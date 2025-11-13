@@ -1,0 +1,2193 @@
+"""
+Dashboard Interativo - Análise de Redes Olímpicas.
+
+Dashboard Streamlit para exploração dos resultados de análise de redes.
+Usa visualization/ como fonte única de verdade para todos os gráficos.
+"""
+
+import streamlit as st
+import pandas as pd
+import sys
+from pathlib import Path
+
+# Adicionar diretórios ao path para imports
+project_root = Path(__file__).parent.parent.parent  # main/
+src_root = Path(__file__).parent.parent  # main/src/
+sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(src_root))
+
+from core.data_loader import DataLoader
+from core.metrics import MetricsCalculator
+from dashboard.visualization import (
+    scatter_size_vs_pagerank,
+    histogram_dominance,
+    heatmap_segregation,
+    barplot_top_rivalries,
+    cdf_pagerank,
+    boxplot_metric_by_category,
+    stacked_bar_profile_distribution,
+    violin_betweenness_by_sport,
+    table_top_athletes,
+)
+from core.config.constants import SPORTS_LIST
+from core.config.paths import PATHS
+from dashboard.analysis import render_comparative_table
+
+
+# ============================================================================
+# CONFIGURAÇÃO DA PÁGINA
+# ============================================================================
+
+st.set_page_config(
+    page_title="Análise de Redes Olímpicas",
+    page_icon="🏅",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'About': "Dashboard de Análise de Redes Complexas aplicada ao Esporte Olímpico"
+    }
+)
+
+# Aplicar tema UFOP via CSS customizado
+st.markdown("""
+<style>
+    /* Cor primária UFOP (Vinho) para elementos interativos */
+    .stButton>button {
+        background-color: #8B2635 !important;
+        color: white !important;
+    }
+    .stButton>button:hover {
+        background-color: #6B1D2A !important;
+    }
+
+    /* Tabs selecionadas */
+    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+        border-bottom-color: #8B2635 !important;
+        color: #8B2635 !important;
+    }
+
+    /* Sliders e controles */
+    .stSlider [data-baseweb="slider"] [role="slider"] {
+        background-color: #8B2635 !important;
+    }
+
+    /* Multiselect tags */
+    .stMultiSelect [data-baseweb="tag"] {
+        background-color: #8B2635 !important;
+    }
+
+    /* Links */
+    a {
+        color: #8B2635 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ============================================================================
+# CACHE DE DADOS
+# ============================================================================
+
+@st.cache_data
+def load_data():
+    """Carrega todos os dados com cache."""
+    loader = DataLoader()
+    return loader.load_all()
+
+
+# ============================================================================
+# SIDEBAR - FILTROS GLOBAIS
+# ============================================================================
+
+def render_sidebar(data):
+    """Renderiza sidebar com filtros globais."""
+    st.sidebar.title("Análise de Redes Olímpicas")
+    st.sidebar.caption("Sistema de análise de redes complexas")
+    st.sidebar.markdown("---")
+
+    # Guia de Interpretação
+    with st.sidebar.expander("📖 Guia de Uso", expanded=False):
+        st.markdown("""
+        ### Como usar este dashboard
+
+        **1. Filtros (abaixo):**
+        - Selecione esportes, sexo e período temporal
+        - Filtros aplicam-se a todas as abas
+        - Use Ctrl+Click para seleção múltipla
+
+        **2. Navegação:**
+        - **Visão Geral:** Estatísticas principais e distribuições
+        - **Comunidades:** Estrutura de grupos competitivos
+        - **Atletas-Ponte:** Conectores entre comunidades
+        - **Rivalidades:** Confrontos entre grupos
+        - **Rankings:** Top atletas por métrica
+        - **Evolução Temporal:** Mudanças ao longo do tempo
+
+        **3. Convenções Visuais:**
+        - **Cor Vinho (#8B2635):** Marca UFOP, valores importantes
+        - **Tabelas:** Header vinho, células alternadas
+        - **Gráficos interativos:** Hover para detalhes
+
+        **4. Métricas Principais:**
+        - **PageRank:** Importância estrutural (vitórias sobre fortes)
+        - **Betweenness:** Atletas-ponte entre grupos
+        - **Comunidades:** Grupos detectados por Louvain
+
+        **Dica:** Clique nos ícones ⓘ e expanders 📖 para explicações detalhadas!
+        """)
+
+    st.sidebar.markdown("---")
+
+    st.sidebar.subheader("Filtros Globais")
+    st.sidebar.caption("Selecione os dados para análise")
+
+    # Filtro: Esporte
+    sports_available = sorted(data['athletes']['sport'].unique())
+    selected_sports = st.sidebar.multiselect(
+        "Esportes",
+        options=sports_available,
+        default=sports_available,
+        help="Selecione um ou mais esportes para análise"
+    )
+
+    # Filtro: Sexo
+    sex_options = ['M', 'F']
+    selected_sex = st.sidebar.multiselect(
+        "Sexo",
+        options=sex_options,
+        default=sex_options,
+        help="Masculino (M) ou Feminino (F)"
+    )
+
+    # Filtro: Período Temporal
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Filtro Temporal")
+
+    # Extrair anos disponíveis
+    if 'games' in data['athletes'].columns:
+        data['athletes']['year'] = data['athletes']['games'].apply(extract_year_from_games)
+        years_available = sorted(data['athletes']['year'].dropna().unique())
+
+        if len(years_available) > 0:
+            min_year = int(years_available[0])
+            max_year = int(years_available[-1])
+
+            selected_year_range = st.sidebar.slider(
+                "Período (anos)",
+                min_value=min_year,
+                max_value=max_year,
+                value=(min_year, max_year),
+                step=4,  # Olimpíadas a cada 4 anos
+                help="Selecione o intervalo de anos para análise"
+            )
+        else:
+            selected_year_range = None
+    else:
+        selected_year_range = None
+
+    st.sidebar.markdown("---")
+
+    # Informações do dataset
+    st.sidebar.subheader("Estatísticas do Dataset")
+
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        st.metric("Atletas", f"{len(data['athletes']):,}")
+        st.metric("Esportes", len(sports_available))
+    with col2:
+        st.metric("Comunidades", f"{len(data['hierarchy']):,}")
+        st.metric("Rivalidades", f"{len(data['rivalries']):,}")
+
+    st.sidebar.markdown("---")
+
+    # Download de Dados
+    st.sidebar.subheader("Exportar Dados")
+
+    # Botão de download CSV
+    @st.cache_data
+    def convert_df_to_csv(df):
+        return df.to_csv(index=False).encode('utf-8')
+
+    csv_data = convert_df_to_csv(data['athletes'])
+
+    st.sidebar.download_button(
+        label="📥 Download CSV (Atletas)",
+        data=csv_data,
+        file_name="olympic_athletes_network.csv",
+        mime="text/csv",
+        help="Download dos dados de atletas filtrados no formato CSV"
+    )
+
+    st.sidebar.markdown("---")
+
+    # Rodapé
+    st.sidebar.caption("Dashboard v1.0 | TCC 2024-2026")
+    st.sidebar.caption("Análise de Redes Complexas")
+
+    # Dica sobre tema
+    with st.sidebar.expander("⚙️ Configuração de Tema"):
+        st.markdown("""
+        **Tema recomendado:** Light
+
+        Se os textos estiverem ilegíveis:
+        1. Clique no menu ⋮ (canto superior direito)
+        2. Settings > Theme
+        3. Selecione: **Light**
+
+        Isso garante melhor contraste com as cores UFOP.
+        """)
+
+    return {
+        'sports': selected_sports,
+        'sex': selected_sex,
+        'year_range': selected_year_range,
+    }
+
+
+# ============================================================================
+# FUNÇÕES AUXILIARES
+# ============================================================================
+
+def extract_year_from_games(games_str):
+    """Extrai ano da coluna 'games' (ex: '1920 Summer' -> 1920)."""
+    if pd.isna(games_str):
+        return None
+    return int(str(games_str).split()[0])
+
+
+# ============================================================================
+# FUNÇÕES DE PADRONIZAÇÃO VISUAL
+# ============================================================================
+
+def render_section_title(title: str, subtitle: str = None):
+    """
+    Renderiza título de seção padronizado.
+
+    Args:
+        title: Título principal
+        subtitle: Subtítulo opcional (descrição curta)
+    """
+    st.markdown(f"### {title}")
+    if subtitle:
+        st.caption(subtitle)
+    st.markdown("---")
+
+
+def render_subsection(title: str, caption: str = None):
+    """
+    Renderiza subtítulo padronizado.
+
+    Args:
+        title: Título da subseção
+        caption: Caption opcional (descrição curta)
+    """
+    st.markdown(f"**{title}**")
+    if caption:
+        st.caption(caption)
+
+
+# ============================================================================
+# FUNÇÕES DE FILTRO
+# ============================================================================
+
+def filter_data(data, filters):
+    """Aplica filtros aos dados."""
+    with st.spinner("Aplicando filtros..."):
+        filtered = {}
+
+        # Atletas
+        df = data['athletes'].copy()
+
+        # Garantir que coluna year existe
+        if 'year' not in df.columns and 'games' in df.columns:
+            df['year'] = df['games'].apply(extract_year_from_games)
+
+        if filters['sports']:
+            df = df[df['sport'].isin(filters['sports'])]
+        if filters['sex']:
+            df = df[df['sex'].isin(filters['sex'])]
+        if filters['year_range'] and 'year' in df.columns:
+            df = df[(df['year'] >= filters['year_range'][0]) & (df['year'] <= filters['year_range'][1])]
+
+        filtered['athletes'] = df
+
+        # Medal profile
+        df = data['medal_profile'].copy()
+        if filters['sports']:
+            df = df[df['sport'].isin(filters['sports'])]
+        if filters['sex']:
+            df = df[df['sex'].isin(filters['sex'])]
+        filtered['medal_profile'] = df
+
+        # Hierarchy
+        df = data['hierarchy'].copy()
+        if filters['sports']:
+            df = df[df['sport'].isin(filters['sports'])]
+        if filters['sex']:
+            df = df[df['sex'].isin(filters['sex'])]
+        filtered['hierarchy'] = df
+
+        # Connectivity
+        df = data['connectivity'].copy()
+        if filters['sports']:
+            df = df[df['sport'].isin(filters['sports'])]
+        if filters['sex']:
+            df = df[df['sex'].isin(filters['sex'])]
+        filtered['connectivity'] = df
+
+        # Rivalries
+        df = data['rivalries'].copy()
+        if filters['sports']:
+            df = df[df['sport'].isin(filters['sports'])]
+        if filters['sex']:
+            df = df[df['sex'].isin(filters['sex'])]
+        filtered['rivalries'] = df
+
+    return filtered
+
+
+# ============================================================================
+# TAB 1: VISÃO GERAL
+# ============================================================================
+
+def render_overview_tab(data):
+    """Tab: Visão Geral."""
+    st.header("Visão Geral")
+    st.caption("Estatísticas gerais e distribuições fundamentais das redes olímpicas")
+    st.markdown("---")
+
+    with st.expander("Sobre esta Análise"):
+        st.markdown("""
+        Esta seção apresenta uma **visão panorâmica** da rede olímpica construída a partir de relações competitivas entre atletas medalhistas.
+
+        **Métricas Principais:**
+        - **PageRank**: Mede a importância de cada atleta baseado em suas conexões e qualidade dos oponentes derrotados
+        - **Betweenness Centrality**: Identifica atletas que servem como pontes entre diferentes grupos ou eras
+
+        **Distribuições Estatísticas:**
+        - **CDF (Cumulative Distribution Function)**: Mostra como a importância está distribuída - poucos atletas muito importantes vs muitos com importância baixa
+        - **Violin Plot**: Revela padrões de distribuição de betweenness por esporte, incluindo valores extremos e mediana
+        """)
+
+    # Métricas resumidas
+    render_subsection("Indicadores Principais")
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            "Atletas Analisados",
+            f"{len(data['athletes']):,}",
+            help="Total de atletas medalhistas na seleção atual"
+        )
+
+    with col2:
+        st.metric(
+            "Comunidades Detectadas",
+            f"{len(set(data['hierarchy']['community_id'])) if 'community_id' in data['hierarchy'].columns else len(data['medal_profile'])}",
+            help="Comunidades distintas identificadas por Louvain (considerando esporte e gênero)"
+        )
+
+    with col3:
+        bridges = MetricsCalculator.identify_bridge_athletes(data['athletes'])
+        st.metric(
+            "Atletas-Ponte",
+            f"{len(bridges):,}",
+            help="Atletas com alta betweenness centrality (top 10%)"
+        )
+
+    with col4:
+        avg_pr = data['athletes']['original_pagerank'].mean()
+        st.metric(
+            "PageRank Médio",
+            f"{avg_pr:.6f}",
+            help="PageRank médio dos atletas"
+        )
+
+    st.markdown("---")
+
+    # Tabela Comparativa
+    with st.spinner("Gerando tabela comparativa..."):
+        render_comparative_table(data)
+
+    st.markdown("---")
+
+    # Visualizações principais
+    render_section_title("Distribuições Estatísticas", "Análise da distribuição de importância e intermediação na rede")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        with st.container():
+            render_subsection("PageRank - Função de Distribuição Acumulada", "CDF mostrando a distribuição de importância dos atletas na rede")
+            fig = cdf_pagerank(data['athletes'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="overview_cdf_pagerank")
+
+    with col2:
+        with st.container():
+            render_subsection("Betweenness Centrality por Esporte", "Distribuição dos atletas-ponte (intermediadores) em cada esporte")
+            fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="overview_violin_betweenness")
+
+
+# ============================================================================
+# TAB 2: COMUNIDADES
+# ============================================================================
+
+def render_communities_tab(data):
+    """Tab: Análise de Comunidades."""
+    st.header("Análise de Comunidades")
+    st.caption("Estrutura, hierarquia e características das comunidades detectadas pelo algoritmo de Louvain")
+    st.markdown("---")
+
+    with st.expander("Sobre Detecção de Comunidades"):
+        st.markdown("""
+        As **comunidades** são grupos de atletas densamente conectados entre si, identificados automaticamente pelo **algoritmo de Louvain**.
+
+        **Hierarquia Estrutural:**
+        - **Núcleo**: Comunidades com alto PageRank médio - grupos de atletas de elite altamente conectados
+        - **Intermediária**: Comunidades com centralidade moderada - grupos competitivos estáveis
+        - **Periférica**: Comunidades com baixo PageRank médio - grupos menos centrais ou emergentes
+
+        **Perfis Competitivos:**
+        - **Elite**: Alto percentual de medalhas de ouro (dominância alta)
+        - **Competitiva**: Distribuição balanceada entre ouro, prata e bronze
+        - **Participante**: Maior concentração de medalhas de bronze
+
+        **Segregação Estrutural:**
+        Mede o grau de isolamento entre comunidades. Alta segregação indica pouca interação entre grupos,
+        baixa segregação indica confrontos frequentes entre comunidades diferentes.
+        """)
+
+    # Subtabs
+    subtab1, subtab2, subtab3 = st.tabs(["Hierarquia", "Perfis Competitivos", "Segregação"])
+
+    with subtab1:
+        render_subsection("Hierarquia de Comunidades", "Análise da hierarquia estrutural baseada em PageRank médio")
+        st.markdown("""
+        Comunidades de **Núcleo** têm alta centralidade, **Periféricas** têm baixa.
+        """)
+
+        fig = scatter_size_vs_pagerank(data['hierarchy'], interactive=True)
+        st.plotly_chart(fig, use_container_width=True, key="communities_hierarchy_scatter")
+
+        st.markdown("---")
+
+        # Estatísticas por nível
+        render_subsection("Estatísticas por Nível Hierárquico")
+        col1, col2, col3 = st.columns(3)
+
+        # Normalizar hierarchy_level para remover acentos
+        hierarchy_normalized = data['hierarchy'].copy()
+        hierarchy_normalized['hierarchy_level_norm'] = hierarchy_normalized['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+
+        # Mapa de labels com acentos para exibição
+        label_map = {
+            'Nucleo': 'Núcleo',
+            'Intermediaria': 'Intermediária',
+            'Periferica': 'Periférica'
+        }
+
+        for i, level in enumerate(['Nucleo', 'Intermediaria', 'Periferica']):
+            subset = hierarchy_normalized[hierarchy_normalized['hierarchy_level_norm'] == level]
+
+            with [col1, col2, col3][i]:
+                st.metric(
+                    label_map[level],
+                    f"{len(subset)} comunidades",
+                    help=f"PageRank médio: {subset['pagerank_mean'].mean():.6f}" if len(subset) > 0 else "Sem dados"
+                )
+
+    with subtab2:
+        render_subsection("Perfis Competitivos", "Classificação baseada no índice de dominância (distribuição de medalhas)")
+        st.markdown("""
+        **Elite**: Alto percentual de ouro | **Competitiva**: Balanceado | **Participante**: Mais bronze.
+        """)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            fig = histogram_dominance(data['medal_profile'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="communities_dominance_hist")
+
+        with col2:
+            fig = stacked_bar_profile_distribution(data['medal_profile'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="communities_profiles_stacked")
+
+        st.markdown("---")
+
+        # Comparação por esporte
+        render_subsection("Comparação por Esporte")
+        fig = boxplot_metric_by_category(
+            data['medal_profile'],
+            metric_column='dominance_index',
+            category_column='sport',
+            interactive=True,
+            title='Índice de Dominância por Esporte'
+        )
+        st.plotly_chart(fig, use_container_width=True, key="communities_dominance_boxplot")
+
+    with subtab3:
+        render_subsection("Segregação Estrutural", "Análise da conectividade intra vs inter-comunidade")
+        st.markdown("""
+        **Alta segregação**: Comunidades isoladas | **Baixa segregação**: Bem conectadas.
+        """)
+
+        fig = heatmap_segregation(data['connectivity'], interactive=True)
+        st.plotly_chart(fig, use_container_width=True, key="communities_segregation_heatmap")
+
+        st.markdown("---")
+
+        # Tabela de conectividade
+        render_subsection("Tabela de Conectividade")
+        st.dataframe(
+            data['connectivity'][['sport', 'sex', 'intra_edges', 'inter_edges', 'segregation_score']],
+            use_container_width=True
+        )
+
+
+# ============================================================================
+# TAB 3: ATLETAS-PONTE
+# ============================================================================
+
+def render_bridges_tab(data):
+    """Tab: Atletas-Ponte."""
+    st.header("Atletas-Ponte")
+    st.caption("Atletas que ocupam posições estruturais críticas, conectando diferentes comunidades ou eras competitivas")
+    st.markdown("---")
+
+    with st.expander("Sobre Atletas-Ponte"):
+        st.markdown("""
+        **Atletas-ponte** são identificados por alta **betweenness centrality** (top 10% da distribuição).
+        Eles atuam como intermediadores cruciais na rede, conectando grupos que de outra forma seriam menos conectados.
+        """)
+
+    # Identificar bridges
+    bridges = MetricsCalculator.identify_bridge_athletes(data['athletes'])
+
+    # Métricas em destaque
+    render_subsection("Indicadores")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "Total de Bridges",
+            f"{len(bridges):,}",
+            help="Número de atletas identificados como pontes estruturais"
+        )
+
+    with col2:
+        pct = (len(bridges) / len(data['athletes'])) * 100
+        st.metric(
+            "Percentual",
+            f"{pct:.1f}%",
+            help="Percentual em relação ao total de atletas"
+        )
+
+    with col3:
+        max_bet = bridges['original_betweenness_centrality'].max()
+        st.metric(
+            "Betweenness Máxima",
+            f"{max_bet:.4f}",
+            help="Maior valor de betweenness centrality encontrado"
+        )
+
+    st.markdown("---")
+
+    # Visualizações
+    render_section_title("Análises Visuais", "Distribuição e ranking dos atletas-ponte por esporte")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        with st.container():
+            render_subsection("Distribuição por Esporte", "Violin plot mostrando a variação de betweenness em cada esporte")
+            fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="bridges_violin_betweenness")
+
+    with col2:
+        with st.container():
+            render_subsection("Top 20 Atletas-Ponte", "Ranking dos atletas com maior betweenness centrality")
+            fig = table_top_athletes(
+                bridges,
+                metric_column='original_betweenness_centrality',
+                top_n=20,
+                interactive=True
+            )
+            st.plotly_chart(fig, use_container_width=True, key="bridges_table_top20")
+
+    st.markdown("---")
+
+    # Tabela detalhada
+    render_subsection("Atletas-Ponte por Esporte")
+
+    for sport in sorted(data['athletes']['sport'].unique()):
+        sport_bridges = bridges[bridges['sport'] == sport].nlargest(5, 'original_betweenness_centrality')
+
+        if len(sport_bridges) > 0:
+            with st.expander(f"{sport} ({len(sport_bridges[sport_bridges['sport'] == sport])} bridges)"):
+                st.dataframe(
+                    sport_bridges[['name', 'noc', 'sex', 'original_betweenness_centrality', 'original_pagerank']],
+                    use_container_width=True
+                )
+
+
+# ============================================================================
+# TAB 4: RIVALIDADES
+# ============================================================================
+
+def render_rivalries_tab(data):
+    """Tab: Rivalidades Estruturais."""
+    st.header("Rivalidades Estruturais")
+    st.caption("Pares de comunidades com padrões intensos de confrontos competitivos diretos")
+    st.markdown("---")
+
+    with st.expander("Sobre Rivalidades Estruturais"):
+        st.markdown("""
+        **Rivalidades estruturais** são identificadas pelo número de arestas (confrontos) entre pares de comunidades.
+        Quanto maior o número de confrontos, mais intensa a rivalidade estrutural entre os grupos.
+        """)
+
+    # Métricas
+    render_subsection("Indicadores")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Rivalidades Identificadas", f"{len(data['rivalries']):,}")
+
+    with col2:
+        max_confronts = data['rivalries']['num_confronts'].max()
+        st.metric("Máximo de Confrontos", f"{max_confronts:,}")
+
+    with col3:
+        avg_confronts = data['rivalries']['num_confronts'].mean()
+        st.metric("Média de Confrontos", f"{avg_confronts:.1f}")
+
+    st.markdown("---")
+
+    # Controle: Top N
+    render_subsection("Top Rivalidades")
+    top_n = st.slider("Número de rivalidades a exibir", min_value=5, max_value=30, value=10, step=5)
+
+    # Visualização
+    fig = barplot_top_rivalries(data['rivalries'], top_n=top_n, interactive=True)
+    st.plotly_chart(fig, use_container_width=True, key="rivalries_bar_top_n")
+
+    st.markdown("---")
+
+    # Heatmap de segregação
+    render_section_title("Mapa de Segregação", "Heatmap mostrando a segregação entre comunidades")
+    fig = heatmap_segregation(data['connectivity'], interactive=True)
+    st.plotly_chart(fig, use_container_width=True, key="rivalries_segregation_heatmap")
+
+    st.markdown("---")
+
+    # Tabela completa
+    render_subsection("Tabela Completa de Rivalidades")
+    st.dataframe(
+        data['rivalries'].sort_values('num_confronts', ascending=False),
+        use_container_width=True
+    )
+
+
+# ============================================================================
+# TAB 5: RANKINGS
+# ============================================================================
+
+def render_rankings_tab(data):
+    """Tab: Rankings de Atletas."""
+    st.header("Rankings de Atletas")
+    st.caption("Rankings customizáveis baseados em diferentes métricas de centralidade de rede")
+    st.markdown("---")
+
+    with st.expander("Sobre as Métricas de Centralidade"):
+        st.markdown("""
+        Cada métrica captura um aspecto diferente da importância de um atleta na rede competitiva:
+
+        **PageRank:**
+        - Baseado no algoritmo do Google
+        - Considera não apenas quantas vitórias, mas a **qualidade** dos oponentes derrotados
+        - Um atleta ganha mais pontos ao vencer outros atletas importantes
+
+        **Betweenness Centrality:**
+        - Mede o quanto um atleta atua como **ponte** entre diferentes grupos
+        - Atletas com alto betweenness conectam comunidades ou eras distintas
+        - Importante para entender fluxo de informação e influência na rede
+
+        **Closeness Centrality:**
+        - Mede a **proximidade média** de um atleta a todos os outros
+        - Alto closeness indica capacidade de alcançar rapidamente outros atletas via caminhos curtos
+        - Reflete posição central e eficiência de conexão
+
+        **Degree Centrality:**
+        - Simplesmente conta o **número de conexões diretas** (vitórias/derrotas)
+        - Métrica mais simples, mas ainda útil para entender atividade competitiva
+        - Alto degree indica muitos confrontos diretos com diferentes oponentes
+        """)
+
+    # Controles
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        # Seleção de métrica
+        metric_options = {
+            'PageRank': 'original_pagerank',
+            'Betweenness Centrality': 'original_betweenness_centrality',
+            'Closeness Centrality': 'original_closeness_centrality',
+            'Degree Centrality': 'original_degree_centrality',
+        }
+
+        selected_metric_name = st.selectbox(
+            "Métrica de Ranking",
+            options=list(metric_options.keys()),
+            help="Selecione a métrica para ordenar os atletas"
+        )
+
+        selected_metric = metric_options[selected_metric_name]
+
+    with col2:
+        # Top N
+        top_n = st.slider("Número de atletas", min_value=10, max_value=50, value=20, step=10)
+
+    st.markdown("---")
+
+    # Tabela
+    render_section_title(f"Top {top_n} Atletas", f"Ranking baseado em {selected_metric_name}")
+    fig = table_top_athletes(
+        data['athletes'],
+        metric_column=selected_metric,
+        top_n=top_n,
+        interactive=True
+    )
+    st.plotly_chart(fig, use_container_width=True, key="rankings_table_top_n")
+
+    st.markdown("---")
+
+    # Distribuição
+    render_section_title(f"Distribuição de {selected_metric_name}", "Análise estatística da métrica selecionada")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        fig = cdf_pagerank(data['athletes'], interactive=True) if selected_metric == 'original_pagerank' else None
+        if fig:
+            st.plotly_chart(fig, use_container_width=True, key="rankings_cdf_distribution")
+
+    with col2:
+        fig = boxplot_metric_by_category(
+            data['athletes'],
+            metric_column=selected_metric,
+            category_column='sport',
+            interactive=True,
+            title=f'{selected_metric_name} por Esporte'
+        )
+        st.plotly_chart(fig, use_container_width=True, key="rankings_boxplot_by_sport")
+
+
+# ============================================================================
+# TAB 6: REDE INTERATIVA
+# ============================================================================
+
+def render_network_tab(data):
+    """
+    Tab: Visualização Interativa da Rede (Versão Melhorada).
+
+    Args:
+        data: Dicionário com dados carregados (compatibilidade, não usado diretamente)
+    """
+    from dashboard.components import render_cosmograph
+    import json
+
+    st.header("Redes Interativas")
+    st.caption("Explore as redes competitivas olímpicas de forma interativa")
+    st.markdown("---")
+
+    # Obter diretório de resultados
+    results_dir = str(Path(__file__).parent.parent.parent / 'results')
+
+    # ========================================================================
+    # SELETOR DE REDE ESPECÍFICA
+    # ========================================================================
+
+    st.subheader("1. Selecione a Rede")
+
+    # Definir as 8 redes disponíveis
+    networks = [
+        {"id": "swimming_M_individual", "label": "Natação Masculina - Individual", "sport": "Swimming", "sex": "M", "event_type": "individual"},
+        {"id": "swimming_M_team", "label": "Natação Masculina - Equipe (Revezamentos)", "sport": "Swimming", "sex": "M", "event_type": "team"},
+        {"id": "swimming_F_individual", "label": "Natação Feminina - Individual", "sport": "Swimming", "sex": "F", "event_type": "individual"},
+        {"id": "swimming_F_team", "label": "Natação Feminina - Equipe (Revezamentos)", "sport": "Swimming", "sex": "F", "event_type": "team"},
+        {"id": "football_M_team", "label": "Futebol Masculino", "sport": "Football", "sex": "M", "event_type": "team"},
+        {"id": "football_F_team", "label": "Futebol Feminino", "sport": "Football", "sex": "F", "event_type": "team"},
+        {"id": "basketball_M_team", "label": "Basquetebol Masculino", "sport": "Basketball", "sex": "M", "event_type": "team"},
+        {"id": "basketball_F_team", "label": "Basquetebol Feminino", "sport": "Basketball", "sex": "F", "event_type": "team"},
+    ]
+
+    network_labels = [net["label"] for net in networks]
+    selected_network_label = st.selectbox(
+        "Escolha uma rede para visualizar:",
+        network_labels,
+        help="Cada rede representa um conjunto específico de atletas e competições"
+    )
+
+    # Encontrar a rede selecionada
+    selected_network = next(net for net in networks if net["label"] == selected_network_label)
+
+    # ========================================================================
+    # CARREGAR DADOS DA REDE SELECIONADA
+    # ========================================================================
+
+    sport_lower = selected_network["sport"].lower()
+    sex = selected_network["sex"]
+    event_type = selected_network["event_type"]
+
+    # Caminhos dos arquivos
+    sport_dir = Path(results_dir) / sport_lower
+
+    if "event_type" in selected_network and selected_network["event_type"]:
+        metrics_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_detailed_metrics.csv"
+        edges_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_original_edges.csv"
+        summary_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_network_summary.json"
+    else:
+        metrics_file = sport_dir / f"{sport_lower}_{sex}_detailed_metrics.csv"
+        edges_file = sport_dir / f"{sport_lower}_{sex}_original_edges.csv"
+        summary_file = sport_dir / f"{sport_lower}_{sex}_network_summary.json"
+
+    # Verificar se arquivos existem
+    if not metrics_file.exists():
+        st.error(f"Arquivo de métricas não encontrado: {metrics_file}")
+        return
+
+    if not edges_file.exists():
+        st.error(f"Arquivo de arestas não encontrado: {edges_file}")
+        return
+
+    if not summary_file.exists():
+        st.error(f"Arquivo de sumário não encontrado: {summary_file}")
+        return
+
+    # Carregar dados
+    df_athletes = pd.read_csv(metrics_file)
+    df_edges = pd.read_csv(edges_file)
+
+    # Carregar dados originais completos para obter histórico completo de medalhas e anos
+    athlete_events_file = PATHS['athlete_events']
+    if athlete_events_file.exists():
+        # Carregar apenas colunas necessárias para economizar memória
+        df_full_history = pd.read_csv(athlete_events_file, usecols=['ID', 'Games', 'Medal', 'Sport', 'Sex'])
+        # Renomear ID para athlete_id para consistência
+        df_full_history = df_full_history.rename(columns={'ID': 'athlete_id'})
+        # Filtrar pelo esporte e sexo atual
+        df_full_history = df_full_history[
+            (df_full_history['Sport'] == selected_network['sport']) &
+            (df_full_history['Sex'] == sex) &
+            (df_full_history['Medal'].notna())  # Apenas medalhistas
+        ]
+    else:
+        st.warning("Arquivo athlete_events.csv não encontrado. Informações de histórico podem estar incompletas.")
+        df_full_history = None
+
+    with open(summary_file, 'r', encoding='utf-8') as f:
+        network_summary = json.load(f)
+
+    # Extrair estatísticas da rede
+    num_nodes_total = network_summary["original_network"]["num_nodes"]
+    num_edges_total = network_summary["original_network"]["num_edges"]
+    density = network_summary["original_network"]["density"]
+    modularity = network_summary["original_community"]["modularity"]
+    num_communities = network_summary["original_community"]["num_communities"]
+
+    # ========================================================================
+    # MOSTRAR INFORMAÇÕES DA REDE
+    # ========================================================================
+
+    st.success(f"**Rede Carregada:** {selected_network_label}")
+
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.metric("Atletas (Nós)", f"{num_nodes_total:,}")
+    with col2:
+        st.metric("Competições (Arestas)", f"{num_edges_total:,}")
+    with col3:
+        st.metric("Densidade", f"{density:.4f}")
+    with col4:
+        st.metric("Modularidade", f"{modularity:.3f}")
+    with col5:
+        st.metric("Comunidades", num_communities)
+
+    st.markdown("---")
+
+    # ========================================================================
+    # FILTROS E OPÇÕES
+    # ========================================================================
+
+    st.subheader("2. Configurações de Visualização")
+
+    # Tabs para organizar opções
+    tab_filtros, tab_visual, tab_avancado = st.tabs(["🔍 Filtros", "🎨 Aparência", "⚙️ Avançado"])
+
+    with tab_filtros:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Filtro de número de nós (usar o tamanho real da rede selecionada)
+            show_top_n = st.slider(
+                "Número de atletas a exibir:",
+                min_value=10,
+                max_value=num_nodes_total,
+                value=min(500, num_nodes_total),
+                step=10,
+                help=f"Mostra os N atletas com maior PageRank (máximo: {num_nodes_total:,} nós)"
+            )
+            
+            # Avisos de desempenho baseados no número de nós
+            if show_top_n > 800:
+                st.warning("⚠️ Muitos nós! O filtro de arestas será ajustado automaticamente.")
+            elif show_top_n > 500:
+                st.info("ℹ️ Rede grande detectada. Peso mínimo de arestas ajustado automaticamente.")
+
+            # Filtro por peso de arestas com valores sugeridos baseados no tamanho
+            suggested_min_weight = 1
+            if show_top_n > 800:
+                suggested_min_weight = 4
+            elif show_top_n > 600:
+                suggested_min_weight = 3
+            elif show_top_n > 400:
+                suggested_min_weight = 2
+            
+            min_edge_weight = st.slider(
+                "Peso mínimo das arestas:",
+                min_value=1,
+                max_value=10,
+                value=suggested_min_weight,
+                help=f"Filtra arestas com peso menor que este valor. Sugerido: {suggested_min_weight} para esta quantidade de nós."
+            )
+
+        with col2:
+            # Filtro por país
+            if 'noc' in df_athletes.columns:
+                all_countries = sorted(df_athletes['noc'].dropna().unique())
+                selected_countries = st.multiselect(
+                    "Filtrar por países (NOC):",
+                    options=all_countries,
+                    default=[],
+                    help="Deixe vazio para mostrar todos os países"
+                )
+            else:
+                selected_countries = []
+
+            # Filtro por comunidade
+            if 'original_community' in df_athletes.columns:
+                all_communities = sorted(df_athletes['original_community'].dropna().unique())
+                selected_communities = st.multiselect(
+                    "Filtrar por comunidades:",
+                    options=all_communities,
+                    default=[],
+                    help="Deixe vazio para mostrar todas as comunidades"
+                )
+            else:
+                selected_communities = []
+
+    with tab_visual:
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            node_size_by = st.selectbox(
+                "Tamanho dos nós por:",
+                ["PageRank", "Grau Total", "Betweenness"],
+                help="Métrica usada para determinar o tamanho dos nós"
+            )
+
+            color_by = st.selectbox(
+                "Colorir nós por:",
+                ["Comunidade", "País (NOC)", "Década", "Tipo de Medalha"],
+                help="Atributo usado para colorir os nós"
+            )
+
+        with col2:
+            color_scheme = st.selectbox(
+                "Paleta de cores:",
+                ["Padrão (UFOP)", "Pastel", "Vibrante", "Fria", "Quente"],
+                help="Esquema de cores para os grupos"
+            )
+
+            show_labels = st.checkbox(
+                "Mostrar nomes dos nós",
+                value=False,
+                help="Exibe o nome dos atletas nos nós (pode deixar a visualização poluída)"
+            )
+
+        with col3:
+            edge_opacity = st.slider(
+                "Opacidade das arestas:",
+                min_value=0.1,
+                max_value=1.0,
+                value=0.3,
+                step=0.1,
+                help="Transparência das conexões"
+            )
+
+            node_scale_range = st.slider(
+                "Escala dos nós:",
+                min_value=3,
+                max_value=50,
+                value=(5, 30),
+                help="Tamanho mínimo e máximo dos nós"
+            )
+
+    with tab_avancado:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Desabilitar física automaticamente em redes grandes
+            default_physics = False
+            physics_enabled = st.checkbox(
+                "Ativar simulação física",
+                value=default_physics,
+                help="Layout com física. Desativado por padrão para melhor desempenho."
+            )
+
+            height = st.slider(
+                "Altura da visualização (pixels):",
+                min_value=400,
+                max_value=1200,
+                value=700,
+                step=50
+            )
+
+        with col2:
+            st.markdown("**Parâmetros de Física:**")
+
+            gravitational_constant = st.slider(
+                "Força Gravitacional:",
+                min_value=-200,
+                max_value=-10,
+                value=-50,
+                step=10,
+                help="Controla a repulsão entre nós (valores mais negativos = maior repulsão)"
+            )
+
+            spring_length = st.slider(
+                "Comprimento das Molas:",
+                min_value=50,
+                max_value=300,
+                value=100,
+                step=10,
+                help="Distância ideal entre nós conectados"
+            )
+
+            spring_constant = st.slider(
+                "Rigidez das Molas:",
+                min_value=0.01,
+                max_value=0.20,
+                value=0.08,
+                step=0.01,
+                help="Força das conexões entre nós"
+            )
+
+    st.markdown("---")
+
+    # ========================================================================
+    # PREPARAR DADOS DOS NÓS
+    # ========================================================================
+
+    df_filtered = df_athletes.copy()
+
+    # Aplicar filtro de países
+    if selected_countries:
+        df_filtered = df_filtered[df_filtered['noc'].isin(selected_countries)]
+
+    # Aplicar filtro de comunidades
+    if selected_communities:
+        df_filtered = df_filtered[df_filtered['original_community'].isin(selected_communities)]
+
+    # Selecionar top N atletas por PageRank
+    if len(df_filtered) > show_top_n:
+        df_filtered = df_filtered.nlargest(show_top_n, 'original_pagerank')
+
+    # Remover duplicatas
+    df_filtered = df_filtered.drop_duplicates(subset=['athlete_id'], keep='first')
+
+    selected_ids = set(df_filtered['athlete_id'].astype(str))
+
+    # Preparar nós com informações completas para tooltip
+    nodes = []
+    for _, row in df_filtered.iterrows():
+        node_id = str(row['athlete_id'])
+
+        # Tamanho do nó
+        if node_size_by == "PageRank":
+            size = float(row.get('original_pagerank', 0.0001) * 10000)
+        elif node_size_by == "Grau Total":
+            size = float(row.get('original_total_degree', 1))
+        else:  # Betweenness
+            size = float(row.get('original_betweenness_centrality', 0.0001) * 100000)
+
+        # Grupo para cor
+        if color_by == "Comunidade":
+            group = int(row.get('original_community', 0))
+        elif color_by == "País (NOC)":
+            group = hash(row.get('noc', '')) % 16
+        elif color_by == "Década":
+            # Extrair ano de 'games' (formato "1920 Summer")
+            games_str = str(row.get('games', '2000 Summer'))
+            try:
+                year = int(games_str.split()[0])
+            except:
+                year = 2000
+            group = (year // 10) % 16  # Década mod 16
+        else:  # Tipo de Medalha
+            medal = row.get('medal', 'Bronze')
+            medal_map = {'Gold': 0, 'Silver': 1, 'Bronze': 2}
+            group = medal_map.get(medal, 2)
+
+        # Calcular percentil de PageRank
+        pagerank_val = row.get('original_pagerank', 0)
+        pagerank_percentile = (df_filtered['original_pagerank'] < pagerank_val).sum() / len(df_filtered) * 100
+
+        # Verificar se é atleta-ponte (betweenness > 75º percentil)
+        betweenness_val = row.get('original_betweenness_centrality', 0)
+        betweenness_threshold = df_filtered['original_betweenness_centrality'].quantile(0.75)
+        is_bridge = betweenness_val > betweenness_threshold
+
+        # Contar medalhas e anos do atleta usando histórico completo
+        athlete_id_val = row['athlete_id']
+
+        if df_full_history is not None:
+            # Buscar TODAS as medalhas e jogos deste atleta no histórico completo
+            athlete_history = df_full_history[df_full_history['athlete_id'] == athlete_id_val]
+
+            medal_counts = {
+                'Gold': int((athlete_history['Medal'] == 'Gold').sum()),
+                'Silver': int((athlete_history['Medal'] == 'Silver').sum()),
+                'Bronze': int((athlete_history['Medal'] == 'Bronze').sum())
+            }
+            total_medals = sum(medal_counts.values())
+
+            # Extrair anos de participação
+            athlete_games = athlete_history['Games'].dropna()
+            if len(athlete_games) > 0:
+                years_list = sorted(set([int(str(g).split()[0]) for g in athlete_games if str(g).split()[0].isdigit()]))
+                years_str = ', '.join(map(str, years_list)) if years_list else 'N/A'
+            else:
+                years_list = []
+                years_str = 'N/A'
+        else:
+            # Fallback: usar apenas dados da linha atual
+            medal = row.get('medal', 'Bronze')
+            medal_counts = {'Gold': 1 if medal == 'Gold' else 0,
+                          'Silver': 1 if medal == 'Silver' else 0,
+                          'Bronze': 1 if medal == 'Bronze' else 0}
+            total_medals = 1
+            years_list = []
+            years_str = 'N/A'
+
+        # Dados completos para tooltip (converter tudo para tipos Python nativos)
+        tooltip_data = {
+            'name': str(row.get('name', 'N/A')),
+            'noc': str(row.get('noc', 'N/A')),
+            'team': str(row.get('team', 'N/A')),
+            'years': str(years_str),  # Todos os anos de participação
+            'years_list': years_list,  # Lista de anos para timeline
+            'age': int(row.get('age', 0)) if pd.notna(row.get('age')) else 'N/A',
+            'height': int(row.get('height', 0)) if pd.notna(row.get('height')) else 'N/A',
+            'weight': int(row.get('weight_kg', 0)) if pd.notna(row.get('weight_kg')) else 'N/A',
+            'medal_gold': int(medal_counts['Gold']),
+            'medal_silver': int(medal_counts['Silver']),
+            'medal_bronze': int(medal_counts['Bronze']),
+            'medal_total': int(total_medals),
+            'pagerank': str(f"{pagerank_val:.6f}"),
+            'pagerank_percentile': str(f"{pagerank_percentile:.1f}"),
+            'betweenness': str(f"{betweenness_val:.6f}"),
+            'is_bridge': True if is_bridge else False,  # Converter para bool Python explicitamente
+            'degree_in': int(row.get('original_in_degree', 0)),
+            'degree_out': int(row.get('original_out_degree', 0)),
+            'degree_total': int(row.get('original_total_degree', 0)),
+            'community': int(row.get('original_community', 0)),
+        }
+
+        nodes.append({
+            'id': node_id,
+            'label': row.get('name', f"Atleta {row['athlete_id']}"),
+            'size': size,
+            'group': group,
+            'tooltip_data': tooltip_data
+        })
+
+    # ========================================================================
+    # PREPARAR DADOS DAS ARESTAS
+    # ========================================================================
+
+    links = []
+
+    # Filtrar arestas
+    df_edges_filtered = df_edges[
+        df_edges['source_id'].astype(str).isin(selected_ids) &
+        df_edges['target_id'].astype(str).isin(selected_ids)
+    ]
+
+    # Aplicar filtro de peso
+    if 'weight' in df_edges_filtered.columns:
+        df_edges_filtered = df_edges_filtered[df_edges_filtered['weight'] >= min_edge_weight]
+    
+    # Otimização adaptativa: limitar arestas baseado no número de nós
+    # Quanto mais nós, menos arestas podemos renderizar
+    if len(nodes) > 800:
+        max_edges = 1500
+    elif len(nodes) > 600:
+        max_edges = 2500
+    elif len(nodes) > 400:
+        max_edges = 4000
+    else:
+        max_edges = 6000
+    
+    if len(df_edges_filtered) > max_edges:
+        st.info(f"ℹ️ Otimização: Exibindo as {max_edges:,} arestas de maior peso (de {len(df_edges_filtered):,} totais). Aumente o peso mínimo para ver conexões mais relevantes.")
+        df_edges_filtered = df_edges_filtered.nlargest(max_edges, 'weight')
+
+    for _, edge in df_edges_filtered.iterrows():
+        links.append({
+            'source': str(edge['source_id']),
+            'target': str(edge['target_id']),
+            'value': float(edge.get('weight', 1.0))
+        })
+
+    # ========================================================================
+    # ESTATÍSTICAS DA REDE VISÍVEL
+    # ========================================================================
+
+    st.subheader("3. Visualização da Rede")
+    
+    # Aviso de desempenho baseado na quantidade real de arestas
+    total_elements = len(nodes) + len(links)
+    if total_elements > 4000:
+        st.error(f"🚨 **AVISO:** Renderizando {len(nodes):,} nós e {len(links):,} arestas. A visualização pode ficar lenta. Aumente o peso mínimo das arestas!")
+    elif total_elements > 2500:
+        st.warning(f"⚠️ **Atenção:** {len(nodes):,} nós e {len(links):,} arestas. Considere aumentar o peso mínimo das arestas.")
+    elif len(links) > 3000:
+        st.info(f"ℹ️ Muitas arestas ({len(links):,}). Se a visualização ficar lenta, aumente o peso mínimo.")
+    
+    # Aviso sobre física
+    if physics_enabled and (len(nodes) > 500 or len(links) > 2000):
+        st.warning("⚠️ Física ativada com muitos elementos pode causar lentidão significativa.")
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Nós exibidos", f"{len(nodes):,}")
+    with col2:
+        st.metric("Arestas exibidas", f"{len(links):,}")
+    with col3:
+        density_visible = len(links) / (len(nodes) * (len(nodes) - 1)) if len(nodes) > 1 else 0
+        st.metric("Densidade visível", f"{density_visible:.4f}")
+    with col4:
+        avg_degree = (2 * len(links)) / len(nodes) if len(nodes) > 0 else 0
+        st.metric("Grau médio", f"{avg_degree:.2f}")
+
+    # ========================================================================
+    # LEGENDA DE CORES DINÂMICA
+    # ========================================================================
+
+    st.markdown("---")
+
+    # Paleta de cores (replicar a mesma do componente)
+    color_schemes_dash = {
+        "Padrão (UFOP)": ['#8B2635', '#2E5A88', '#2A7F62', '#D4A017', '#8B4513', '#4B0082', '#008B8B', '#B8860B',
+                   '#CD5C5C', '#4682B4', '#9ACD32', '#FF8C00', '#8A2BE2', '#20B2AA', '#CD853F', '#9370DB'],
+        "Pastel": ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4', '#FFDFD3', '#C9E4DE',
+                  '#FFC8DD', '#BDE0FE', '#A2D2FF', '#CDB4DB', '#FEC89A', '#F1FAEE', '#A8DADC', '#E5989B'],
+        "Vibrante": ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2',
+                   '#F8B195', '#F67280', '#C06C84', '#6C5B7B', '#355C7D', '#99B898', '#FECEAB', '#FF847C'],
+        "Fria": ['#1A535C', '#4ECDC4', '#F7FFF7', '#FF6B6B', '#FFE66D', '#2E86AB', '#A23B72', '#F18F01',
+                '#C73E1D', '#6A994E', '#BC4749', '#F2CC8F', '#81B29A', '#3D405B', '#E07A5F', '#F4F1DE'],
+        "Quente": ['#D62828', '#F77F00', '#FCBF49', '#EAE2B7', '#003049', '#D9376E', '#FF8C42', '#FFC857',
+                '#E5323B', '#F25F5C', '#FFE066', '#50514F', '#247BA0', '#70C1B3', '#B2DBBF', '#F3FFBD']
+    }
+
+    selected_palette = color_schemes_dash[color_scheme]
+
+    # Legenda antiga removida - agora está dentro do componente JavaScript interativo
+
+    # ========================================================================
+    # RENDERIZAR VISUALIZAÇÃO
+    # ========================================================================
+
+    if len(nodes) == 0:
+        st.warning("Nenhum atleta encontrado com os filtros aplicados.")
+        return
+
+    if len(links) == 0:
+        st.warning("Nenhuma aresta encontrada com os filtros aplicados. A visualização mostrará apenas nós isolados.")
+
+    # Mapear nomes de paletas
+    color_scheme_map = {
+        "Padrão (UFOP)": "default",
+        "Pastel": "pastel",
+        "Vibrante": "vibrant",
+        "Fria": "cool",
+        "Quente": "warm"
+    }
+
+    # Injetar CSS para forçar iframe a usar largura total
+    st.markdown("""
+        <style>
+        /* Forçar iframe do componente a usar largura total */
+        iframe[title="components.html"] {
+            width: 100% !important;
+        }
+
+        /* Garantir que container do iframe também use largura total */
+        .stHtml {
+            width: 100% !important;
+        }
+
+        /* Se estiver em um bloco, garantir largura total */
+        div[data-testid="stVerticalBlock"] > div {
+            width: 100% !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Renderizar visualização em largura total
+    render_cosmograph(
+        nodes=nodes,
+        links=links,
+        height=height,
+        physics_enabled=physics_enabled,
+        show_labels=show_labels,
+        color_scheme=color_scheme_map[color_scheme],
+        edge_opacity=edge_opacity,
+        node_scale_min=node_scale_range[0],
+        node_scale_max=node_scale_range[1],
+        gravitational_constant=gravitational_constant,
+        spring_length=spring_length,
+        spring_constant=spring_constant,
+        color_by=color_by,
+        key="network_interactive"
+    )
+
+    # ========================================================================
+    # INFORMAÇÕES ADICIONAIS
+    # ========================================================================
+
+    with st.expander("ℹ️ Ajuda e Instruções", expanded=False):
+        st.markdown("""
+        ### Como usar a visualização interativa:
+
+        - **Navegação:**
+          - Arraste com o mouse para mover a câmera
+          - Use scroll/pinch para zoom in/out
+          - Clique em um nó para selecioná-lo
+          - Passe o mouse sobre nós para ver informações (tooltip)
+
+        - **Física:**
+          - Com física ativada, os nós se movem seguindo forças de atração/repulsão
+          - Com física desativada, o layout é estático (recomendado para redes grandes)
+          - A simulação estabiliza automaticamente após alguns segundos
+
+        - **Cores:**
+          - Cada cor representa um grupo diferente do atributo selecionado
+          - Comunidades são detectadas pelo algoritmo de Louvain
+          - Use diferentes paletas para melhor contraste
+
+        - **Performance:**
+          - Para redes grandes (>300 nós), recomenda-se desativar física
+          - Reduzir opacidade das arestas melhora visualização
+          - Desativar labels melhora performance
+        """)
+
+
+def render_temporal_tab(data):
+    """Tab: Evolução Temporal."""
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    from core.config.olympic_eras import (
+        get_timeline_data,
+        get_era_shapes_for_plot,
+        get_era_annotations_for_plot,
+        OLYMPIC_ERAS
+    )
+    from visualization.timeline_plots import create_olympic_timeline, create_events_accordion
+
+    st.header("Evolução Temporal")
+    st.caption("125 anos de história olímpica: da Belle Époque à Era Profissional Moderna (1896-2021)")
+    st.markdown("---")
+
+    # Timeline Visual Interativa com Plotly
+    render_section_title("Linha do Tempo Histórica", "4 eras olímpicas de 1896 a 2016")
+
+    st.caption("💡 **Dica:** Passe o mouse sobre as barras para ver detalhes de cada era")
+
+    # Criar timeline responsiva com Plotly (limpa e objetiva)
+    timeline_fig = create_olympic_timeline(OLYMPIC_ERAS, height=350)
+    st.plotly_chart(timeline_fig, use_container_width=True, key="olympic_timeline")
+
+    st.markdown("---")
+
+    # Eventos históricos em expanders organizados (4 colunas)
+    render_subsection("Eventos Históricos Detalhados", "Expanda cada era para ver os eventos marcantes")
+
+    events_by_era = create_events_accordion(OLYMPIC_ERAS)
+
+    cols = st.columns(4)
+    for idx, era_info in enumerate(events_by_era):
+        with cols[idx]:
+            # Ícone visual da era
+            era_icons = {
+                'Belle Époque': '🎭',
+                'Entre-Guerras': '⚔️',
+                'Guerra Fria': '🥊',
+                'Pós-Guerra Fria': '🌍'
+            }
+            era_icon = era_icons.get(era_info['name'], '📅')
+
+            with st.expander(f"{era_icon} **{era_info['name']}**", expanded=False):
+                # Badge com período
+                st.markdown(f"<div style='background-color: {era_info['color']}; color: white; padding: 8px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 10px;'>{era_info['period']}</div>", unsafe_allow_html=True)
+
+                st.markdown(f"*{era_info['description']}*")
+                st.markdown("")
+
+                st.markdown("**📊 Características:**")
+                for char in era_info['characteristics']:
+                    st.markdown(f"• {char}")
+
+                st.markdown("")
+                st.markdown("**📌 Eventos-Chave:**")
+                for event in era_info['events']:
+                    event_icons = {
+                        'olympic': '🏅',
+                        'political': '⚔️',
+                        'social': '👥',
+                        'sport': '🏆',
+                        'geographic': '🌍'
+                    }
+                    icon = event_icons.get(event['type'], '📌')
+                    st.markdown(f"**{event['year']}** {icon} *{event['event']}*")
+
+    st.markdown("---")
+
+    with st.expander("📖 Sobre as Eras Olímpicas", expanded=False):
+        st.markdown("""
+        A evolução olímpica pode ser dividida em **4 grandes eras históricas**, cada uma com características
+        estruturais e competitivas distintas:
+
+        ### 🎭 Belle Époque (1896-1912)
+        - **Contexto**: Primeiros Jogos Olímpicos da era moderna
+        - **Participação**: ~100 atletas por edição, predominância europeia
+        - **Características**: Exclusão feminina, esportes tradicionais, amadorismo estrito
+        - **Estrutura de Rede**: Pequena, altamente concentrada, poucas conexões internacionais
+
+        ### ⚔️ Entre-Guerras (1920-1936)
+        - **Contexto**: Crescimento pós-Primeira Guerra Mundial
+        - **Participação**: ~300-400 atletas, expansão geográfica (América do Sul, Ásia)
+        - **Características**: Primeiras participações femininas oficiais, profissionalização incipiente
+        - **Estrutura de Rede**: Crescimento moderado, início da diversificação geográfica
+
+        ### 🥊 Guerra Fria (1948-1988)
+        - **Contexto**: Esporte como campo de batalha ideológica (EUA vs URSS)
+        - **Participação**: 400 → 800+ atletas, crescimento exponencial
+        - **Características**: Boicotes políticos (1980, 1984), profissionalização em países socialistas
+        - **Estrutura de Rede**: Altíssima concentração em blocos, polarização estrutural, PageRank elevado
+
+        ### 🌍 Pós-Guerra Fria (1992-2016)
+        - **Contexto**: Globalização e democratização do esporte olímpico
+        - **Participação**: 800 → 900+ atletas, participação global
+        - **Características**: Profissionalização total, avanço feminino (paridade), tecnologia avançada
+        - **Estrutura de Rede**: Democratização do PageRank, diversificação geográfica, HHI em queda
+
+        ---
+
+        **💡 Como interpretar os gráficos abaixo:**
+        - **Faixas coloridas de fundo**: Delimitam cada era histórica
+        - **Labels no topo**: Identificam as eras
+        - **Anotações nos gráficos**: Destacam transições e eventos importantes
+        """)
+
+    # Verificar se temos dados temporais
+    if 'year' not in data['athletes'].columns:
+        st.warning("Dados temporais não disponíveis. Aplique o filtro temporal na sidebar.")
+        return
+
+    with st.spinner("Processando análise temporal..."):
+        # Preparar dados agregados por ano
+        df = data['athletes'].copy()
+
+        # Preparar dicionário de agregação com colunas disponíveis
+        agg_dict = {'athlete_id': 'count'}
+
+        if 'original_pagerank' in df.columns:
+            agg_dict['original_pagerank'] = 'mean'
+        if 'original_betweenness_centrality' in df.columns:
+            agg_dict['original_betweenness_centrality'] = 'mean'
+        if 'original_total_degree' in df.columns:
+            agg_dict['original_total_degree'] = 'mean'
+
+        df_by_year = df.groupby('year').agg(agg_dict).reset_index()
+
+        # Renomear colunas
+        column_mapping = {
+            'athlete_id': 'num_athletes',
+            'original_pagerank': 'avg_pagerank',
+            'original_betweenness_centrality': 'avg_betweenness',
+            'original_total_degree': 'avg_degree'
+        }
+        df_by_year.rename(columns=column_mapping, inplace=True)
+
+    render_subsection("Indicadores Temporais")
+
+    # Métricas resumidas
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        total_years = len(df_by_year)
+        st.metric(
+            "Anos Analisados",
+            f"{total_years}",
+            help="Número de edições olímpicas no período selecionado"
+        )
+
+    with col2:
+        total_athletes = df['athlete_id'].nunique()
+        st.metric(
+            "Atletas Únicos",
+            f"{total_athletes:,}",
+            help="Número total de atletas medalhistas únicos"
+        )
+
+    with col3:
+        avg_athletes_per_year = df_by_year['num_athletes'].mean()
+        st.metric(
+            "Média de Atletas/Ano",
+            f"{avg_athletes_per_year:.0f}",
+            help="Média de atletas medalhistas por edição"
+        )
+
+    with col4:
+        growth_rate = ((df_by_year['num_athletes'].iloc[-1] / df_by_year['num_athletes'].iloc[0]) - 1) * 100 if len(df_by_year) > 1 else 0
+        st.metric(
+            "Crescimento",
+            f"{growth_rate:.0f}%",
+            help="Taxa de crescimento entre primeira e última edição"
+        )
+
+    st.markdown("---")
+
+    # Visualizações temporais
+    render_section_title("Evolução ao Longo do Tempo", "Crescimento da participação e mudanças nas métricas de rede")
+
+    # Gráfico 1: Número de Atletas ao longo do tempo
+    col1, col2 = st.columns(2)
+
+    with col1:
+        with st.container():
+            render_subsection("Crescimento da Participação", "Número de atletas medalhistas por edição olímpica")
+
+            # Determinar range de anos
+            years_range = (df_by_year['year'].min(), df_by_year['year'].max())
+
+            fig = go.Figure()
+
+            # Adicionar linha principal
+            fig.add_trace(go.Scatter(
+                x=df_by_year['year'],
+                y=df_by_year['num_athletes'],
+                mode='lines+markers',
+                name='Atletas',
+                line=dict(color='#8B2635', width=3),
+                marker=dict(size=8),
+                hovertemplate='<b>%{x}</b><br>Atletas: %{y}<extra></extra>'
+            ))
+
+            # Adicionar shapes de eras (retângulos de fundo)
+            era_shapes = get_era_shapes_for_plot(years_range)
+
+            # Adicionar annotations de eras
+            era_annotations = get_era_annotations_for_plot(years_range, y_position=0.98)
+
+            # Calcular estatísticas por era para anotações adicionais
+            belle_epoque_data = df_by_year[df_by_year['year'] <= 1912]
+            guerra_fria_data = df_by_year[(df_by_year['year'] >= 1948) & (df_by_year['year'] <= 1988)]
+            pos_gf_data = df_by_year[df_by_year['year'] >= 1992]
+
+            if len(belle_epoque_data) > 0 and len(pos_gf_data) > 0:
+                growth_factor = pos_gf_data['num_athletes'].mean() / belle_epoque_data['num_athletes'].mean()
+
+                # Adicionar anotação de crescimento
+                era_annotations.append({
+                    'x': 0.02,
+                    'y': 0.05,
+                    'xref': 'paper',
+                    'yref': 'paper',
+                    'text': f"<b>Crescimento Belle Époque → Era Moderna:</b><br>{growth_factor:.1f}× mais atletas",
+                    'showarrow': False,
+                    'font': dict(size=11),
+                    'bgcolor': 'rgba(255, 232, 237, 0.9)',
+                    'bordercolor': '#8B2635',
+                    'borderwidth': 2,
+                    'borderpad': 8,
+                    'align': 'left',
+                    'xanchor': 'left',
+                    'yanchor': 'bottom'
+                })
+
+            fig.update_layout(
+                xaxis_title='Ano',
+                yaxis_title='Número de Atletas',
+                template='plotly_white',
+                hovermode='x unified',
+                height=400,
+                shapes=era_shapes,
+                annotations=era_annotations
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key="temporal_athletes_growth")
+
+    with col2:
+        if 'avg_pagerank' in df_by_year.columns:
+            with st.container():
+                render_subsection("Evolução do PageRank Médio", "Mudanças na centralidade média dos atletas ao longo do tempo")
+
+                fig = go.Figure()
+
+                # Adicionar linha principal
+                fig.add_trace(go.Scatter(
+                    x=df_by_year['year'],
+                    y=df_by_year['avg_pagerank'],
+                    mode='lines+markers',
+                    name='PageRank Médio',
+                    line=dict(color='#5A5A5A', width=3),
+                    marker=dict(size=8),
+                    hovertemplate='<b>%{x}</b><br>PageRank: %{y:.6f}<extra></extra>'
+                ))
+
+                # Adicionar shapes e annotations de eras
+                era_shapes = get_era_shapes_for_plot(years_range)
+                era_annotations = get_era_annotations_for_plot(years_range, y_position=0.98)
+
+                # Calcular estatísticas por era
+                entre_guerras_data = df_by_year[(df_by_year['year'] >= 1920) & (df_by_year['year'] <= 1936)]
+                guerra_fria_data = df_by_year[(df_by_year['year'] >= 1948) & (df_by_year['year'] <= 1988)]
+                pos_gf_data = df_by_year[df_by_year['year'] >= 1992]
+
+                # Encontrar pico da Guerra Fria
+                if len(guerra_fria_data) > 0:
+                    peak_year = guerra_fria_data.loc[guerra_fria_data['avg_pagerank'].idxmax(), 'year']
+                    peak_value = guerra_fria_data['avg_pagerank'].max()
+
+                    # Adicionar anotação do pico
+                    era_annotations.append({
+                        'x': peak_year,
+                        'y': peak_value,
+                        'text': f"<b>Pico Guerra Fria</b><br>{peak_year}: {peak_value:.6f}",
+                        'showarrow': True,
+                        'arrowhead': 2,
+                        'arrowsize': 1,
+                        'arrowwidth': 2,
+                        'arrowcolor': '#8B2635',
+                        'ax': 40,
+                        'ay': -40,
+                        'font': dict(size=10),
+                        'bgcolor': 'rgba(255, 232, 237, 0.9)',
+                        'bordercolor': '#8B2635',
+                        'borderwidth': 2,
+                        'borderpad': 4,
+                    })
+
+                # Comparar eras
+                if len(guerra_fria_data) > 0 and len(pos_gf_data) > 0:
+                    gf_avg = guerra_fria_data['avg_pagerank'].mean()
+                    pos_avg = pos_gf_data['avg_pagerank'].mean()
+                    decrease_pct = ((pos_avg - gf_avg) / gf_avg) * 100
+
+                    era_annotations.append({
+                        'x': 0.02,
+                        'y': 0.05,
+                        'xref': 'paper',
+                        'yref': 'paper',
+                        'text': f"<b>Democratização Pós-Guerra Fria:</b><br>PageRank médio {abs(decrease_pct):.1f}% menor<br>(Menos concentração de poder)",
+                        'showarrow': False,
+                        'font': dict(size=11),
+                        'bgcolor': 'rgba(255, 255, 255, 0.9)',
+                        'bordercolor': '#5A5A5A',
+                        'borderwidth': 2,
+                        'borderpad': 8,
+                        'align': 'left',
+                        'xanchor': 'left',
+                        'yanchor': 'bottom'
+                    })
+
+                fig.update_layout(
+                    xaxis_title='Ano',
+                    yaxis_title='PageRank Médio',
+                    template='plotly_white',
+                    hovermode='x unified',
+                    height=400,
+                    shapes=era_shapes,
+                    annotations=era_annotations
+                )
+
+                st.plotly_chart(fig, use_container_width=True, key="temporal_pagerank")
+        else:
+            st.info("Dados de PageRank não disponíveis")
+
+    # Gráfico 2: Betweenness e Degree ao longo do tempo
+    if 'avg_betweenness' in df_by_year.columns or 'avg_degree' in df_by_year.columns:
+        st.markdown("---")
+        render_section_title("Métricas de Centralidade", "Evolução de betweenness e degree ao longo do tempo")
+
+        # Verificar quais colunas existem
+        has_betweenness = 'avg_betweenness' in df_by_year.columns
+        has_degree = 'avg_degree' in df_by_year.columns
+
+        if has_betweenness and has_degree:
+            # Ambas existem - criar subplots
+            fig = make_subplots(
+                rows=1, cols=2,
+                subplot_titles=('Betweenness Centrality Médio', 'Degree Centrality Médio')
+            )
+
+            # Betweenness
+            fig.add_trace(
+                go.Scatter(
+                    x=df_by_year['year'],
+                    y=df_by_year['avg_betweenness'],
+                    mode='lines+markers',
+                    name='Betweenness',
+                    line=dict(color='#8B2635', width=2),
+                    marker=dict(size=8),
+                    hovertemplate='<b>%{x}</b><br>Betweenness: %{y:.6f}<extra></extra>'
+                ),
+                row=1, col=1
+            )
+
+            # Degree
+            fig.add_trace(
+                go.Scatter(
+                    x=df_by_year['year'],
+                    y=df_by_year['avg_degree'],
+                    mode='lines+markers',
+                    name='Degree',
+                    line=dict(color='#5A5A5A', width=2),
+                    marker=dict(size=8),
+                    hovertemplate='<b>%{x}</b><br>Degree: %{y:.2f}<extra></extra>'
+                ),
+                row=1, col=2
+            )
+
+            fig.update_xaxes(title_text="Ano", row=1, col=1)
+            fig.update_xaxes(title_text="Ano", row=1, col=2)
+
+            # Definir range explícito para Betweenness baseado nos dados reais
+            betw_min = df_by_year['avg_betweenness'].min()
+            betw_max = df_by_year['avg_betweenness'].max()
+            betw_margin = (betw_max - betw_min) * 0.1
+
+            fig.update_yaxes(
+                title_text="Betweenness Médio",
+                row=1, col=1,
+                tickformat='.5f',  # 5 casas decimais
+                range=[betw_min - betw_margin, betw_max + betw_margin]  # Range explícito com margem
+            )
+            fig.update_yaxes(title_text="Degree Médio", row=1, col=2)
+
+            # Adicionar shapes de eras (retângulos de fundo) para ambos os subplots
+            era_shapes = get_era_shapes_for_plot(years_range)
+
+            # Duplicar shapes para ambos os subplots
+            shapes_subplot1 = []
+            shapes_subplot2 = []
+
+            for shape in era_shapes:
+                # Subplot 1 (Betweenness)
+                shape1 = shape.copy()
+                shape1['xref'] = 'x'
+                shape1['yref'] = 'y'
+                shapes_subplot1.append(shape1)
+
+                # Subplot 2 (Degree)
+                shape2 = shape.copy()
+                shape2['xref'] = 'x2'
+                shape2['yref'] = 'y2'
+                shapes_subplot2.append(shape2)
+
+            all_shapes = shapes_subplot1 + shapes_subplot2
+
+            # Adicionar annotations de eras
+            era_annotations = []
+
+            # Labels das eras para subplot 1
+            for era_key, era_data in OLYMPIC_ERAS.items():
+                start_year, end_year = era_data['period']
+
+                if end_year < years_range[0] or start_year > years_range[1]:
+                    continue
+
+                start_year = max(start_year, years_range[0])
+                end_year = min(end_year, years_range[1])
+                mid_year = (start_year + end_year) / 2
+
+                # Label para subplot 1
+                era_annotations.append({
+                    'x': mid_year,
+                    'y': 1.05,
+                    'xref': 'x',
+                    'yref': 'y domain',
+                    'text': f"<b>{era_data['name']}</b>",
+                    'showarrow': False,
+                    'font': dict(size=9, color=era_data['color']),
+                    'bgcolor': 'rgba(255, 255, 255, 0.8)',
+                    'bordercolor': era_data['color'],
+                    'borderwidth': 1,
+                    'borderpad': 3,
+                })
+
+                # Label para subplot 2
+                era_annotations.append({
+                    'x': mid_year,
+                    'y': 1.05,
+                    'xref': 'x2',
+                    'yref': 'y2 domain',
+                    'text': f"<b>{era_data['name']}</b>",
+                    'showarrow': False,
+                    'font': dict(size=9, color=era_data['color']),
+                    'bgcolor': 'rgba(255, 255, 255, 0.8)',
+                    'bordercolor': era_data['color'],
+                    'borderwidth': 1,
+                    'borderpad': 3,
+                })
+
+            # Calcular estatísticas por era para anotações adicionais
+            guerra_fria_data = df_by_year[(df_by_year['year'] >= 1948) & (df_by_year['year'] <= 1988)]
+
+            if len(guerra_fria_data) > 0:
+                # Adicionar anotação sobre pico de betweenness na Guerra Fria
+                peak_between_year = guerra_fria_data.loc[guerra_fria_data['avg_betweenness'].idxmax(), 'year']
+                peak_between_value = guerra_fria_data['avg_betweenness'].max()
+
+                era_annotations.append({
+                    'x': 0.02,
+                    'y': 0.05,
+                    'xref': 'x domain',
+                    'yref': 'y domain',
+                    'text': f"<b>Pico Guerra Fria:</b><br>{peak_between_year}<br>Betweenness: {peak_between_value:.6f}",
+                    'showarrow': False,
+                    'font': dict(size=10),
+                    'bgcolor': 'rgba(255, 232, 237, 0.9)',
+                    'bordercolor': '#8B2635',
+                    'borderwidth': 2,
+                    'borderpad': 6,
+                    'align': 'left',
+                    'xanchor': 'left',
+                    'yanchor': 'bottom'
+                })
+
+                # Adicionar anotação sobre degree médio
+                avg_degree_gf = guerra_fria_data['avg_degree'].mean()
+                avg_degree_pos = pos_gf_data['avg_degree'].mean() if len(pos_gf_data) > 0 else 0
+
+                if avg_degree_pos > 0:
+                    change_pct = ((avg_degree_pos - avg_degree_gf) / avg_degree_gf) * 100
+
+                    era_annotations.append({
+                        'x': 0.02,
+                        'y': 0.05,
+                        'xref': 'x2 domain',
+                        'yref': 'y2 domain',
+                        'text': f"<b>Mudança Pós-GF:</b><br>Degree médio<br>{'+' if change_pct > 0 else ''}{change_pct:.1f}%",
+                        'showarrow': False,
+                        'font': dict(size=10),
+                        'bgcolor': 'rgba(255, 255, 255, 0.9)',
+                        'bordercolor': '#5A5A5A',
+                        'borderwidth': 2,
+                        'borderpad': 6,
+                        'align': 'left',
+                        'xanchor': 'left',
+                        'yanchor': 'bottom'
+                    })
+
+            fig.update_layout(
+                template='plotly_white',
+                height=400,
+                showlegend=False,
+                shapes=all_shapes,
+                annotations=era_annotations
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key="temporal_centralities")
+
+        else:
+            # Apenas uma existe - gráfico único
+            col1, col2 = st.columns(2)
+
+            if has_betweenness:
+                with col1:
+                    render_subsection("Betweenness Centrality Médio")
+
+                    # Verificar range dos dados
+                    betw_min = df_by_year['avg_betweenness'].min()
+                    betw_max = df_by_year['avg_betweenness'].max()
+
+                    fig = go.Figure()
+                    fig.add_trace(go.Scatter(
+                        x=df_by_year['year'],
+                        y=df_by_year['avg_betweenness'],
+                        mode='lines+markers',
+                        line=dict(color='#8B2635', width=2),
+                        marker=dict(size=8),
+                        hovertemplate='<b>%{x}</b><br>Betweenness: %{y:.8f}<extra></extra>'
+                    ))
+
+                    # Adicionar shapes e annotations de eras
+                    era_shapes = get_era_shapes_for_plot(years_range)
+                    era_annotations = get_era_annotations_for_plot(years_range, y_position=0.98)
+
+                    # Encontrar pico
+                    guerra_fria_data = df_by_year[(df_by_year['year'] >= 1948) & (df_by_year['year'] <= 1988)]
+                    if len(guerra_fria_data) > 0:
+                        peak_year = guerra_fria_data.loc[guerra_fria_data['avg_betweenness'].idxmax(), 'year']
+                        peak_value = guerra_fria_data['avg_betweenness'].max()
+
+                        era_annotations.append({
+                            'x': 0.02,
+                            'y': 0.05,
+                            'xref': 'paper',
+                            'yref': 'paper',
+                            'text': f"<b>Pico Guerra Fria:</b><br>{peak_year}: {peak_value:.8f}",
+                            'showarrow': False,
+                            'font': dict(size=10),
+                            'bgcolor': 'rgba(255, 232, 237, 0.9)',
+                            'bordercolor': '#8B2635',
+                            'borderwidth': 2,
+                            'borderpad': 6,
+                            'align': 'left',
+                            'xanchor': 'left',
+                            'yanchor': 'bottom'
+                        })
+
+                    # Calcular range com margem de 10%
+                    betw_margin = (betw_max - betw_min) * 0.1
+
+                    fig.update_layout(
+                        xaxis_title='Ano',
+                        yaxis_title='Betweenness Médio',
+                        template='plotly_white',
+                        height=400,
+                        shapes=era_shapes,
+                        annotations=era_annotations,
+                        yaxis=dict(
+                            tickformat='.5f',  # 5 casas decimais
+                            range=[betw_min - betw_margin, betw_max + betw_margin]  # Range explícito
+                        )
+                    )
+                    st.plotly_chart(fig, use_container_width=True, key="temporal_betweenness")
+
+            if has_degree:
+                with col2:
+                    render_subsection("Degree Centrality Médio")
+                    fig = go.Figure()
+                    fig.add_trace(go.Scatter(
+                        x=df_by_year['year'],
+                        y=df_by_year['avg_degree'],
+                        mode='lines+markers',
+                        line=dict(color='#5A5A5A', width=2),
+                        marker=dict(size=6)
+                    ))
+
+                    # Adicionar shapes e annotations de eras
+                    era_shapes = get_era_shapes_for_plot(years_range)
+                    era_annotations = get_era_annotations_for_plot(years_range, y_position=0.98)
+
+                    # Comparar eras
+                    guerra_fria_data = df_by_year[(df_by_year['year'] >= 1948) & (df_by_year['year'] <= 1988)]
+                    pos_gf_data = df_by_year[df_by_year['year'] >= 1992]
+
+                    if len(guerra_fria_data) > 0 and len(pos_gf_data) > 0:
+                        gf_avg = guerra_fria_data['avg_degree'].mean()
+                        pos_avg = pos_gf_data['avg_degree'].mean()
+                        change_pct = ((pos_avg - gf_avg) / gf_avg) * 100
+
+                        era_annotations.append({
+                            'x': 0.02,
+                            'y': 0.05,
+                            'xref': 'paper',
+                            'yref': 'paper',
+                            'text': f"<b>Mudança Pós-Guerra Fria:</b><br>Degree médio {'+' if change_pct > 0 else ''}{change_pct:.1f}%",
+                            'showarrow': False,
+                            'font': dict(size=10),
+                            'bgcolor': 'rgba(255, 255, 255, 0.9)',
+                            'bordercolor': '#5A5A5A',
+                            'borderwidth': 2,
+                            'borderpad': 6,
+                            'align': 'left',
+                            'xanchor': 'left',
+                            'yanchor': 'bottom'
+                        })
+
+                    fig.update_layout(
+                        xaxis_title='Ano',
+                        yaxis_title='Degree Médio',
+                        template='plotly_white',
+                        height=400,
+                        shapes=era_shapes,
+                        annotations=era_annotations
+                    )
+                    st.plotly_chart(fig, use_container_width=True, key="temporal_degree")
+
+    # Comparação por esporte
+    st.markdown("---")
+    render_section_title("Comparação Entre Esportes", "Evolução temporal comparativa de diferentes esportes")
+
+    sports_available = sorted(df['sport'].unique())
+    selected_sports_temporal = st.multiselect(
+        "Selecione esportes para comparar",
+        options=sports_available,
+        default=sports_available[:min(3, len(sports_available))],
+        help="Selecione até 3 esportes para comparar evolução"
+    )
+
+    if selected_sports_temporal:
+        # Preparar agregação por esporte
+        agg_dict_sports = {'athlete_id': 'count'}
+        if 'original_pagerank' in df.columns:
+            agg_dict_sports['original_pagerank'] = 'mean'
+
+        df_sports = df[df['sport'].isin(selected_sports_temporal)].groupby(['year', 'sport']).agg(agg_dict_sports).reset_index()
+
+        # Renomear colunas
+        column_mapping_sports = {
+            'athlete_id': 'num_athletes',
+            'original_pagerank': 'avg_pagerank'
+        }
+        df_sports.rename(columns=column_mapping_sports, inplace=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            render_subsection("Número de Atletas por Esporte")
+
+            fig = go.Figure()
+            colors = ['#8B2635', '#5A5A5A', '#A0A0A0']
+
+            for i, sport in enumerate(selected_sports_temporal):
+                sport_data = df_sports[df_sports['sport'] == sport]
+                fig.add_trace(go.Scatter(
+                    x=sport_data['year'],
+                    y=sport_data['num_athletes'],
+                    mode='lines+markers',
+                    name=sport,
+                    line=dict(color=colors[i % len(colors)], width=2),
+                    marker=dict(size=6)
+                ))
+
+            fig.update_layout(
+                xaxis_title='Ano',
+                yaxis_title='Número de Atletas',
+                template='plotly_white',
+                hovermode='x unified',
+                height=400
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key="temporal_sports_athletes")
+
+        with col2:
+            if 'avg_pagerank' in df_sports.columns:
+                render_subsection("PageRank Médio por Esporte")
+
+                fig = go.Figure()
+
+                for i, sport in enumerate(selected_sports_temporal):
+                    sport_data = df_sports[df_sports['sport'] == sport]
+                    fig.add_trace(go.Scatter(
+                        x=sport_data['year'],
+                        y=sport_data['avg_pagerank'],
+                        mode='lines+markers',
+                        name=sport,
+                        line=dict(color=colors[i % len(colors)], width=2),
+                        marker=dict(size=6)
+                    ))
+
+                fig.update_layout(
+                    xaxis_title='Ano',
+                    yaxis_title='PageRank Médio',
+                    template='plotly_white',
+                    hovermode='x unified',
+                    height=400
+                )
+
+                st.plotly_chart(fig, use_container_width=True, key="temporal_sports_pagerank")
+            else:
+                st.info("Dados de PageRank não disponíveis para comparação")
+
+
+# ============================================================================
+# MAIN
+# ============================================================================
+
+def main():
+    """Função principal do dashboard."""
+
+    # Carregar dados
+    with st.spinner("Carregando dados..."):
+        data = load_data()
+
+    # Sidebar com filtros
+    filters = render_sidebar(data)
+
+    # Aplicar filtros
+    filtered_data = filter_data(data, filters)
+
+    # Verificar se há dados após filtro
+    if len(filtered_data['athletes']) == 0:
+        st.warning("Nenhum dado disponível com os filtros selecionados. Ajuste os filtros na barra lateral.")
+        return
+
+    # Título principal
+    # Cabeçalho principal
+    st.title("Análise de Redes Olímpicas")
+    st.markdown("Modelagem de Relações Competitivas através de Teoria de Redes Complexas")
+
+    # Informações de contexto
+    col1, col2, col3 = st.columns([2, 2, 1])
+    with col1:
+        st.caption("Dataset: 125 anos de história olímpica (1896-2021)")
+    with col2:
+        st.caption("Algoritmos: PageRank, Louvain, Métricas de Centralidade")
+    with col3:
+        st.caption(f"{len(filtered_data['athletes']):,} atletas filtrados")
+
+    st.markdown("---")
+
+    # Tabs principais
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+        "Visão Geral",
+        "Comunidades",
+        "Atletas-Ponte",
+        "Rivalidades",
+        "Rankings",
+        "Evolução Temporal",
+        "Rede Interativa"
+    ])
+
+    with tab1:
+        render_overview_tab(filtered_data)
+
+    with tab2:
+        render_communities_tab(filtered_data)
+
+    with tab3:
+        render_bridges_tab(filtered_data)
+
+    with tab4:
+        render_rivalries_tab(filtered_data)
+
+    with tab5:
+        render_rankings_tab(filtered_data)
+
+    with tab6:
+        render_temporal_tab(filtered_data)
+
+    with tab7:
+        render_network_tab(filtered_data)
+
+
+if __name__ == '__main__':
+    main()

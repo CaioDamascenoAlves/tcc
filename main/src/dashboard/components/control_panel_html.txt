@@ -1,0 +1,214 @@
+<!-- Overlay -->
+<div id="control-panel-overlay" onclick="toggleControlPanel()"></div>
+
+<!-- Botão Flutuante -->
+<button id="control-panel-toggle" onclick="toggleControlPanel()">
+    ⚙️
+</button>
+
+<!-- Drawer Lateral -->
+<div id="control-panel-drawer">
+    <!-- Header -->
+    <div class="drawer-header">
+        <div class="drawer-title">Controles</div>
+        <button class="drawer-close-btn" onclick="toggleControlPanel()">✕</button>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="drawer-content">
+
+        <!-- Seção: Aparência -->
+        <div class="drawer-section">
+            <div class="drawer-section-header" onclick="toggleSection(this)">
+                <div class="drawer-section-title">
+                    <span class="drawer-section-icon">🎨</span>
+                    <span>Aparência</span>
+                </div>
+                <span class="drawer-section-arrow">▼</span>
+            </div>
+            <div class="drawer-section-body">
+                <div class="drawer-section-content">
+                    <!-- Colorir Por -->
+                    <div class="control-group">
+                        <label class="control-label">Colorir Por</label>
+                        <select id="color-by-select" class="control-select" onchange="changeColorBy(this.value)">
+                            <option value="Comunidade">Comunidade</option>
+                            <option value="País (NOC)">País (NOC)</option>
+                            <option value="Década">Década</option>
+                            <option value="Tipo de Medalha">Tipo de Medalha</option>
+                        </select>
+                    </div>
+
+                    <!-- Esquema de Cores -->
+                    <div class="control-group">
+                        <label class="control-label">Esquema de Cores</label>
+                        <div class="color-palette-grid">
+                            <div class="color-palette-item active" style="background: linear-gradient(135deg, #8B2635, #2E5A88, #2A7F62, #D4A017);"
+                                 onclick="changeColorScheme('default')" data-scheme="default"></div>
+                            <div class="color-palette-item" style="background: linear-gradient(135deg, #FFB3BA, #FFDFBA, #BAFFC9, #BAE1FF);"
+                                 onclick="changeColorScheme('pastel')" data-scheme="pastel"></div>
+                            <div class="color-palette-item" style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #FFA07A, #F7DC6F);"
+                                 onclick="changeColorScheme('vibrant')" data-scheme="vibrant"></div>
+                            <div class="color-palette-item" style="background: linear-gradient(135deg, #1A535C, #4ECDC4, #FF6B6B, #FFE66D);"
+                                 onclick="changeColorScheme('cool')" data-scheme="cool"></div>
+                        </div>
+                    </div>
+
+                    <!-- Opacidade das Arestas -->
+                    <div class="control-group">
+                        <label class="control-label">
+                            Opacidade das Arestas
+                            <span class="slider-value" id="edge-opacity-value">0.3</span>
+                        </label>
+                        <input type="range" id="edge-opacity-slider" class="control-slider"
+                               min="0.1" max="1" step="0.1" value="0.3"
+                               oninput="changeEdgeOpacity(this.value)">
+                    </div>
+
+                    <!-- Tamanho dos Nós -->
+                    <div class="control-group">
+                        <label class="control-label">Tamanho dos Nós</label>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="flex: 1;">
+                                <span style="font-size: 11px; color: #666;">Min: <span id="node-size-min-value">5</span></span>
+                                <input type="range" id="node-size-min-slider" class="control-slider"
+                                       min="3" max="15" step="1" value="5"
+                                       oninput="changeNodeSizeMin(this.value)">
+                            </div>
+                            <div style="flex: 1;">
+                                <span style="font-size: 11px; color: #666;">Max: <span id="node-size-max-value">30</span></span>
+                                <input type="range" id="node-size-max-slider" class="control-slider"
+                                       min="20" max="50" step="5" value="30"
+                                       oninput="changeNodeSizeMax(this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mostrar Labels -->
+                    <div class="control-group">
+                        <div class="control-toggle" onclick="toggleLabels()">
+                            <span class="toggle-label">Mostrar Labels</span>
+                            <div class="toggle-switch" id="labels-toggle">
+                                <div class="toggle-switch-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Física -->
+        <div class="drawer-section">
+            <div class="drawer-section-header" onclick="toggleSection(this)">
+                <div class="drawer-section-title">
+                    <span class="drawer-section-icon">⚡</span>
+                    <span>Física e Movimento</span>
+                </div>
+                <span class="drawer-section-arrow">▼</span>
+            </div>
+            <div class="drawer-section-body">
+                <div class="drawer-section-content">
+                    <!-- Ativar Física -->
+                    <div class="control-group">
+                        <div class="control-toggle" onclick="togglePhysicsFromPanel()">
+                            <span class="toggle-label">Ativar Física</span>
+                            <div class="toggle-switch" id="physics-toggle">
+                                <div class="toggle-switch-knob"></div>
+                            </div>
+                        </div>
+                        <p class="control-info">Quando ativada, os nós se movem dinamicamente. Desative para layout estático.</p>
+                    </div>
+
+                    <div class="control-divider"></div>
+
+                    <!-- Força Gravitacional -->
+                    <div class="control-group">
+                        <label class="control-label">
+                            Força Gravitacional
+                            <span class="slider-value" id="gravity-value">-800</span>
+                        </label>
+                        <input type="range" id="gravity-slider" class="control-slider"
+                               min="-2000" max="-200" step="100" value="-800"
+                               oninput="changeGravity(this.value)">
+                    </div>
+
+                    <!-- Comprimento das Molas -->
+                    <div class="control-group">
+                        <label class="control-label">
+                            Comprimento das Molas
+                            <span class="slider-value" id="spring-length-value">150</span>
+                        </label>
+                        <input type="range" id="spring-length-slider" class="control-slider"
+                               min="50" max="300" step="10" value="150"
+                               oninput="changeSpringLength(this.value)">
+                    </div>
+
+                    <!-- Constante das Molas -->
+                    <div class="control-group">
+                        <label class="control-label">
+                            Rigidez das Molas
+                            <span class="slider-value" id="spring-constant-value">0.04</span>
+                        </label>
+                        <input type="range" id="spring-constant-slider" class="control-slider"
+                               min="0.01" max="0.1" step="0.01" value="0.04"
+                               oninput="changeSpringConstant(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Exportar -->
+        <div class="drawer-section">
+            <div class="drawer-section-header" onclick="toggleSection(this)">
+                <div class="drawer-section-title">
+                    <span class="drawer-section-icon">💾</span>
+                    <span>Exportar</span>
+                </div>
+                <span class="drawer-section-arrow">▼</span>
+            </div>
+            <div class="drawer-section-body">
+                <div class="drawer-section-content">
+                    <div class="control-button-grid">
+                        <button class="control-button control-button-secondary" onclick="exportPNG()">
+                            <span>📷</span> PNG
+                        </button>
+                        <button class="control-button control-button-secondary" onclick="exportSVG()">
+                            <span>🎨</span> SVG
+                        </button>
+                        <button class="control-button control-button-secondary" onclick="exportGEXF()">
+                            <span>🕸️</span> GEXF
+                        </button>
+                        <button class="control-button control-button-secondary" onclick="exportCSV()">
+                            <span>📊</span> CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Sobre -->
+        <div class="drawer-section">
+            <div class="drawer-section-header" onclick="toggleSection(this)">
+                <div class="drawer-section-title">
+                    <span class="drawer-section-icon">ℹ️</span>
+                    <span>Sobre</span>
+                </div>
+                <span class="drawer-section-arrow">▼</span>
+            </div>
+            <div class="drawer-section-body">
+                <div class="drawer-section-content">
+                    <p style="font-size: 13px; line-height: 1.6; color: #555;">
+                        <strong>Visualização Interativa de Redes Olímpicas</strong><br>
+                        Use os controles acima para personalizar a aparência e comportamento da rede.<br><br>
+                        <strong>Atalhos:</strong><br>
+                        • Ctrl+K: Buscar atleta<br>
+                        • ESC: Reset zoom<br>
+                        • F: Tela cheia<br>
+                        • P: Toggle física
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
