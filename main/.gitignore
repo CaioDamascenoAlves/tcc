@@ -1,0 +1,140 @@
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.Python
+venv/
+env/
+ENV/
+
+# ============================================================================
+# Resultados de Análise (GRANDES - não comitar)
+# ============================================================================
+results/networks/*.csv
+results/networks/*.gexf
+results/networks/*.json
+results/networks/swimming/
+results/networks/basketball/
+results/networks/football/
+results/additional_analyses/*.csv
+
+# Exceções: Arquivos pequenos e essenciais podem ser commitados se necessário
+# !results/networks/summaries.json
+
+# ============================================================================
+# Dados Brutos (GRANDES - não comitar)
+# ============================================================================
+data/*.csv
+# Exceção: Dataset principal (se quiser comitar)
+!data/athlete_events.csv
+
+# ============================================================================
+# Arquivos Temporários e Caches
+# ============================================================================
+*.tmp
+*.temp
+.cache/
+.streamlit/cache/
+
+# ============================================================================
+# LaTeX
+# ============================================================================
+docs/monografia/*.aux
+docs/monografia/*.bbl
+docs/monografia/*.blg
+docs/monografia/*.log
+docs/monografia/*.out
+docs/monografia/*.toc
+docs/monografia/*.lof
+docs/monografia/*.lot
+docs/monografia/*.fls
+docs/monografia/*.fdb_latexmk
+docs/monografia/*.synctex.gz
+docs/monografia/*.nav
+docs/monografia/*.snm
+docs/monografia/*.vrb
+
+docs/apresentacao/*.aux
+docs/apresentacao/*.log
+docs/apresentacao/*.nav
+docs/apresentacao/*.out
+docs/apresentacao/*.snm
+docs/apresentacao/*.toc
+docs/apresentacao/*.vrb
+
+# Manter PDFs compilados (se quiser)
+# docs/monografia/main.pdf
+# docs/apresentacao/main.pdf
+
+# ============================================================================
+# Figuras e Tabelas Geradas (podem ser regeneradas)
+# ============================================================================
+docs/monografia/figuras/*.png
+docs/monografia/figuras/*.pdf
+docs/monografia/tabelas/*.tex
+
+# ============================================================================
+# Notebooks Jupyter
+# ============================================================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ============================================================================
+# IDEs e Editores
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ============================================================================
+# Sistema Operacional
+# ============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ============================================================================
+# Logs
+# ============================================================================
+*.log
+logs/
+*.log.*
+
+# ============================================================================
+# Arquivados (não comitar)
+# ============================================================================
+_archived/
+*.backup
+*.bak
+
+# ============================================================================
+# Testes
+# ============================================================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ============================================================================
+# Diversos
+# ============================================================================
+*.zip
+*.tar.gz
+*.rar
