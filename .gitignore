@@ -69,6 +69,8 @@ monografia/figuras/*.pdf
 monografia/tabelas/*.tex
 apresentacao/figuras/*.png
 apresentacao/figuras/*.pdf
+main/docs/monografia/figuras/*.png
+main/docs/monografia/figuras/*.pdf
 
 # ============================================================================
 # Notebooks Jupyter
