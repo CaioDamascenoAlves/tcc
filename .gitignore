@@ -17,20 +17,14 @@ ENV/
 # ============================================================================
 # Resultados de Análise (GRANDES - não comitar)
 # ============================================================================
-main/results/networks/*.csv
-main/results/networks/*.gexf
-main/results/networks/*.json
-main/results/networks/swimming/
-main/results/networks/basketball/
-main/results/networks/football/
-main/results/additional_analyses/*.csv
+main/results/
+!main/results/README.md
 
 # ============================================================================
 # Dados Brutos (GRANDES - não comitar)
 # ============================================================================
-main/data/*.csv
-# Exceção: Dataset principal pode ser commitado se necessário
-# !main/data/athlete_events.csv
+main/data/
+!main/data/README.md
 
 # ============================================================================
 # Arquivos Temporários e Caches
