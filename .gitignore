@@ -138,4 +138,5 @@ CLAUDE.md
 *.tar.gz
 *.rar
 nul
+main/data/*csv
 main/data/athlete_events.csv
