@@ -1,8 +1,8 @@
 # Análise de Redes Complexas Aplicada ao Esporte Olímpico
 
 **Trabalho de Conclusão de Curso (TCC)**
-Ciência da Computação - Universidade Federal de Ouro Preto (UFOP)
-2024
+Sistemas de Informação - Universidade Federal de Ouro Preto (UFOP)
+2025/2026
 
 ---
 
@@ -209,11 +209,11 @@ As redes são construídas onde:
 **Licença**: MIT
 
 **Instituição**: Universidade Federal de Ouro Preto (UFOP)
-**Curso**: Ciência da Computação
-**Ano**: 2024
+**Curso**: Sistemas de Informação
+**Ano**: 2025/2026
 
 **Status do Projeto**: Em desenvolvimento ativo
-**Última atualização**: Novembro 2024
+**Última atualização**: Novembro 2025
 
 ---
 
@@ -222,10 +222,10 @@ As redes são construídas onde:
 Se utilizar este trabalho, cite:
 
 ```bibtex
-@misc{tcc_redes_olimpicas_2024,
+@misc{tcc_redes_olimpicas_2025,
   author = {Autor},
   title = {Análise de Redes Complexas Aplicada ao Esporte Olímpico},
-  year = {2024},
+  year = {2025},
   school = {Universidade Federal de Ouro Preto},
   type = {Trabalho de Conclusão de Curso}
 }

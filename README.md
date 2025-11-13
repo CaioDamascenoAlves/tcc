@@ -1,8 +1,8 @@
 # TCC - Análise de Redes Complexas Aplicada ao Esporte Olímpico
 
 **Trabalho de Conclusão de Curso**
-Ciência da Computação - Universidade Federal de Ouro Preto (UFOP)
-2024
+Sistemas de Informação - Universidade Federal de Ouro Preto (UFOP)
+2025/2026
 
 ---
 
@@ -99,4 +99,4 @@ LaTeX: abntex2, babel, graphicx, amsmath, booktabs, hyperref
 MIT License - Ver arquivo LICENSE
 
 **Instituição**: UFOP
-**Ano**: 2024
+**Ano**: 2025/2026
