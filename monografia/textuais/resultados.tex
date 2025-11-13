@@ -1,0 +1,225 @@
+% ----------------------------------------------------------
+% Capítulo de Resultados
+% ----------------------------------------------------------
+\chapter{Resultados}
+\label{cap:resultados}
+% ---
+
+A aplicação do pipeline de análise às três modalidades olímpicas selecionadas (Swimming, Basketball e Football) gerou redes competitivas com propriedades estruturais distintas, refletindo diferenças fundamentais nas dinâmicas competitivas de cada esporte. As redes construídas a partir de 125 anos de dados históricos (1896-2021) revelam padrões emergentes de dominância, hierarquias estruturais e agrupamentos comunitários que transcendem métricas tradicionais de performance individual.
+
+\section{Caracterização Geral das Redes Construídas}
+
+As redes competitivas construídas a partir dos dados olímpicos apresentam características estruturais distintas entre as modalidades analisadas. O conjunto completo compreende 4.659 atletas medalhistas distribuídos em três esportes ao longo de 125 anos de história olímpica (1896-2021).
+
+\textbf{Swimming} gerou as redes mais numerosas e estruturalmente diversas, com 2.176 atletas distribuídos entre eventos individuais e coletivos (revezamentos). A segregação por tipo de evento revelou diferenças significativas: eventos individuais produziram redes com modularidade elevada (0.73 para masculino), enquanto eventos coletivos apresentaram modularidade moderada (0.37), refletindo a natureza mista da modalidade.
+
+\textbf{Basketball} e \textbf{Football}, como esportes coletivos genuínos, produziram redes mais densas e interconectadas. Football masculino constitui a maior rede individual do estudo (1.275 atletas), apresentando densidade de 0.34 e conectividade global (um único componente fracamente conexo), característica esperada para torneios olímpicos onde múltiplas equipes enfrentam-se sequencialmente.
+
+A heterogeneidade estrutural entre modalidades valida a estratégia de seleção baseada em diferentes tipos de interdependência competitiva, conforme estabelecido na fundamentação teórica. As redes capturam adequadamente as distinções entre competição individual, coletiva e mista, permitindo análises comparativas robustas.
+
+\section{Estrutura de Comunidades nas Redes Competitivas}
+
+A aplicação do algoritmo de Louvain \citeonline{Blondel2008Louvain} resultou na identificação de 37 comunidades distintas nas redes analisadas, distribuídas desigualmente entre as modalidades: Swimming apresentou 26 comunidades, Basketball 5, e Football 6. Esta distribuição reflete a natureza estrutural de cada esporte e seus padrões competitivos característicos. As comunidades detectadas variam significativamente em tamanho, desde agrupamentos pequenos com menos de 20 atletas até comunidades massivas com mais de 700 membros. O tamanho médio das comunidades segue ordem crescente: Swimming (84 atletas), Basketball (183 atletas) e Football (314 atletas), padrão consistente com a crescente densidade de interações competitivas em esportes coletivos. A modularidade das redes apresentou valores distintos entre modalidades: Swimming individual alcançou 0.73, indicando comunidades bem definidas e segregadas, enquanto esportes coletivos apresentaram modularidade próxima a zero (Basketball: 0.003, Football: 0.0006), revelando redes densamente interconectadas onde fronteiras entre comunidades são difusas.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figuras/fig_community_counts.png}
+  \caption{Distribuição do número de comunidades por esporte e sexo. O barplot agrupado mostra que Swimming possui a maior fragmentação (17 comunidades masculinas + 9 femininas = 26 total), refletindo maior diversidade de especializações. Basketball (3 M + 2 F = 5 total) e Football (2 M + 4 F = 6 total) apresentam menor fragmentação.}
+  \label{fig:community_counts}
+\end{figure}
+
+As comunidades detectadas na natação apresentam maior diversidade temporal entre todas as modalidades analisadas, com entropia de Shannon \citeonline{Rajaram2017ShannonEntropy} média de 2.32. Comunidades individuais abrangem múltiplas décadas, sugerindo que agrupamentos refletem não apenas períodos temporais isolados, mas combinações de fatores estruturais mais complexos. A maior comunidade de natação masculina (378 atletas) distribui-se temporalmente entre 1908 e 2016, com concentração na Guerra Fria (28\% dos atletas) mas mantendo participação significativa em todas as eras olímpicas. Esta diversidade temporal, combinada com dominância geográfica moderada (USA com 31.5\%, HHI=0.14 conforme índice de Herfindahl-Hirschman \citeonline{Hirschman1964NationalPower}), caracteriza comunidade heterogênea. A análise de PageRank dentro das comunidades revela hierarquias de performance: Michael Phelps apresenta PageRank de 0.027, valor substancialmente superior à média da comunidade (0.0017), evidenciando heterogeneidade característica de esportes individuais onde superstars despontam claramente.
+
+Basketball e Football apresentam padrões estruturais radicalmente distintos da natação. A modularidade extremamente baixa indica que comunidades detectadas não representam agrupamentos fortemente segregados, mas sim partições sutis de redes altamente densas. Football masculino exemplifica este fenômeno: 1.275 atletas formam essencialmente uma única estrutura interconectada, dividida em apenas 2 comunidades massivas (781 e 428 atletas) com diversidade temporal excepcional (12 décadas em média) e geográfica elevada (33.5 países por comunidade). A concentração geográfica nestas comunidades é significativamente menor que na natação (HHI médio de 0.096 vs 0.267), indicando distribuição mais equilibrada. A dominância brasileira no Football (8.8\%) contrasta com a americana na natação (31.5\%), revelando diferentes padrões de hegemonia competitiva. O PageRank médio em esportes coletivos é substancialmente inferior (Football: 0.0008 vs Swimming: 0.0018), com menor variabilidade (CV=0.58 vs 0.71), refletindo a natureza coletiva onde importância individual é diluída pela interdependência entre membros da equipe.
+
+A análise temporal revelou que 73\% das comunidades de Swimming abrangem múltiplas eras olímpicas, sugerindo que comunidades refletem características técnicas persistentes que transcendem períodos históricos. Basketball apresentou comunidades temporalmente mais concentradas (era dominante representa 45\% dos atletas em média), sugerindo maior influência de fatores temporais. A dominância de eras específicas varia sistematicamente: natação concentra-se na Guerra Fria, Basketball na era moderna, e Football distribui-se uniformemente. A análise de concentração geográfica através do índice HHI revelou hierarquia clara: Swimming (0.267), Basketball (0.141) e Football (0.096). Comunidades específicas em Swimming apresentaram concentração extrema (HHI=0.64 com 77\% americanos em eventos pioneiros), enquanto comunidades contemporâneas evidenciam globalização progressiva. USA domina 8 das 26 comunidades em Swimming, mas apenas 2 em Basketball e nenhuma em Football, sugerindo diferentes estruturas de hegemonia competitiva.
+
+A análise de betweenness centrality identificou atletas-ponte que ocupam posições estratégicas conectando agrupamentos. Em Swimming, 10.2\% dos atletas foram classificados como pontes, proporção superior aos esportes coletivos (Basketball: 7.1\%, Football: 5.3\%), refletindo estruturas comunitárias mais definidas onde pontes são necessárias para conectar grupos especializados. Atletas-ponte frequentemente apresentam participação em múltiplas edições olímpicas, transição entre eras competitivas, ou combinação incomum de especializações técnicas, revelando importância estrutural não capturada por métricas tradicionais de performance.
+
+\input{./tabelas/tab_bridge_athletes.tex}
+
+Exemplos notáveis incluem Amanda Beard (USA) em Swimming com betweenness de 0.0625, que competiu em quatro Jogos Olímpicos (1996-2012) conectando comunidades de diferentes eras. Em Basketball, Yelena Baranova (RUS) apresenta betweenness de 0.0128, refletindo transição entre a era soviética (EUN) e pós-soviética. No Football, Bernd Bransch (GDR) com 0.0149 atua como ponte estrutural entre comunidades do Leste Europeu nas décadas de 1970-1980, período de intensificação competitiva na região.
+
+\subsection{Perfil de Medalhas e Hierarquia Competitiva}
+
+A análise de perfil de medalhas revelou que 96,3\% das comunidades detectadas (26 de 27) apresentam perfil competitivo equilibrado (índice de dominância entre 1,8 e 2,2), caracterizando competição sistemática sem ultradomínio. Apenas uma comunidade (Swimming Masculino C10) foi classificada como ``Participante'' (dominância 1,75), indicando prevalência de medalhas de bronze. Não foram identificadas comunidades ``Elite'' (dominância > 2,2), sugerindo ausência de monopolização absoluta mesmo em esportes com hegemonia reconhecida.
+
+A distribuição de medalhas por tipo varia sistematicamente entre modalidades: Swimming feminino apresenta comunidades com até 41,1\% de medalhas de ouro (C2, USA), enquanto Football e Basketball mantêm proporções mais equilibradas (~34\% ouro). Este padrão reflete diferenças estruturais: esportes individuais permitem dominância concentrada de superstars, enquanto esportes coletivos diluem importância individual através de interdependência entre membros da equipe \citeonline{buldu2019complex, ComplexNetworksBasketball2023}.
+
+A classificação hierárquica das comunidades identificou três níveis: Núcleo (20\%, PageRank médio 0,004039), Intermediária (42\%, 0,002238) e Periférica (38\%, 0,001457). Comunidades do núcleo concentram centralidade estrutural 2,8× superior às periféricas, independentemente de volume de medalhas. Destaca-se que três das cinco comunidades mais centrais são alemãs (Swimming M C9, Football F C1 e C0), evidenciando que centralidade estrutural não equivale necessariamente a dominância em contagem absoluta de medalhas. A comunidade brasileira de Football (C1, 781 atletas) exemplifica este padrão: apesar de ser a maior comunidade individual do estudo, apresenta PageRank médio de apenas 0,000826, indicando competição regional concentrada com menor integração ao núcleo europeu historicamente dominante.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{figuras/fig_dominance_distribution.png}
+  \caption{Distribuição do índice de dominância das comunidades. O histograma mostra que 96,3\% das comunidades concentram-se na faixa ``Competitiva'' (1,8 $\leq$ D $<$ 2,2), indicando equilíbrio competitivo. Linhas tracejadas verticais marcam os limites de classificação em D=1,8 (laranja) e D=2,2 (vermelho). As regiões são coloridas conforme o perfil: cinza (Participante), verde (Competitiva), roxo (Elite).}
+  \label{fig:dominance_dist}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Resumo estatístico dos perfis competitivos. Elite (D $\geq$ 2,2), Competitiva (1,8 $\leq$ D $<$ 2,2), Participante (D $<$ 1,8).}
+\label{tab:profiles_summary}
+\begin{tabular}{lllllllll}
+\hline
+Perfil & N & Tam. Médio & Ouro\% & Prata\% & Bronze\% & D Médio & D Mín & D Máx \\
+\hline
+Competitiva & 26 & 162.8 & 31.0 & 34.6 & 34.5 & 1.965 & 1.808 & 2.091 \\
+Participante & 1 & 80.0 & 25.0 & 25.0 & 50.0 & 1.750 & 1.750 & 1.750 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Top 10 comunidades ordenadas por índice de dominância. O índice varia de 1,0 (todas bronze) até 3,0 (todas ouro).}
+\label{tab:top10_dominance}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cllcccccccc@{}}
+\hline
+\# & Esp. & S & Com. & País & Tam. & Au\% & Ag\% & Br\% & Dom. & Perfil \\
+\hline
+1 & Swim & F & C2 & USA & 219 & 41.1 & 26.9 & 32.0 & 2.091 & Comp. \\
+2 & Swim & F & C2 & USA & 219 & 41.1 & 26.9 & 32.0 & 2.091 & Comp. \\
+3 & Swim & F & C4 & USA & 70 & 38.6 & 28.6 & 32.9 & 2.057 & Comp. \\
+4 & Swim & F & C4 & USA & 70 & 38.6 & 28.6 & 32.9 & 2.057 & Comp. \\
+5 & Foot & F & C1 & GER & 94 & 35.1 & 35.1 & 29.8 & 2.053 & Comp. \\
+6 & Bask & F & C1 & USA & 98 & 35.7 & 32.6 & 31.6 & 2.041 & Comp. \\
+7 & Bask & M & C0 & USA & 346 & 33.8 & 35.0 & 31.2 & 2.026 & Comp. \\
+8 & Bask & M & C1 & USA & 210 & 36.7 & 28.1 & 35.2 & 2.014 & Comp. \\
+9 & Swim & M & C4 & FRA & 19 & 31.6 & 36.8 & 31.6 & 2.000 & Comp. \\
+10 & Swim & M & C4 & FRA & 19 & 31.6 & 36.8 & 31.6 & 2.000 & Comp. \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figuras/fig_size_vs_pagerank.png}
+  \caption{Relação entre tamanho e centralidade estrutural das comunidades. Cores indicam nível hierárquico: vermelho (núcleo), amarelo (intermediária), azul (periférica). Observa-se que comunidades grandes não necessariamente ocupam posições centrais na rede. Por exemplo, a Alemanha apresenta alta centralidade apesar do tamanho reduzido, enquanto Brasil possui tamanho expressivo mas centralidade periférica.}
+  \label{fig:size_pagerank}
+\end{figure}
+
+\subsection{Conexões Inter-Comunidade e Rivalidades Estruturais}
+
+A análise de conectividade inter-comunidade revelou padrão de segregação moderada global (razão intra/inter de 0,91×), indicando que comunidades mantêm conexões significativas entre si, não operando como estruturas isoladas. A segregação varia sistematicamente por esporte e gênero: Basketball feminino apresenta razão de 0,50×, caracterizando ``rivalidade global'' onde comunidades competem duas vezes mais entre si do que internamente, enquanto Football masculino apresenta 1,18×, indicando agrupamentos mais coesos internamente.
+
+Este padrão reflete características estruturais dos torneios olímpicos: Basketball feminino historicamente concentrou competitividade em poucas seleções (dominância americana), resultando em confrontos cruzados intensos entre comunidades, enquanto Football masculino, com 33,5 países distribuídos em média por comunidade, apresenta confrontos mais restritos a grupos regionais ou temporais específicos. A maior segregação masculina (1,12× vs 0,76× feminino) sugere que competição masculina desenvolveu estruturas comunitárias mais especializadas ao longo da história olímpica.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figuras/fig_dominance_vs_segregation.png}
+  \caption{Relação entre dominância competitiva e segregação estrutural. O scatter plot investiga se comunidades dominantes tendem a ser mais segregadas. Pontos são coloridos por esporte e diferenciados por forma (círculo=M, triângulo=F). Não se observa correlação linear forte, sugerindo que dominância e isolamento estrutural são dimensões independentes.}
+  \label{fig:dominance_segregation}
+\end{figure}
+
+A identificação de rivalidades estruturais através de contagem de confrontos inter-comunitários revelou que as cinco maiores rivalidades concentram-se em Basketball feminino, com destaque para o triângulo C0-C1-C2 totalizando 15.947 confrontos mútuos. A assimetria direcional observada (C0→C1: 4.604 vs C1→C0: 3.355) indica que C0 ocupa posição estruturalmente inferior, perdendo mais frequentemente para C1. Análise qualitativa sugere que estas comunidades representam escolas competitivas geograficamente diferenciadas: americana (C0), europeia oriental (C1) e asiática/australiana (C2), configurando núcleo de competição sistemática ao longo de múltiplas edições olímpicas.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figuras/fig_segregation_heatmap.png}
+  \caption{Índice de segregação estrutural por esporte e sexo. O heatmap apresenta a razão entre conexões intra-comunidade e inter-comunidade (Intra/Inter). Valores superiores a 1,0 (vermelho) indicam comunidades segregadas, enquanto valores inferiores (verde) indicam alta integração. Basketball Feminino apresenta o menor índice (0,50$\times$), caracterizando-se como altamente integrado com múltiplas rivalidades inter-comunidade.}
+  \label{fig:segregation_heatmap}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Índice de segregação estrutural por esporte e sexo. Razão Intra/Inter > 1,0 indica comunidade segregada; < 1,0 indica alta integração.}
+\label{tab:segregation}
+\begin{tabular}{lllllll}
+\hline
+Esporte & Sexo & Arestas Intra & Arestas Inter & Razão Intra\% & Razão Inter\% & Segregação \\
+\hline
+Basketball & F & 11.018 & 22.166 & 33.2 & 66.8 & 0.50 \\
+Basketball & M & 61.908 & 56.652 & 52.2 & 47.8 & 1.09 \\
+Football & F & 9.895 & 9.562 & 50.9 & 49.1 & 1.03 \\
+Football & M & 271.463 & 230.041 & 54.1 & 45.9 & 1.18 \\
+Swimming & F & 8.723 & 11.488 & 43.2 & 56.8 & 0.76 \\
+Swimming & F & 43.907 & 59.852 & 42.3 & 57.7 & 0.73 \\
+Swimming & M & 12.783 & 11.756 & 52.1 & 47.9 & 1.09 \\
+Swimming & M & 59.310 & 66.060 & 47.3 & 52.7 & 0.90 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figuras/fig_top10_rivalries.png}
+  \caption{Top 10 rivalidades estruturais inter-comunidade. O gráfico apresenta os pares de comunidades com maior número de confrontos direcionados. Basketball-F C0 vs C1 lidera com 4.604 confrontos, evidenciando rivalidade estrutural intensa. Cores distinguem modalidades esportivas.}
+  \label{fig:top10_rivalries}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Top 10 rivalidades estruturais inter-comunidade. Número de confrontos representa confrontos direcionados (A→B + B→A).}
+\label{tab:top10_rivalries}
+\begin{tabular}{llllll}
+\hline
+Rank & Esporte & Sexo & Comunidade A & Comunidade B & Confrontos \\
+\hline
+1 & Football & M & C0 & C1 & 116,811 \\
+2 & Football & M & C1 & C0 & 113,230 \\
+3 & Basketball & M & C1 & C0 & 29,129 \\
+4 & Basketball & M & C0 & C1 & 27,523 \\
+5 & Swimming & F & C0 & C1 & 9,924 \\
+6 & Swimming & M & C0 & C8 & 6,797 \\
+7 & Swimming & F & C0 & C2 & 6,226 \\
+8 & Swimming & F & C1 & C0 & 6,198 \\
+9 & Swimming & M & C0 & C5 & 6,150 \\
+10 & Swimming & M & C5 & C0 & 5,624 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{figuras/fig_basketball_rivalry_matrix.png}
+  \caption{Matriz de rivalidades estruturais em Basketball Feminino. O heatmap simétrico apresenta o número de confrontos direcionados entre as 5 comunidades detectadas. Tonalidade mais escura indica maior número de confrontos. Destaca-se o ``triângulo de rivalidade'' formado pelas comunidades C0, C1 e C2, com confrontos superiores a 2.000 em cada direção, caracterizando rivalidade global equilibrada.}
+  \label{fig:basketball_rivalry_matrix}
+\end{figure}
+
+\section{Análise de PageRank e Hierarquias Competitivas}
+
+A aplicação de PageRank às redes competitivas revelou hierarquias de importância distintas das classificações tradicionais baseadas em contagem de medalhas. Michael Phelps emerge como o atleta de maior PageRank (0.027), valor substancialmente superior ao segundo colocado, refletindo não apenas seu sucesso individual mas também a qualidade dos competidores que enfrentou ao longo de múltiplas edições olímpicas. A análise do ranking global revela dominância pronunciada de atletas femininas nas primeiras posições: 14 das 20 posições de maior PageRank são ocupadas por mulheres, com destaque para futebolistas americanas (Christie Pearce-Rampone: 0.0156, Shannon Boxx: 0.0151) e jogadoras de basquete (Sue Bird, Tamika Catchings, Teresa Edwards, Lisa Leslie, Diana Taurasi, todas com 0.0136). Este padrão reflete não superioridade de performance feminina, mas estrutura diferenciada das redes por gênero: redes femininas apresentam menor número de competidores, produzindo PageRank médio mais elevado devido a maior concentração de conexões competitivas. A Tabela~\ref{tab:top20_pagerank} apresenta o ranking completo dos 20 atletas de maior PageRank global. Entre nadadores masculinos, após Michael Phelps, destacam-se Mark Spitz (0.0114) e atletas históricos da era pioneira e guerra fria, evidenciando intensidade competitiva e densidade de interações no pódio olímpico de natação.
+
+A análise da distribuição de PageRank entre modalidades revela padrões sistemáticos relacionados a estrutura competitiva. Swimming apresenta maior variabilidade de PageRank (desvio padrão: 0.0024), com valores máximos substancialmente superiores a outras modalidades, refletindo característica fundamental de esportes individuais onde alguns atletas dominam extensivamente suas especialidades ao longo de múltiplas olimpíadas. Basketball e Football apresentam distribuições mais homogêneas (desvio padrão: 0.0018 e 0.0012 respectivamente), com PageRank máximo inferior. Esta compressão da distribuição reflete duas características estruturais: importância individual diluída pela interdependência entre membros da equipe, e número reduzido de equipes medalhistas concentrando PageRank em grupos maiores de atletas com valores similares. A razão entre PageRank máximo e médio oferece métrica de concentração: Swimming apresenta razão de 14.9, Basketball 7.5, e Football 19.4. O valor extremo de Football reflete estrutura específica onde poucas equipes dominam historicamente, com alguns atletas participando de múltiplas edições medalhistas consecutivas.
+
+A comparação entre ranking por PageRank e ranking por contagem total de medalhas revela divergências significativas, evidenciando que as métricas capturam dimensões distintas de sucesso olímpico. Atletas com número idêntico de medalhas podem apresentar PageRank substancialmente diferente, dependendo da qualidade dos competidores enfrentados e estrutura temporal de suas participações. Michael Phelps exemplifica esta divergência: seu PageRank é desproporcionalmente alto comparado a atletas com contagens similares, refletindo qualidade dos confrontos. Phelps competiu consistentemente contra os melhores nadadores de sua era, derrotando múltiplos campeões olímpicos em eventos sobrepostos, acumulando importância através de vitórias sobre competidores eles mesmos altamente ranqueados. Em contraste, atletas de esportes coletivos podem acumular múltiplas medalhas participando da mesma equipe medalhista em edições consecutivas, resultando em PageRank elevado mas com interpretação distinta: o valor reflete participação em estrutura coletiva de sucesso sustentado, não necessariamente dominância individual sobre competidores específicos.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figuras/fig_pagerank_cdf_by_sport.png}
+  \caption{Função de distribuição acumulada (CDF) do PageRank por esporte. O gráfico em escala log-log revela diferenças na concentração de centralidade. Swimming apresenta distribuição mais heterogênea, com atletas outliers como Michael Phelps. Football mostra distribuição mais homogênea, indicando menor concentração de centralidade em poucos atletas.}
+  \label{fig:pagerank_cdf}
+\end{figure}
+
+\section{Análise de Centralidades Complementares}
+
+A análise de centralidade de grau \citeonline{Freeman1979Centrality} (in-degree e out-degree) revela padrões de confronto competitivo distintos entre atletas. In-degree elevado indica atletas frequentemente superados por outros no pódio, caracterizando competidores consistentes que alcançam posições de medalhista mas raramente conquistam ouro. Out-degree elevado identifica atletas que sistematicamente superam muitos competidores, conquistando posições superiores. Nathan Adrian (natação masculina) apresenta balance interessante: in-degree de 48 e out-degree de 52, indicando posicionamento intermediário na hierarquia competitiva com participação equilibrada em confrontos como vencedor e vencido. Este perfil caracteriza atletas de elite que competem regularmente no pódio mas alternam entre posições dependendo da prova específica e período olímpico. A razão in-degree/out-degree oferece métrica sintética de dominância: valores próximos a zero indicam atletas raramente superados (dominantes), valores próximos a infinito indicam atletas consistentemente superados (dominados), e valores próximos a 1 indicam competidores balanceados. A distribuição desta razão difere sistematicamente entre modalidades, refletindo estruturas competitivas distintas.
+
+A análise de betweenness centrality identifica atletas que ocupam posições estruturalmente críticas, servindo de ponte entre diferentes regiões da rede. Estes atletas não necessariamente apresentam PageRank elevado, mas sua remoção hipotética fragmentaria significativamente a estrutura de conectividade. Krisztina Egerszegi (natação feminina) apresenta betweenness de 0.0259, valor elevado apesar de PageRank moderado (0.0119), indicando papel estrutural importante conectando diferentes grupos competitivos. Sua longevidade olímpica e versatilidade técnica posicionam-na como ponte entre eras e especializações. Mark Spitz apresenta padrão similar: betweenness de 0.0303 reflete posição de ponte entre era pré-moderna e contemporânea da natação olímpica. Atletas com longevidade competitiva tendem a apresentar betweenness elevado independentemente de PageRank, pois conectam temporalmente diferentes gerações de competidores. Esportes coletivos apresentam betweenness sistematicamente inferior: a alta densidade de conexões globais nestas redes torna função de ponte menos crítica, pois caminhos alternativos entre quaisquer pares de atletas são abundantes.
+
+Closeness centrality mede distância média de um vértice a todos os demais na rede, identificando atletas centralmente posicionados na estrutura global. Valores elevados indicam atletas cujas conexões competitivas alcançam rapidamente toda a rede. Devido a natureza direcionada das redes e existência de múltiplos componentes fracamente conexos, closeness centrality apresenta valores nulos para muitos atletas, limitando sua utilidade analítica. Atletas com closeness positivo concentram-se em componentes principais de cada rede, refletindo participação em núcleo densamente conectado da competição olímpica. A distribuição de closeness difere drasticamente entre modalidades: Swimming apresenta distribuição fragmentada com muitos valores nulos (atletas em componentes isolados), enquanto Football apresenta distribuição mais uniforme refletindo conectividade global mais forte. Esta diferença quantifica observação qualitativa sobre estruturas competitivas: esportes coletivos produzem redes mais coesas, esportes individuais geram múltiplos agrupamentos menos interconectados.
+
+\section{Evolução Temporal das Estruturas Competitivas}
+
+A análise longitudinal das redes competitivas ao longo de 125 anos de história olímpica (1896-2021) revela transformações estruturais profundas relacionadas a processos históricos de expansão, globalização e profissionalização do esporte olímpico. O número de atletas medalhistas por edição cresceu exponencialmente, de aproximadamente 100 atletas nas primeiras olimpíadas (Belle Époque, 1896-1912) para mais de 900 atletas por edição no período contemporâneo (pós-2000). Este crescimento de 9× não reflete meramente expansão quantitativa, mas transformação qualitativa na estrutura competitiva global, com diversificação geográfica, inclusão feminina progressiva e especialização técnica crescente.
+
+A evolução do PageRank médio apresenta padrão não-linear correlacionado com períodos históricos específicos. Durante o período entre-guerras (1920-1936), o PageRank médio manteve-se relativamente estável (0.0015-0.0018), refletindo consolidação das estruturas competitivas estabelecidas na Belle Époque. A era da Guerra Fria (1948-1988) marca inflexão significativa: o PageRank médio aumenta para 0.0022-0.0025, indicando intensificação da competitividade e concentração estrutural associada à rivalidade geopolítica entre blocos. Este período caracteriza-se por investimentos estatais massivos em programas olímpicos, produzindo atletas de elite com dominância pronunciada. O período pós-Guerra Fria (1992-2016) apresenta tendência de redução do PageRank médio (0.0019-0.0021), sugerindo democratização competitiva e difusão global da excelência esportiva. A dissolução de hegemonias estabelecidas e emergência de novas potências esportivas (China, Austrália, países do Leste Europeu pós-independência) redistribuiu centralidade estrutural antes concentrada em USA e URSS.
+
+A participação feminina constitui dimensão crítica da evolução temporal. As primeiras olimpíadas modernas (1896-1908) excluíram completamente mulheres. A inclusão gradual iniciou em 1912 (natação feminina) e expandiu progressivamente ao longo do século XX, alcançando paridade aproximada apenas no século XXI. Esta evolução temporal manifesta-se estruturalmente: redes femininas apresentam fragmentação temporal mais acentuada, com comunidades segregadas por era histórica refletindo diferentes etapas de inclusão e profissionalização. Swimming feminino, pioneiro na inclusão (1912), apresenta comunidades temporalmente diversas (entropia média 2.18), enquanto Football feminino, incluído tardiamente (1996), concentra-se no período contemporâneo (entropia 1.45). Esta heterogeneidade temporal feminina contrasta com redes masculinas mais uniformes temporalmente, evidenciando que dimensão de gênero e dimensão temporal interagem na estruturação das comunidades competitivas.
+
+A comparação entre esportes individuais e coletivos ao longo do tempo revela trajetórias divergentes. Swimming apresenta crescimento constante em número de eventos e atletas, com múltiplos picos associados a introdução de novas distâncias e estilos (1960s: expansão de provas femininas, 1980s: introdução de 50m livre, 2000s: eliminação de 200m costas). Esta expansão progressiva fragmenta comunidades e reduz concentração de PageRank: comunidades históricas de swimming (pré-1960) apresentam PageRank médio 0.0028, comunidades contemporâneas (pós-2000) apresentam 0.0016, indicando distribuição mais equitativa da importância estrutural. Basketball e Football, em contraste, mantiveram estrutura de eventos relativamente estável, com crescimento primariamente via inclusão feminina. Esta estabilidade estrutural preserva concentração de PageRank em equipes historicamente dominantes: USA Basketball mantém hegemonia consistente desde 1936, refletida em PageRank médio das comunidades americanas (0.0026) significativamente superior a média global (0.0015).
+
+A globalização competitiva manifesta-se através de diversificação geográfica progressiva das comunidades. Comunidades pioneiras (pré-1936) apresentam concentração geográfica extrema (HHI médio: 0.45), dominadas por potências europeias e norte-americanas pioneiras. A expansão pós-Segunda Guerra Mundial incorpora países latino-americanos, asiáticos e africanos, reduzindo HHI para 0.28 no período Guerra Fria. O período contemporâneo (1992-2016) alcança maior diversificação (HHI: 0.18), refletindo difusão global do treinamento esportivo de elite e democratização do acesso aos Jogos Olímpicos. Esta evolução temporal da diversidade geográfica correlaciona-se inversamente com PageRank médio: comunidades mais diversas geograficamente tendem a apresentar PageRank médio inferior, sugerindo que difusão global da competitividade redistribui importância estrutural antes concentrada em poucos países dominantes.
+
+A análise temporal detalhada foi implementada como ferramenta interativa no dashboard desenvolvido para este trabalho, permitindo exploração ad-hoc de tendências específicas, filtragem por períodos históricos e comparação dinâmica entre modalidades. Esta interface complementar demonstra potencial de ferramentas de visualização interativa para análise exploratória de redes temporais complexas, superando limitações de análises estáticas baseadas em texto e figuras fixas.
+
+\section{Síntese Quantitativa dos Resultados}
+
+As Tabelas~\ref{tab:network_metrics} e~\ref{tab:top_communities} sintetizam as principais métricas estruturais das redes analisadas e características das maiores comunidades detectadas, respectivamente. A Tabela~\ref{tab:network_metrics} evidencia diferenças sistemáticas entre modalidades e gêneros em termos de tamanho da rede, número de comunidades detectadas pelo algoritmo de Louvain \citeonline{Blondel2008Louvain} e métricas médias de centralidade \citeonline{Freeman1979Centrality}. A Tabela~\ref{tab:top_communities} destaca a heterogeneidade temporal (medida por entropia de Shannon \citeonline{Rajaram2017ShannonEntropy}) e geográfica (quantificada pelo índice de Herfindahl-Hirschman \citeonline{Hirschman1964NationalPower}) das maiores comunidades, com períodos de atividade que abrangem múltiplas décadas e concentrações geográficas variáveis entre modalidades.
+
+% Incluir tabelas geradas
+\input{./tabelas/tab_top20_pagerank.tex}
+\input{./tabelas/tab_network_metrics.tex}
+\input{./tabelas/tab_top_communities.tex}
