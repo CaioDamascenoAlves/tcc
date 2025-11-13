@@ -1,0 +1,114 @@
+\begin{frame}{Análise Temporal}
+    \framesubtitle{Evolução de Dominância e Diversidade}
+    \begin{block}{Objetivo}
+        Capturar dinâmicas temporais de concentração geográfica e diversidade competitiva através das eras olímpicas.
+    \end{block}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Métricas Utilizadas:}
+            \begin{itemize}
+                \item \textbf{HHI} (Herfindahl-Hirschman Index)
+                \begin{itemize}
+                    \footnotesize
+                    \item Mede concentração geográfica
+                    \item $\text{HHI} = \sum_{i=1}^{n} s_i^2$
+                    \item Alto HHI = dominância concentrada
+                \end{itemize}
+                \item \textbf{Entropia de Shannon}
+                \begin{itemize}
+                    \footnotesize
+                    \item Mede diversidade temporal
+                    \item $H = -\sum_{i=1}^{n} p_i \log_2(p_i)$
+                    \item Alta entropia = alta diversidade
+                \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Períodos Analisados:}
+            \begin{itemize}
+                \item Era Pioneira (1896-1936)
+                \item Era Pós-Guerra (1948-1980)
+                \item Era Moderna (1984-2000)
+                \item Era Contemporânea (2004-2021)
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Evolução de Concentração Geográfica (HHI)}
+    \framesubtitle{Tendências de Dominância ao Longo do Tempo}
+    \begin{block}{Achados Principais}
+        \begin{itemize}
+            \item \textbf{Swimming}: HHI decresce de 0.45 (1896-1936) para 0.15 (2004-2021)
+            \begin{itemize}
+                \footnotesize
+                \item Indica globalização e redução de dominância concentrada
+                \item Transição de hegemonia EUA/AUS para distribuição mais equilibrada
+            \end{itemize}
+            \item \textbf{Basketball}: HHI permanece moderado (0.10-0.14)
+            \begin{itemize}
+                \footnotesize
+                \item Dominância consistente de poucos países (USA, RUS, ESP)
+                \item Estrutura competitiva mais estável temporalmente
+            \end{itemize}
+            \item \textbf{Football}: HHI mais baixo (0.08-0.10)
+            \begin{itemize}
+                \footnotesize
+                \item Maior diversidade geográfica desde início
+                \item Distribuição equilibrada entre múltiplos países
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Diversidade Temporal (Entropia de Shannon)}
+    \framesubtitle{Persistência Competitiva ao Longo das Eras}
+    \begin{block}{Interpretação}
+        Alta entropia indica que atletas da comunidade participaram de forma distribuída em múltiplos períodos olímpicos (longevidade competitiva).
+    \end{block}
+
+    \begin{table}[h]
+        \centering
+        \footnotesize
+        \begin{tabular}{lccc}
+            \toprule
+            \textbf{Esporte} & \textbf{Entropia Média} & \textbf{Min} & \textbf{Max} \\
+            \midrule
+            Swimming & 2.32 & 1.58 & 2.81 \\
+            Basketball & 2.44 & 2.00 & 2.76 \\
+            Football & 2.53 & 2.15 & 2.85 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \vspace{0.3cm}
+    \begin{block}{Achados}
+        \begin{itemize}
+            \item Esportes coletivos apresentam maior diversidade temporal
+            \item Natação mostra maior variação entre comunidades (algumas muito concentradas temporalmente, outras muito diversas)
+            \item Alta entropia geral indica persistência competitiva através das décadas
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Relação entre HHI e Entropia}
+    \framesubtitle{Padrões Combinados de Dominância e Diversidade}
+    \begin{alertblock}{Insight Principal}
+        Comunidades podem ter alta diversidade temporal (entropia elevada) mas concentração geográfica moderada (HHI médio), indicando longevidade competitiva de poucos países dominantes.
+    \end{alertblock}
+
+    \vspace{0.3cm}
+    \begin{block}{Exemplo: Swimming Feminino - Comunidade 0}
+        \begin{itemize}
+            \item \textbf{Entropia}: 2.65 (alta diversidade temporal)
+            \item \textbf{HHI}: 0.35 (concentração geográfica moderada)
+            \item \textbf{Interpretação}: Dominância USA/AUS persistente através de múltiplas décadas
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+    \begin{block}{Conclusão}
+        Análise temporal revela que o trabalho NÃO trata redes como estruturas estáticas. Métricas HHI/Entropy capturam dinâmicas evolutivas de dominância e diversidade competitiva.
+    \end{block}
+\end{frame}

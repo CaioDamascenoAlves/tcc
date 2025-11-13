@@ -1,0 +1,111 @@
+\begin{frame}{Detecção de Comunidades}
+    \framesubtitle{Algoritmo de Louvain}
+    \begin{block}{Objetivo}
+        Identificar agrupamentos estruturais de atletas com padrões competitivos similares.
+    \end{block}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Resultados Gerais:}
+            \begin{itemize}
+                \item \textbf{37 comunidades} detectadas
+                \item \textbf{4.659 atletas} analisados
+                \item \textbf{0 nós isolados} em todas as redes
+                \item Modularidade varia por esporte
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Distribuição:}
+            \begin{itemize}
+                \item Swimming: 26 comunidades
+                \item Basketball: 5 comunidades
+                \item Football: 6 comunidades
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Modularidade por Modalidade}
+    \framesubtitle{Diferenças Estruturais entre Esportes}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            \textbf{Esporte} & \textbf{Tipo} & \textbf{Modularidade} & \textbf{Interpretação} \\
+            \midrule
+            Swimming & Individual & 0.73 & Alta segregação \\
+            Swimming & Team & 0.45 & Média segregação \\
+            Basketball & Coletivo & 0.003 & Estrutura coesa \\
+            Football & Coletivo & 0.0006 & Estrutura coesa \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \vspace{0.3cm}
+    \begin{block}{Interpretação}
+        \begin{itemize}
+            \item \textbf{Alta modularidade} (Swimming): Comunidades bem definidas por especialização técnica, período temporal e dominância geográfica
+            \item \textbf{Baixa modularidade} (Basketball/Football): Rede densamente interconectada com fronteiras difusas entre comunidades
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Natureza Multifatorial das Comunidades}
+    \framesubtitle{Além de Geografia e Tempo}
+    \begin{alertblock}{Achado Principal}
+        Comunidades NÃO correspondem a agrupamentos simples por período temporal ou nacionalidade, mas emergem de \textbf{combinações complexas} de múltiplos fatores.
+    \end{alertblock}
+
+    \vspace{0.3cm}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Natação:}
+            \begin{itemize}
+                \item Alta diversidade temporal
+                \item Entropia média: 2.32
+                \item Concentração geográfica moderada
+                \item HHI: 0.267
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Esportes Coletivos:}
+            \begin{itemize}
+                \item Diversidade temporal similar
+                \item Entropia: 2.44-2.53
+                \item Distribuição geográfica equilibrada
+                \item HHI: 0.096-0.141
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+    \begin{block}{Conclusão}
+        Algoritmos de detecção capturam estruturas emergentes não redutíveis a características isoladas.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Perfis de Medalhas por Comunidade}
+    \framesubtitle{Índice de Dominância}
+    \begin{block}{Métrica Desenvolvida}
+        \textbf{Índice de Dominância} = $(3 \times \%\text{Ouro} + 2 \times \%\text{Prata} + 1 \times \%\text{Bronze}) / 100$
+    \end{block}
+
+    \begin{table}[h]
+        \centering
+        \footnotesize
+        \begin{tabular}{lcc}
+            \toprule
+            \textbf{Classificação} & \textbf{Índice} & \textbf{Perfil Competitivo} \\
+            \midrule
+            Participante & $< 1.8$ & Baixa proporção de ouros \\
+            Competitiva & $1.8 - 2.2$ & Distribuição equilibrada \\
+            Elite & $> 2.2$ & Alta concentração de ouros \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \vspace{0.3cm}
+    \begin{block}{Aplicação}
+        Permite classificar comunidades por nível de dominância competitiva, revelando hierarquias estruturais nas redes.
+    \end{block}
+\end{frame}
