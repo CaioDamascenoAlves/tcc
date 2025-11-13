@@ -41,9 +41,8 @@ python 02e_rivalries.py
    - Remove 2 duplicatas
    - Filtra pódios com <2 atletas (garante 0 nós isolados)
 4. Constrói redes direcionadas ponderadas
-5. Aplica disparity filter (α=0.2) para extrair backbone
-6. Calcula métricas (PageRank, centralidade, comunidades)
-7. Exporta resultados em múltiplos formatos
+5. Calcula métricas (PageRank, centralidade, comunidades)
+6. Exporta resultados em múltiplos formatos
 
 **Redes Geradas:**
 - Swimming M individual

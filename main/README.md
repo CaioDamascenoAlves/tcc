@@ -25,7 +25,6 @@ Este projeto utiliza **teoria de redes complexas** para modelar e analisar rela�
 ### Características Principais
 
 - **Modelagem de Redes Competitivas**: Transforma resultados olímpicos em grafos direcionados ponderados
-- **Extração de Backbone**: Utiliza disparity filter para identificar conexões estatisticamente significativas
 - **Detecção de Comunidades**: Algoritmo de Louvain para identificar agrupamentos estruturais
 - **Métricas Avançadas**: PageRank, centralidade, modularidade, segregação inter-comunidade
 - **Dashboard Interativo**: Interface Streamlit para exploração visual dos resultados
@@ -179,8 +178,7 @@ As redes são construídas onde:
    - Filtragem de pódios com <2 atletas (garante 0 nós isolados)
 
 2. **Construção de Redes**
-   - Grafos originais ponderados
-   - Extração de backbone (disparity filter α=0.2)
+   - Grafos direcionados ponderados
 
 3. **Cálculo de Métricas**
    - PageRank (importância estrutural)
