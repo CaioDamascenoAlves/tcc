@@ -1,5 +1,23 @@
 // Script principal para inicialização da rede
+console.log('[network_init.js] Arquivo carregado!');
+
 function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
+    console.log('[initNetwork] FUNÇÃO CHAMADA!');
+    // DEBUG: Verificar dados recebidos do Python
+    console.log('='.repeat(80));
+    console.log('[initNetwork] RECEBEU DO PYTHON:');
+    console.log('  - Nodes:', nodesData.length);
+    console.log('  - Links:', linksData.length);
+
+    // Procurar McLOUGHLIN nos dados recebidos (buscar por ID)
+    const mcloughlinReceived = nodesData.find(n => n.id === '1978278640');
+    if (mcloughlinReceived) {
+        console.log('  - McLOUGHLIN RECEBIDO:', mcloughlinReceived.id, mcloughlinReceived.label);
+    } else {
+        console.warn('  - McLOUGHLIN NÃO RECEBIDO do Python!');
+    }
+    console.log('='.repeat(80));
+
     // Verificar se vis está disponível
     if (typeof vis === 'undefined') {
         console.error('vis-network library not loaded');
@@ -31,10 +49,20 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
         });
 
         // Preparar dados para vis-network
+        console.log('[initNetwork] Preparando nodes DataSet...');
         const nodes = new vis.DataSet(
             nodesData.map(n => {
                 const groupIndex = typeof n.group === 'number' ? n.group : 0;
                 const groupColor = colorPalette[groupIndex % colorPalette.length];
+
+                // Debug: verificar McLOUGHLIN no map
+                if (n.label && n.label.toUpperCase().includes('MCLOUGHLIN')) {
+                    console.log('McLOUGHLIN dentro do map():');
+                    console.log('  - ID:', n.id);
+                    console.log('  - Label:', n.label);
+                    console.log('  - Size:', n.size);
+                    console.log('  - Group:', n.group);
+                }
 
                 // Debug: verificar se Michael Phelps tem grupo correto
                 if (n.label && n.label.includes('Phelps')) {
@@ -48,7 +76,8 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 // Preserva todas as propriedades calculadas previamente (x, y, physics, etc.)
                 const node = { ...n };
                 node.label = config.showLabels ? (n.label || '') : '';
-                node.size = n.size !== undefined ? n.size : 10;
+                // IMPORTANTE: vis-network usa 'value' para scaling, não 'size'
+                node.value = n.size !== undefined ? n.size : 10;
                 node.group = groupIndex;
                 node.color = {
                     background: groupColor,
@@ -59,7 +88,15 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                     }
                 };
                 node.borderWidth = 2;
-                node.tooltipHTML = createRichTooltip(n);
+                node.tooltipHTML = window.createRichTooltip(n);
+
+                // Debug: verificar McLOUGHLIN após processamento
+                if (n.label && n.label.toUpperCase().includes('MCLOUGHLIN')) {
+                    console.log('McLOUGHLIN DEPOIS de processar:');
+                    console.log('  - node.id:', node.id);
+                    console.log('  - node.label:', node.label);
+                    console.log('  - node retornado:', node);
+                }
 
                 // Debug: verificar nó APÓS aplicar configurações
                 if (n.label && n.label.includes('Phelps')) {
@@ -73,6 +110,34 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 return node;
             })
         );
+
+        console.log('[initNetwork] DataSet criado com', nodes.length, 'nodes');
+
+        // Verificar se McLOUGHLIN está no DataSet (buscar por ID direto)
+        const mcloughlinById = nodes.get('1978278640');
+        if (mcloughlinById) {
+            console.log('[initNetwork] McLOUGHLIN no DataSet (por ID):', mcloughlinById.id, mcloughlinById.label);
+        } else {
+            console.error('[initNetwork] McLOUGHLIN NÃO está no DataSet (busca por ID)!');
+
+            // Buscar por substring no label
+            const allNodes = nodes.get();
+            const mcloughlinByLabel = allNodes.find(n =>
+                n.label && n.label.toUpperCase().includes('MCLOUGHLIN')
+            );
+
+            if (mcloughlinByLabel) {
+                console.log('[initNetwork] Mas McLOUGHLIN encontrado por label:', mcloughlinByLabel.id, mcloughlinByLabel.label);
+            } else {
+                console.error('[initNetwork] McLOUGHLIN REALMENTE não está no DataSet!');
+
+                // Debug: procurar IDs próximos
+                const nearbyIds = allNodes
+                    .filter(n => Math.abs(parseInt(n.id) - 1978278640) < 1000)
+                    .slice(0, 5);
+                console.log('IDs próximos de 1978278640:', nearbyIds.map(n => ({ id: n.id, label: n.label })));
+            }
+        }
 
         const edges = new vis.DataSet(
             linksData.map(l => {
@@ -129,19 +194,19 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 solver: 'forceAtlas2Based',
                 forceAtlas2Based: {
                     gravitationalConstant: config.gravitationalConstant,
-                    centralGravity: 0.01,
+                    centralGravity: 0.005,  // Reduzido de 0.01
                     springLength: config.springLength,
                     springConstant: config.springConstant,
-                    damping: 0.95,
+                    damping: 0.98,  // Aumentado de 0.95 (converge mais rápido)
                     avoidOverlap: 0
                 },
-                maxVelocity: 10,
-                minVelocity: 0.75,
-                timestep: 0.5,
+                maxVelocity: 20,  // Reduzido de 1000 (menos caótico)
+                minVelocity: 1.5,  // Aumentado de 0.75 (para mais cedo)
+                timestep: 0.5,  // Aumentado de 0.2 (passos maiores)
                 stabilization: {
                     enabled: true,
-                    iterations: 1000,
-                    updateInterval: 50,
+                    iterations: 200,  // Reduzido de 1000 (5x mais rápido!)
+                    updateInterval: 25,  // Reduzido de 50 (updates mais frequentes)
                     onlyDynamicEdges: false,
                     fit: true
                 }
@@ -157,17 +222,31 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
         // Criar rede
         const network = new vis.Network(container, { nodes, edges }, options);
 
+        // Tornar networkInstance global para os gerenciadores
+        window.networkInstance = network;
+        window.nodesDataset = nodes;
+        window.edgesDataset = edges;
+        window.allNodesData = nodesData;
+
+        // Inicializar gerenciadores centralizados
+        window.initPhysicsManager(config.physicsEnabled);
+        window.initColorManager(config.colorBy, 'default'); // Sempre começa com 'default' do Python
+
         // Passar referência da rede para o sistema de toast
-        setNetworkReference(network, nodes, edges, nodesData, linksData);
+        window.setNetworkReference(network, nodes, edges, nodesData, linksData);
 
         // Inicializar índice de busca
-        initSearchIndex(nodesData);
+        window.initSearchIndex(nodesData);
 
         // Inicializar legenda de comunidades
-        initCommunityLegend(nodesData, colorPalette);
+        window.initCommunityLegend(nodesData, colorPalette);
 
         // Inicializar painel de controle
-        initControlPanel(config);
+        window.initControlPanel(config);
+
+        // Monitorar estabilização de física
+        network.on('stabilizationProgress', window.onStabilizationProgress);
+        network.on('stabilizationIterationsDone', window.onStabilizationComplete);
 
         // Tooltip customizado ao hover
         network.on('hoverNode', function(params) {
@@ -205,7 +284,7 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 console.log('Clicked node:', nodeId, node);
 
                 // Mostrar toast com detalhes do atleta
-                showAthleteToast(nodeId, node);
+                window.showAthleteToast(nodeId, node);
 
                 // Enviar dados do nó para o Streamlit (mantido para compatibilidade)
                 window.parent.postMessage({
@@ -219,21 +298,21 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
             } else {
                 // Click no background - fechar toast se estiver aberta
                 const toast = document.getElementById('athlete-toast');
-                if (toast.classList.contains('visible')) {
-                    closeAthleteToast();
+                if (toast && toast.classList.contains('visible')) {
+                    window.closeAthleteToast();
                 }
             }
         });
 
         // Inicializar botão de física com o estado inicial da config
-        initPhysicsButton(config.physicsEnabled);
+        window.initPhysicsButton(config.physicsEnabled);
 
         // Função para inicializar mini-mapa
         function initMinimapAfterRender() {
             setTimeout(() => {
-                if (typeof initMinimap === 'function') {
+                if (typeof window.initMinimap === 'function') {
                     console.log('Initializing minimap...');
-                    initMinimap();
+                    window.initMinimap();
                 } else {
                     console.error('initMinimap function not found');
                 }
@@ -249,7 +328,7 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 network.setOptions({ physics: { enabled: false } });
 
                 // Atualizar botão para refletir que física foi desativada
-                initPhysicsButton(false);
+                window.initPhysicsButton(false);
 
                 console.log('Rede estabilizada - física desativada');
 

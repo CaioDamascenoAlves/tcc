@@ -49,24 +49,43 @@
 \end{frame}
 
 
-\begin{frame}{Base de dados}
-\begin{block}{Base de Dados}
+\begin{frame}{Base de Dados}
+\begin{block}{Dataset Principal - Griffin (2018)}
     \begin{itemize}
-        \item \textbf{Nome:} 120 years of Olympic history.
-        \item \textbf{Descrição:} Basic bio data on athletes and medal results from Athens 1896 to Rio 2016.
-        \item \textbf{Autor:} Randi H Griffin, PhD.
-        \item \textbf{Disponível em:} \url{https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results}.
+        \item \textbf{Nome:} "120 years of Olympic history: athletes and results"
+        \item \textbf{Autor:} Randi H. Griffin, PhD
+        \item \textbf{Período original:} Atenas 1896 até Rio 2016
+        \item \textbf{Fonte:} Kaggle
+    \end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{block}{Atualização - Tokyo 2020}
+    \begin{itemize}
+        \item \textbf{Merge} com dados do repositório GitHub "olympic-history"
+        \item \textbf{Período final:} 1896 até Tokyo 2021 (125 anos)
+        \item \textbf{Dados atualizados:} Medalhas e participantes Tokyo 2020
     \end{itemize}
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Caracteristicas da Base de Dados}
-\framesubtitle{Premissa de Análise}
-\begin{block}{Características da Base de Dados}
+\begin{frame}{Características da Base de Dados}
+\begin{block}{Estrutura do Dataset}
     \begin{itemize}
-        \item \textbf{18 Colunas.}
-        \item \textbf{271117 Linhas}
-        \item \textbf{Campos:} ID, Name, Sex, Age, Height, Weight, Team, NOC, Games, Year, Season, City, Sport, Event, Medal.
+        \item \textbf{Período:} Atenas 1896 até Rio 2016 (125 anos)
+        \item \textbf{271.117 registros} com 18 colunas
+        \item \textbf{Campos principais:} ID, Name, Sex, Age, Height, Weight, Team, NOC, Games, Year, Season, City, Sport, Event, Medal
+    \end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Limpeza e Filtragem}
+    \begin{itemize}
+        \item \textbf{Foco:} Apenas medalhistas (ouro, prata, bronze)
+        \item \textbf{Esportes selecionados:} Swimming, Basketball, Football
+        \item \textbf{Remoção de duplicatas:} 2 registros removidos
+        \item \textbf{Filtragem de pódios:} Apenas pódios com $\geq$ 2 atletas
+        \item \textbf{Resultado:} 4.659 atletas únicos, 0 nós isolados garantidos
     \end{itemize}
 \end{block}
 \end{frame}

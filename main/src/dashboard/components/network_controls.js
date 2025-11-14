@@ -1,6 +1,6 @@
 // Controles de Visualização da Rede
+// NOTA: Física agora é gerenciada pelo physics_manager.js
 
-let physicsEnabled = null; // Será inicializado com o valor da config
 let isFullscreen = false;
 
 function resetZoom() {
@@ -31,60 +31,20 @@ function resetZoom() {
     console.log('Zoom reset complete');
 }
 
-function togglePhysics() {
-    if (!networkInstance) {
-        console.error('Network instance not available');
-        return;
-    }
-
-    physicsEnabled = !physicsEnabled;
-
-    console.log('Toggling physics to:', physicsEnabled);
-
-    const btn = document.getElementById('btn-toggle-physics');
-    const btnSvg = btn.querySelector('svg');
-
-    if (physicsEnabled) {
-        // Ativar física
-        networkInstance.setOptions({ physics: { enabled: true } });
-        btn.classList.add('active');
-        btn.setAttribute('data-tooltip', 'Pausar Física');
-
-        // Mudar ícone para "pause" (duas barras verticais)
-        btnSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-
-        console.log('Physics enabled - icon set to PAUSE');
-    } else {
-        // Desativar física
-        networkInstance.setOptions({ physics: { enabled: false } });
-        btn.classList.remove('active');
-        btn.setAttribute('data-tooltip', 'Ativar Física');
-
-        // Mudar ícone para "play" (triângulo)
-        btnSvg.innerHTML = '<path d="M8 5v14l11-7z"/>';
-
-        console.log('Physics disabled - icon set to PLAY');
-    }
-}
+// Nota: togglePhysics é definida pelo physics_manager.js
+// HTML onclick="togglePhysics()" vai chamar a função global
 
 // Inicializar estado do botão de física baseado na config
 function initPhysicsButton(initialPhysicsState) {
-    physicsEnabled = initialPhysicsState;
+    console.log('Initializing physics button with state:', initialPhysicsState);
 
-    const btn = document.getElementById('btn-toggle-physics');
-    const btnSvg = btn.querySelector('svg');
-
-    console.log('Initializing physics button with state:', physicsEnabled);
-
-    if (physicsEnabled) {
-        btn.classList.add('active');
-        btn.setAttribute('data-tooltip', 'Pausar Física');
-        btnSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // PAUSE
-    } else {
-        btn.classList.remove('active');
-        btn.setAttribute('data-tooltip', 'Ativar Física');
-        btnSvg.innerHTML = '<path d="M8 5v14l11-7z"/>'; // PLAY
+    // Registrar callback para mudanças de física
+    if (typeof onPhysicsChange === 'function') {
+        onPhysicsChange(updateToolbarPhysicsButton);
     }
+
+    // Atualizar botão com estado inicial
+    updateToolbarPhysicsButton(initialPhysicsState);
 }
 
 function takeScreenshot() {

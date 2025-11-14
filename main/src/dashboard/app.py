@@ -920,177 +920,32 @@ def render_network_tab(data):
     # FILTROS E OPÇÕES
     # ========================================================================
 
-    st.subheader("2. Configurações de Visualização")
+    st.info("⚙️ **Controles**: Todos os controles de visualização (filtros, cores, layout) estão disponíveis no painel interativo dentro do grafo abaixo.")
 
-    # Tabs para organizar opções
-    tab_filtros, tab_visual, tab_avancado = st.tabs(["🔍 Filtros", "🎨 Aparência", "⚙️ Avançado"])
-
-    with tab_filtros:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            # Filtro de número de nós (usar o tamanho real da rede selecionada)
-            show_top_n = st.slider(
-                "Número de atletas a exibir:",
-                min_value=10,
-                max_value=num_nodes_total,
-                value=min(500, num_nodes_total),
-                step=10,
-                help=f"Mostra os N atletas com maior PageRank (máximo: {num_nodes_total:,} nós)"
-            )
-            
-            # Avisos de desempenho baseados no número de nós
-            if show_top_n > 800:
-                st.warning("⚠️ Muitos nós! O filtro de arestas será ajustado automaticamente.")
-            elif show_top_n > 500:
-                st.info("ℹ️ Rede grande detectada. Peso mínimo de arestas ajustado automaticamente.")
-
-            # Filtro por peso de arestas com valores sugeridos baseados no tamanho
-            suggested_min_weight = 1
-            if show_top_n > 800:
-                suggested_min_weight = 4
-            elif show_top_n > 600:
-                suggested_min_weight = 3
-            elif show_top_n > 400:
-                suggested_min_weight = 2
-            
-            min_edge_weight = st.slider(
-                "Peso mínimo das arestas:",
-                min_value=1,
-                max_value=10,
-                value=suggested_min_weight,
-                help=f"Filtra arestas com peso menor que este valor. Sugerido: {suggested_min_weight} para esta quantidade de nós."
-            )
-
-        with col2:
-            # Filtro por país
-            if 'noc' in df_athletes.columns:
-                all_countries = sorted(df_athletes['noc'].dropna().unique())
-                selected_countries = st.multiselect(
-                    "Filtrar por países (NOC):",
-                    options=all_countries,
-                    default=[],
-                    help="Deixe vazio para mostrar todos os países"
-                )
-            else:
-                selected_countries = []
-
-            # Filtro por comunidade
-            if 'original_community' in df_athletes.columns:
-                all_communities = sorted(df_athletes['original_community'].dropna().unique())
-                selected_communities = st.multiselect(
-                    "Filtrar por comunidades:",
-                    options=all_communities,
-                    default=[],
-                    help="Deixe vazio para mostrar todas as comunidades"
-                )
-            else:
-                selected_communities = []
-
-    with tab_visual:
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            node_size_by = st.selectbox(
-                "Tamanho dos nós por:",
-                ["PageRank", "Grau Total", "Betweenness"],
-                help="Métrica usada para determinar o tamanho dos nós"
-            )
-
-            color_by = st.selectbox(
-                "Colorir nós por:",
-                ["Comunidade", "País (NOC)", "Década", "Tipo de Medalha"],
-                help="Atributo usado para colorir os nós"
-            )
-
-        with col2:
-            color_scheme = st.selectbox(
-                "Paleta de cores:",
-                ["Padrão (UFOP)", "Pastel", "Vibrante", "Fria", "Quente"],
-                help="Esquema de cores para os grupos"
-            )
-
-            show_labels = st.checkbox(
-                "Mostrar nomes dos nós",
-                value=False,
-                help="Exibe o nome dos atletas nos nós (pode deixar a visualização poluída)"
-            )
-
-        with col3:
-            edge_opacity = st.slider(
-                "Opacidade das arestas:",
-                min_value=0.1,
-                max_value=1.0,
-                value=0.3,
-                step=0.1,
-                help="Transparência das conexões"
-            )
-
-            node_scale_range = st.slider(
-                "Escala dos nós:",
-                min_value=3,
-                max_value=50,
-                value=(5, 30),
-                help="Tamanho mínimo e máximo dos nós"
-            )
-
-    with tab_avancado:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            # Desabilitar física automaticamente em redes grandes
-            default_physics = False
-            physics_enabled = st.checkbox(
-                "Ativar simulação física",
-                value=default_physics,
-                help="Layout com física. Desativado por padrão para melhor desempenho."
-            )
-
-            height = st.slider(
-                "Altura da visualização (pixels):",
-                min_value=400,
-                max_value=1200,
-                value=700,
-                step=50
-            )
-
-        with col2:
-            st.markdown("**Parâmetros de Física:**")
-
-            gravitational_constant = st.slider(
-                "Força Gravitacional:",
-                min_value=-200,
-                max_value=-10,
-                value=-50,
-                step=10,
-                help="Controla a repulsão entre nós (valores mais negativos = maior repulsão)"
-            )
-
-            spring_length = st.slider(
-                "Comprimento das Molas:",
-                min_value=50,
-                max_value=300,
-                value=100,
-                step=10,
-                help="Distância ideal entre nós conectados"
-            )
-
-            spring_constant = st.slider(
-                "Rigidez das Molas:",
-                min_value=0.01,
-                max_value=0.20,
-                value=0.08,
-                step=0.01,
-                help="Força das conexões entre nós"
-            )
-
-    st.markdown("---")
-
+    # Configurações padrão - SEM filtros! Mostrar TUDO
+    show_top_n = num_nodes_total  # TODOS os nós
+    min_edge_weight = 1  # TODAS as arestas
+    selected_countries = []  # Todos os países
+    selected_communities = []  # Todas as comunidades
+    node_size_by = "PageRank"
+    color_by = "Comunidade"
+    color_scheme = "Padrão (UFOP)"  # Corrigido para match do dicionário
+    show_labels = False
+    edge_opacity = 0.3
+    node_scale_range = (5, 30)
+    physics_enabled = False
+    height = 800
+    gravitational_constant = -800
+    spring_length = 150
+    spring_constant = 0.04
+    
     # ========================================================================
     # PREPARAR DADOS DOS NÓS
     # ========================================================================
 
     df_filtered = df_athletes.copy()
+
+    # DEBUG: Rastrear transformações
 
     # Aplicar filtro de países
     if selected_countries:
@@ -1105,7 +960,9 @@ def render_network_tab(data):
         df_filtered = df_filtered.nlargest(show_top_n, 'original_pagerank')
 
     # Remover duplicatas
+    antes_drop = len(df_filtered)
     df_filtered = df_filtered.drop_duplicates(subset=['athlete_id'], keep='first')
+    depois_drop = len(df_filtered)
 
     selected_ids = set(df_filtered['athlete_id'].astype(str))
 
@@ -1213,6 +1070,10 @@ def render_network_tab(data):
             'tooltip_data': tooltip_data
         })
 
+
+    # Verificar se McLOUGHLIN está nos nodes
+    mcl_in_nodes = any('McLOUGHLIN' in n.get('label', '').upper() for n in nodes)
+
     # ========================================================================
     # PREPARAR DADOS DAS ARESTAS
     # ========================================================================
@@ -1230,16 +1091,21 @@ def render_network_tab(data):
         df_edges_filtered = df_edges_filtered[df_edges_filtered['weight'] >= min_edge_weight]
     
     # Otimização adaptativa: limitar arestas baseado no número de nós
-    # Quanto mais nós, menos arestas podemos renderizar
-    if len(nodes) > 800:
-        max_edges = 1500
-    elif len(nodes) > 600:
-        max_edges = 2500
-    elif len(nodes) > 400:
-        max_edges = 4000
+    # IMPORTANTE: Se show_top_n == num_nodes_total, NÃO limitar arestas (mostrar TUDO)
+    if show_top_n == num_nodes_total:
+        # Modo padrão: exibir TODAS as arestas sem limitação
+        max_edges = float('inf')
     else:
-        max_edges = 6000
-    
+        # Modo filtrado: aplicar otimização adaptativa
+        if len(nodes) > 800:
+            max_edges = 1500
+        elif len(nodes) > 600:
+            max_edges = 2500
+        elif len(nodes) > 400:
+            max_edges = 4000
+        else:
+            max_edges = 6000
+
     if len(df_edges_filtered) > max_edges:
         st.info(f"ℹ️ Otimização: Exibindo as {max_edges:,} arestas de maior peso (de {len(df_edges_filtered):,} totais). Aumente o peso mínimo para ver conexões mais relevantes.")
         df_edges_filtered = df_edges_filtered.nlargest(max_edges, 'weight')
@@ -1250,6 +1116,26 @@ def render_network_tab(data):
             'target': str(edge['target_id']),
             'value': float(edge.get('weight', 1.0))
         })
+
+    # ========================================================================
+    # REMOVER NÓS ISOLADOS (sem conexões diretas)
+    # ========================================================================
+
+    # Identificar todos os IDs que aparecem nas arestas filtradas
+    connected_node_ids = set()
+    for link in links:
+        connected_node_ids.add(link['source'])
+        connected_node_ids.add(link['target'])
+
+
+    # Filtrar apenas nós que têm pelo menos uma conexão
+    nodes_before = len(nodes)
+    nodes = [node for node in nodes if node['id'] in connected_node_ids]
+    nodes_removed = nodes_before - len(nodes)
+
+
+    if nodes_removed > 0:
+        st.info(f"ℹ️ Removidos {nodes_removed} nós isolados (sem conexões diretas após filtros)")
 
     # ========================================================================
     # ESTATÍSTICAS DA REDE VISÍVEL
@@ -1347,6 +1233,10 @@ def render_network_tab(data):
     """, unsafe_allow_html=True)
 
     # Renderizar visualização em largura total
+
+    # Verificar novamente McLOUGHLIN antes de passar
+    mcl_before_render = any('McLOUGHLIN' in n.get('label', '').upper() for n in nodes)
+
     render_cosmograph(
         nodes=nodes,
         links=links,

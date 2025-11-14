@@ -1,5 +1,5 @@
 // Utilitários para criar tooltips ricos
-function createRichTooltip(data) {
+window.createRichTooltip = function(data) {
     if (!data.tooltip_data) {
         return data.label || 'Atleta';
     }
@@ -58,4 +58,4 @@ function createRichTooltip(data) {
 
     tooltip += `</div>`;
     return tooltip;
-}
+};

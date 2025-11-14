@@ -16,17 +16,17 @@ const COLOR_SCHEMES = {
             '#C73E1D', '#6A994E', '#BC4749', '#F2CC8F', '#81B29A', '#3D405B', '#E07A5F', '#F4F1DE']
 };
 
-// Inicializar gerenciador de cores
-function initColorManager(colorBy, colorScheme) {
+// Inicializar gerenciador de cores (exposta globalmente)
+window.initColorManager = function(colorBy, colorScheme) {
     currentColorBy = colorBy || 'Comunidade';
     currentColorScheme = colorScheme || 'default';
     currentPalette = COLOR_SCHEMES[currentColorScheme];
 
     console.log('Color Manager initialized:', { colorBy: currentColorBy, colorScheme: currentColorScheme });
-}
+};
 
 // Obter cor para um nó específico
-function getNodeColor(node) {
+window.getNodeColor = function(node) {
     const palette = currentPalette;
     let color;
 
@@ -54,10 +54,10 @@ function getNodeColor(node) {
     }
 
     return color;
-}
+};
 
 // Obter chave de agrupamento para um nó (para legenda)
-function getNodeGroupKey(node) {
+window.getNodeGroupKey = function(node) {
     if (currentColorBy === 'Comunidade') {
         return String(node.group || 0);
     } else if (currentColorBy === 'País (NOC)') {
@@ -74,10 +74,10 @@ function getNodeGroupKey(node) {
         if (silver >= gold && silver >= bronze) return 'Silver';
         return 'Bronze';
     }
-}
+};
 
 // Obter label para chave de grupo
-function getGroupLabel(groupKey) {
+window.getGroupLabel = function(groupKey) {
     if (currentColorBy === 'Comunidade') {
         return `Comunidade ${groupKey}`;
     } else if (currentColorBy === 'País (NOC)') {
@@ -87,10 +87,10 @@ function getGroupLabel(groupKey) {
     } else if (currentColorBy === 'Tipo de Medalha') {
         return groupKey === 'Gold' ? '🥇 Ouro' : groupKey === 'Silver' ? '🥈 Prata' : '🥉 Bronze';
     }
-}
+};
 
 // Mudar esquema de cores (ÚNICO ponto de mudança)
-function setColorScheme(scheme) {
+window.setColorScheme = function(scheme) {
     if (!COLOR_SCHEMES[scheme]) {
         console.error('Invalid color scheme:', scheme);
         return;
@@ -104,10 +104,10 @@ function setColorScheme(scheme) {
     // Aplicar em todos os componentes
     applyColorsToNetwork();
     updateLegendColors();
-}
+};
 
 // Mudar tipo de coloração (ÚNICO ponto de mudança)
-function setColorBy(colorBy) {
+window.setColorBy = function(colorBy) {
     const validOptions = ['Comunidade', 'País (NOC)', 'Década', 'Tipo de Medalha'];
     if (!validOptions.includes(colorBy)) {
         console.error('Invalid color by:', colorBy);
@@ -121,7 +121,7 @@ function setColorBy(colorBy) {
     // Aplicar em todos os componentes
     applyColorsToNetwork();
     rebuildLegend();
-}
+};
 
 // Aplicar cores na rede
 function applyColorsToNetwork() {
@@ -158,25 +158,25 @@ function applyColorsToNetwork() {
 
 // Atualizar cores na legenda existente
 function updateLegendColors() {
-    if (typeof initCommunityLegend === 'function' && allNodesData) {
-        initCommunityLegend(allNodesData, currentPalette);
+    if (typeof window.initCommunityLegend === 'function' && allNodesData) {
+        window.initCommunityLegend(allNodesData, currentPalette);
     }
 }
 
 // Reconstruir legenda (quando muda o tipo de coloração)
 function rebuildLegend() {
-    if (typeof initCommunityLegend === 'function' && allNodesData) {
-        initCommunityLegend(allNodesData, currentPalette);
+    if (typeof window.initCommunityLegend === 'function' && allNodesData) {
+        window.initCommunityLegend(allNodesData, currentPalette);
     }
 }
 
 // Obter estado atual
-function getColorState() {
+window.getColorState = function() {
     return {
         colorBy: currentColorBy,
         colorScheme: currentColorScheme,
         palette: currentPalette
     };
-}
+};
 
 console.log('Color Manager module loaded');

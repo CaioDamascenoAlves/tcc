@@ -1,19 +1,20 @@
 // Sistema de Legenda Dinâmica (Comunidades, NOC, Década, Medalha)
+console.log('[community_legend.js] Loading...');
 
 let legendData = [];
 let activeLegendItems = new Set();
 let legendInitialized = false;
-let currentColorBy = 'Comunidade';
+let legendCurrentColorBy = 'Comunidade';
 
-// Inicializar legenda com dados
-function initCommunityLegend(nodesData, colorPalette) {
+// Inicializar legenda com dados (exposta globalmente)
+window.initCommunityLegend = function(nodesData, colorPalette) {
     // Obter estado atual do color manager
-    const colorState = typeof getColorState === 'function' ? getColorState() : null;
+    const colorState = typeof window.getColorState === 'function' ? window.getColorState() : null;
     if (colorState) {
-        currentColorBy = colorState.colorBy;
+        legendCurrentColorBy = colorState.colorBy;
         colorPalette = colorState.palette;
     } else {
-        currentColorBy = window.config?.colorBy || 'Comunidade';
+        legendCurrentColorBy = window.config?.colorBy || 'Comunidade';
     }
 
     // Agregar dados baseado no esquema de cores usando color_manager
@@ -21,9 +22,9 @@ function initCommunityLegend(nodesData, colorPalette) {
 
     nodesData.forEach(node => {
         // Usar color_manager para obter chave, label e cor
-        const itemKey = typeof getNodeGroupKey === 'function' ? getNodeGroupKey(node) : String(node.group || 0);
-        const itemLabel = typeof getGroupLabel === 'function' ? getGroupLabel(itemKey) : `Item ${itemKey}`;
-        const itemColor = typeof getNodeColor === 'function' ? getNodeColor(node) : colorPalette[0];
+        const itemKey = typeof window.getNodeGroupKey === 'function' ? window.getNodeGroupKey(node) : String(node.group || 0);
+        const itemLabel = typeof window.getGroupLabel === 'function' ? window.getGroupLabel(itemKey) : `Item ${itemKey}`;
+        const itemColor = typeof window.getNodeColor === 'function' ? window.getNodeColor(node) : colorPalette[0];
 
         if (!itemMap[itemKey]) {
             itemMap[itemKey] = {
@@ -42,7 +43,7 @@ function initCommunityLegend(nodesData, colorPalette) {
     legendData = Object.values(itemMap).sort((a, b) => b.count - a.count);
 
     // Limitar a 20 items para NOC (são muitos países)
-    if (currentColorBy === 'País (NOC)' && legendData.length > 20) {
+    if (legendCurrentColorBy === 'País (NOC)' && legendData.length > 20) {
         legendData = legendData.slice(0, 20);
     }
 
@@ -50,8 +51,9 @@ function initCommunityLegend(nodesData, colorPalette) {
     renderLegend();
 
     legendInitialized = true;
-    console.log('Legend initialized:', currentColorBy, legendData.length, 'items');
-}
+    console.log('Legend initialized:', legendCurrentColorBy, legendData.length, 'items');
+};
+console.log('[community_legend.js] window.initCommunityLegend defined:', typeof window.initCommunityLegend);
 
 // Renderizar items da legenda
 function renderLegend() {
@@ -60,7 +62,7 @@ function renderLegend() {
 
     // Atualizar título
     if (legendTitle) {
-        legendTitle.textContent = currentColorBy === 'País (NOC)' ? 'Países (NOC)' : currentColorBy === 'Década' ? 'Décadas' : currentColorBy === 'Tipo de Medalha' ? 'Medalhas' : 'Comunidades';
+        legendTitle.textContent = legendCurrentColorBy === 'País (NOC)' ? 'Países (NOC)' : legendCurrentColorBy === 'Década' ? 'Décadas' : legendCurrentColorBy === 'Tipo de Medalha' ? 'Medalhas' : 'Comunidades';
     }
 
     container.innerHTML = legendData.map((item, index) => {
@@ -143,7 +145,9 @@ function updateNetworkVisibilityByLegend() {
         const isActive = activeNodeIds.has(node.id);
         nodesToUpdate.push({
             id: node.id,
-            hidden: !isActive
+            hidden: !isActive,
+            // CRÍTICO: Preservar cor atual
+            color: node.color
         });
     });
 
@@ -215,7 +219,12 @@ function resetCommunityFilter() {
     const allNodes = nodesDataset.get();
     const allEdges = edgesDataset.get();
 
-    const nodesToUpdate = allNodes.map(node => ({ id: node.id, hidden: false }));
+    const nodesToUpdate = allNodes.map(node => ({
+        id: node.id,
+        hidden: false,
+        // CRÍTICO: Preservar cor atual
+        color: node.color
+    }));
     const edgesToUpdate = allEdges.map(edge => ({ id: edge.id, hidden: false }));
 
     nodesDataset.update(nodesToUpdate);
@@ -256,6 +265,6 @@ function toggleLegend() {
         btn.innerHTML = '🏷️';
         console.log('Legend minimized');
     }
-}
+};
 
 console.log('Community legend module loaded');

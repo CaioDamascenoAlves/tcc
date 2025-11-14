@@ -12,7 +12,7 @@ let originalColors = {}; // {nodeId: colorObj}
 let originalEdgeColors = {}; // {edgeId: colorObj}
 let lastFocusedRivalId = null; // Rastrear último rival focado para toggle
 
-function setNetworkReference(network, nodes, edges, nodesData, edgesData) {
+window.setNetworkReference = function(network, nodes, edges, nodesData, edgesData) {
     networkInstance = network;
     nodesDataset = nodes;
     edgesDataset = edges;
@@ -23,7 +23,7 @@ function setNetworkReference(network, nodes, edges, nodesData, edgesData) {
         edges: edges.length,
         dataNodes: nodesData.length
     });
-}
+};
 
 function showAthleteToast(nodeId, nodeData) {
     currentAthleteId = nodeId;
@@ -81,13 +81,23 @@ function loadRivalsList(nodeId) {
 
     console.log('Loading rivals for node:', nodeId);
 
-    // Buscar arestas conectadas
+    // Buscar arestas conectadas (INCLUINDO ESCONDIDAS para debug!)
     const allEdges = edgesDataset.get();
     const connectedEdges = allEdges.filter(edge =>
+        (edge.from === nodeId || edge.to === nodeId) && !edge.hidden  // Só arestas visíveis
+    );
+
+    const connectedEdgesIncludingHidden = allEdges.filter(edge =>
         edge.from === nodeId || edge.to === nodeId
     );
 
-    console.log('Connected edges:', connectedEdges.length);
+    console.log('Connected edges (visible):', connectedEdges.length);
+    console.log('Connected edges (including hidden):', connectedEdgesIncludingHidden.length);
+
+    if (connectedEdgesIncludingHidden.length !== connectedEdges.length) {
+        console.warn('⚠️ ALGUMAS ARESTAS ESTÃO ESCONDIDAS!',
+                     connectedEdgesIncludingHidden.length - connectedEdges.length, 'escondidas');
+    }
 
     if (connectedEdges.length === 0) {
         document.getElementById('toast-rivals-section').style.display = 'none';
@@ -293,7 +303,12 @@ function isolateSubnetwork() {
 
     allNodes.forEach(node => {
         if (!neighborIds.has(node.id)) {
-            nodesToHide.push({ id: node.id, hidden: true });
+            nodesToHide.push({
+                id: node.id,
+                hidden: true,
+                // CRÍTICO: Preservar cor atual
+                color: node.color
+            });
         }
     });
 
@@ -377,13 +392,12 @@ function restoreNetwork() {
     const nodesToRestore = [];
 
     allNodes.forEach(node => {
-        const updates = { id: node.id, hidden: false };
-
-        if (originalColors[node.id]) {
-            updates.color = originalColors[node.id];
-        }
-
-        nodesToRestore.push(updates);
+        nodesToRestore.push({
+            id: node.id,
+            hidden: false,
+            // CRÍTICO: Preservar cor atual (não do cache)
+            color: node.color
+        });
     });
 
     if (nodesToRestore.length > 0) {

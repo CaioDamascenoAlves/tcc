@@ -4,8 +4,8 @@ let searchIndex = []; // Lista de todos os atletas para busca
 let selectedSuggestionIndex = -1;
 let currentSuggestions = [];
 
-// Inicializar índice de busca
-function initSearchIndex(nodesData) {
+// Inicializar índice de busca (exposta globalmente)
+window.initSearchIndex = function(nodesData) {
     searchIndex = nodesData.map(node => ({
         id: node.id,
         name: node.tooltip_data?.name || node.label || `Atleta ${node.id}`,
@@ -15,7 +15,7 @@ function initSearchIndex(nodesData) {
     }));
 
     console.log('Search index initialized with', searchIndex.length, 'athletes');
-}
+};
 
 // Buscar atletas
 function searchAthletes(query) {

@@ -7,6 +7,7 @@ Renderiza redes interativas com tooltips ricos e timeline temporal.
 import json
 from pathlib import Path
 import streamlit.components.v1 as components
+import sys
 
 
 def render_cosmograph(nodes: list, links: list, height: int = 800,
@@ -15,7 +16,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                      color_scheme: str = 'default',
                      edge_opacity: float = 0.3,
                      node_scale_min: int = 5,
-                     node_scale_max: int = 30,
+                     node_scale_max: int = 50,
                      gravitational_constant: int = -800,
                      spring_length: int = 150,
                      spring_constant: float = 0.04,
@@ -23,6 +24,9 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                      key: str = None):
     """
     Renderiza uma rede interativa usando vis-network.
+
+    # DEBUG
+    print(f"[render_cosmograph] CHAMADA! Nodes: {len(nodes)}, Links: {len(links)}", flush=True)
 
     Parameters
     ----------
@@ -67,6 +71,12 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
     with open(component_dir / 'athlete_search.js', 'r', encoding='utf-8') as f:
         athlete_search_js = f.read()
 
+    with open(component_dir / 'physics_manager.js', 'r', encoding='utf-8') as f:
+        physics_manager_js = f.read()
+
+    with open(component_dir / 'color_manager.js', 'r', encoding='utf-8') as f:
+        color_manager_js = f.read()
+
     with open(component_dir / 'community_legend.js', 'r', encoding='utf-8') as f:
         community_legend_js = f.read()
 
@@ -82,9 +92,19 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
     with open(component_dir / 'network_init.js', 'r', encoding='utf-8') as f:
         network_init_js = f.read()
 
+    with open(component_dir / 'debug_hidden.js', 'r', encoding='utf-8') as f:
+        debug_hidden_js = f.read()
+
+
+    # Verificar McLOUGHLIN
+
     # Converter dados para JSON
     nodes_json = json.dumps(nodes)
     links_json = json.dumps(links)
+
+    # Verificar tamanho do JSON
+
+    # Teste: carregar de volta para garantir que não há perda
 
     # Paletas de cores expandidas
     color_schemes = {
@@ -137,7 +157,9 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         </style>
     </head>
     <body>
-        <div id="loading">Carregando visualização...</div>
+        <div id="loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #8B2635; font-weight: bold; z-index: 9999;">
+            Carregando visualização...
+        </div>
         <div id="cosmograph"></div>
         <div id="custom-tooltip"></div>
 
@@ -309,10 +331,19 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         <script>{tooltip_js}</script>
         <script>{athlete_toast_js}</script>
         <script>{athlete_search_js}</script>
+
+        <!-- Gerenciadores Centralizados (ORDEM IMPORT: devem carregar primeiro) -->
+        <script>{physics_manager_js}</script>
+        <script>{color_manager_js}</script>
+
+        <!-- Componentes UI -->
         <script>{community_legend_js}</script>
         <script>{control_panel_js}</script>
         <script>{network_controls_js}</script>
         <script>{minimap_js}</script>
+        <script>{debug_hidden_js}</script>
+
+        <!-- Inicialização (ÚLTIMO - depende de todos os outros) -->
         <script>{network_init_js}</script>
 
         <!-- Inicializar -->
@@ -326,13 +357,55 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
             // Tornar config disponível globalmente
             window.config = config;
 
-            // Inicializar quando a página carregar
+            // DEBUG: Log inicial
+            console.log('='.repeat(80));
+            console.log('SCRIPT DE INICIALIZAÇÃO CARREGADO');
+            console.log('Document readyState:', document.readyState);
+            console.log('Nodes:', nodesData ? nodesData.length : 'undefined');
+            console.log('Links:', linksData ? linksData.length : 'undefined');
+            console.log('='.repeat(80));
+
+            // Inicializar diretamente (SEM retry por enquanto para debug)
+            function startNetwork() {{
+                console.log('>>> startNetwork() chamada');
+
+                // Verificar se vis-network está disponível
+                if (typeof vis === 'undefined') {{
+                    console.error('ERRO: vis-network não carregou!');
+                    alert('ERRO: Biblioteca vis-network não foi carregada.');
+                    return;
+                }}
+                console.log('✓ vis-network disponível');
+
+                // Verificar se initNetwork existe
+                if (typeof initNetwork === 'undefined') {{
+                    console.error('ERRO: initNetwork não está definida!');
+                    alert('ERRO: Função initNetwork não foi carregada.');
+                    return;
+                }}
+                console.log('✓ initNetwork disponível');
+
+                console.log('>>> Chamando initNetwork...');
+                try {{
+                    initNetwork(nodesData, linksData, colorPalette, config, keyName);
+                    console.log('✓ initNetwork executada com sucesso');
+                }} catch (error) {{
+                    console.error('ERRO ao executar initNetwork:', error);
+                    console.error('Stack:', error.stack);
+                    alert('ERRO ao inicializar rede: ' + error.message);
+                }}
+            }}
+
+            // Aguardar DOM carregar
             if (document.readyState === 'loading') {{
+                console.log('Document loading... aguardando DOMContentLoaded');
                 document.addEventListener('DOMContentLoaded', () => {{
-                    setTimeout(() => initNetwork(nodesData, linksData, colorPalette, config, keyName), 100);
+                    console.log('DOMContentLoaded fired');
+                    setTimeout(startNetwork, 200);
                 }});
             }} else {{
-                setTimeout(() => initNetwork(nodesData, linksData, colorPalette, config, keyName), 100);
+                console.log('Document já carregado, inicializando imediatamente');
+                setTimeout(startNetwork, 200);
             }}
         </script>
     </body>

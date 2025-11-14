@@ -273,12 +273,14 @@
 }
 
 % style of section presented in the table of contents
-\setbeamertemplate{section in toc}{
-  \begin{multicols}{2}
-    \setlength{\parskip}{0pt}
-    \setlength{\columnsep}{1em}
-    $\blacktriangleright$~\inserttocsection
-  \end{multicols}
+\setbeamertemplate{section in toc}{%
+    \leavevmode\leftskip=2em%
+    \llap{%
+      \usebeamerfont*{section number projected}%
+      \usebeamercolor{section number projected}%
+      $\blacktriangleright$\kern0.5em%
+    }%
+    \inserttocsection\par%
   }
 
 % automate subtitle of each frame
