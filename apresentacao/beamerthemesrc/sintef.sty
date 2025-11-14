@@ -2,7 +2,6 @@
 
 \RequirePackage{etoolbox}
 \RequirePackage{tikz}
-\usepackage{multicol}
 
 % Force 16:9 aspect ratio
 \RequirePackage{geometry}
@@ -85,15 +84,26 @@
 \setbeamerfont{frametitle}{series=\bfseries}
 \setbeamerfont{framesubtitle}{series=\mdseries}
 \setbeamerfont{footline}{size=\scriptsize}
-\setbeamerfont{block title}{series=\centering\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
 
 % Code to get prettier boxes
 \setbeamertemplate{blocks}[rounded]
+
+% Better spacing control for lists
+\setbeamertemplate{itemize/enumerate body begin}{\vspace{-0.3ex}}
+\setbeamertemplate{itemize/enumerate subbody begin}{\vspace{-0.2ex}}
+\setlength{\leftmargini}{1.2em}
+\setlength{\leftmarginii}{1em}
+\setlength{\leftmarginiii}{0.8em}
 
 % Bullets in several levels
 \setbeamertemplate{itemize item}{\textbullet}
 \setbeamertemplate{itemize subitem}{\textemdash}
 \setbeamertemplate{itemize subsubitem}{\ensuremath{\circ}}
+
+% Enumerate style
+\setbeamertemplate{enumerate items}[default]
+\setbeamercolor{item projected}{bg=maincolor,fg=white}
 
 \newenvironment{colorblock}[3][white]{%
 	\begingroup
@@ -110,8 +120,8 @@
 
 % Define frame title and subtitle layout
 \setbeamertemplate{frametitle}{%
-  \vspace*{-3.5ex}
-  \begin{beamercolorbox}[leftskip=2cm]{frametitle}%
+  \vspace*{-2.5ex}
+  \begin{beamercolorbox}[leftskip=1.5cm]{frametitle}%
     \usebeamerfont{frametitle}\insertframetitle\\
     \usebeamerfont{framesubtitle}\insertframesubtitle
   \end{beamercolorbox}
@@ -274,7 +284,7 @@
 
 % style of section presented in the table of contents
 \setbeamertemplate{section in toc}{%
-    \leavevmode\leftskip=2em%
+    \leavevmode\leftskip=1.5em\rightskip=1.5em%
     \llap{%
       \usebeamerfont*{section number projected}%
       \usebeamercolor{section number projected}%

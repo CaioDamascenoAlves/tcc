@@ -188,19 +188,24 @@ class SportsNetworkAnalyzer:
             }
             G.add_node(row['ID'], **athlete_info)
         
-        # Adicionar arestas ponderadas entre medalhistas do mesmo evento
+        # Adicionar arestas ponderadas entre medalhistas do mesmo evento (rede histórica acumulada)
         for event, event_group in sport_data.groupby('Event'):
             self._add_competition_edges(G, event_group)
-            
+
+        # CRÍTICO: Remover nós isolados (sem conexões diretas)
+        isolated_nodes = [node for node in G.nodes() if G.degree(node) == 0]
+        if isolated_nodes:
+            print(f"[LIMPEZA] Removendo {len(isolated_nodes)} nós isolados (atletas sem competidores diretos)")
+            G.remove_nodes_from(isolated_nodes)
+
         return G
     
     def _add_competition_edges(self, G: nx.DiGraph, event_group: pd.DataFrame):
-        """Adiciona arestas ponderadas entre medalhistas de um evento."""
+        """Adiciona arestas ponderadas entre medalhistas de um evento (histórico acumulado)."""
 
         # VALIDAÇÃO: Verificar se há pelo menos 2 atletas únicos
         unique_athletes = event_group['ID'].nunique()
         if unique_athletes < 2:
-            # Pódio solo - não criar arestas (deveria ter sido filtrado antes)
             return
 
         medalists = event_group[['ID', 'Medal']].sort_values(
