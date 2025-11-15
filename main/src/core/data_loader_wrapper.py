@@ -81,9 +81,17 @@ class DataLoader:
         """Carrega classificação tipológica de comunidades."""
         return self._load_csv('community_typology_classification.csv', 'community_typology')
 
+    def load_medal_profile(self) -> pd.DataFrame:
+        """Carrega perfil de medalhas por comunidade."""
+        return self._load_csv('additional_analyses/medal_profile_by_community.csv', 'medal_profile')
+
     def load_rivalry_pairs(self) -> pd.DataFrame:
         """Carrega pares de rivalidade top."""
         return self._load_csv('additional_analyses/top_rivalry_pairs.csv', 'rivalry_pairs')
+    
+    def load_top_rivalries(self) -> pd.DataFrame:
+        """Alias para load_rivalry_pairs (compatibilidade)."""
+        return self.load_rivalry_pairs()
 
     def load_community_hierarchy(self) -> pd.DataFrame:
         """Carrega dados de hierarquia entre comunidades."""
@@ -92,6 +100,10 @@ class DataLoader:
     def load_inter_community_connectivity(self) -> pd.DataFrame:
         """Carrega conectividade entre comunidades."""
         return self._load_csv('additional_analyses/inter_community_connectivity.csv', 'inter_community')
+    
+    def load_inter_connectivity(self) -> pd.DataFrame:
+        """Alias para load_inter_community_connectivity (compatibilidade)."""
+        return self.load_inter_community_connectivity()
 
     def load_consolidated_analysis(self) -> pd.DataFrame:
         """Carrega análise consolidada de redes esportivas."""
@@ -131,6 +143,7 @@ class DataLoader:
             'communities': self.load_community_profiles(),
             'community_members': self.load_community_members(),
             'typology': self.load_community_typology(),
+            'medal_profile': self.load_medal_profile(),
             'rivalries': self.load_rivalry_pairs(),
             'hierarchy': self.load_community_hierarchy(),
             'connectivity': self.load_inter_community_connectivity(),
