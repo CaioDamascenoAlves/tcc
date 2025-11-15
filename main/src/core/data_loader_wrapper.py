@@ -46,7 +46,16 @@ class DataLoader:
         if cache_key in self._cached_data:
             return self._cached_data[cache_key]
         
-        df = self.auto_loader.load_csv(relative_path)
+        # Normaliza caminho: remove prefixos desnecessários
+        path = relative_path.replace('\\', '/')
+        
+        # Remove prefixos comuns se presentes
+        for prefix in ['main/results/', 'results/', 'main/']:
+            if path.startswith(prefix):
+                path = path[len(prefix):]
+                break
+        
+        df = self.auto_loader.load_csv(path)
         self._cached_data[cache_key] = df
         
         print(f"  OK {cache_key}: {len(df)} registros carregados")
