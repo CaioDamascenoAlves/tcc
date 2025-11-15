@@ -312,13 +312,16 @@ def filter_data(data, filters):
 
         filtered['athletes'] = df
 
-        # Medal profile
-        df = data['medal_profile'].copy()
-        if filters['sports']:
-            df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex']:
-            df = df[df['sex'].isin(filters['sex'])]
-        filtered['medal_profile'] = df
+        # Medal profile (com fallback se não existir)
+        if 'medal_profile' in data:
+            df = data['medal_profile'].copy()
+            if filters['sports']:
+                df = df[df['sport'].isin(filters['sports'])]
+            if filters['sex']:
+                df = df[df['sex'].isin(filters['sex'])]
+            filtered['medal_profile'] = df
+        else:
+            filtered['medal_profile'] = pd.DataFrame()
 
         # Hierarchy
         df = data['hierarchy'].copy()
