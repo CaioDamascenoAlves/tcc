@@ -16,7 +16,8 @@ src_root = Path(__file__).parent.parent  # main/src/
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(src_root))
 
-from core.data_loader import DataLoader
+# Usa wrapper que suporta tanto arquivos locais quanto Google Drive
+from core.data_loader_wrapper import DataLoader
 from core.metrics import MetricsCalculator
 from dashboard.visualization import (
     scatter_size_vs_pagerank,
