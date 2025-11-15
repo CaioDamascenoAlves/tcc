@@ -41,42 +41,51 @@ Este projeto utiliza **teoria de redes complexas** para modelar e analisar rela�
 
 ```
 tcc/
-├── data/                          # Dados brutos
-│   └── athlete_events.csv         # Dataset olímpico completo
-│
-├── src/                           # Código-fonte
-│   ├── core/                      # Módulos reutilizáveis
-│   │   ├── config/                # Configurações centralizadas
-│   │   ├── data_loader.py         # Carregamento de dados
-│   │   └── metrics.py             # Cálculos de métricas
+├── main/                          # Diretório principal do projeto
+│   ├── data/                      # Dados brutos
+│   │   └── athlete_events.csv     # Dataset olímpico completo
 │   │
-│   ├── pipeline/                  # Scripts de análise
-│   │   ├── 01_network_generation.py      # Geração de redes
-│   │   ├── 02a_community_enrichment.py   # Análise de comunidades
-│   │   └── ...
+│   ├── src/                       # Código-fonte
+│   │   ├── core/                  # Módulos reutilizáveis
+│   │   │   ├── config/            # Configurações centralizadas
+│   │   │   ├── data_loader.py     # Carregamento de dados
+│   │   │   └── metrics.py         # Cálculos de métricas
+│   │   │
+│   │   ├── pipeline/              # Scripts de análise
+│   │   │   ├── 01_network_generation.py      # Geração de redes
+│   │   │   ├── 02a_community_enrichment.py   # Análise de comunidades
+│   │   │   └── ...
+│   │   │
+│   │   ├── dashboard/             # Dashboard Streamlit
+│   │   │   ├── app.py             # Aplicação principal
+│   │   │   ├── visualization/     # Gráficos e plots
+│   │   │   └── components/        # Componentes interativos
+│   │   │
+│   │   └── outputs/               # Geração de figuras/tabelas
+│   │       ├── figures.py         # Figuras para monografia
+│   │       └── tables.py          # Tabelas LaTeX
 │   │
-│   ├── dashboard/                 # Dashboard Streamlit
-│   │   ├── app.py                 # Aplicação principal
-│   │   ├── visualization/         # Gráficos e plots
-│   │   └── components/            # Componentes interativos
+│   ├── results/                   # Resultados das análises
+│   │   ├── networks/              # Redes geradas (CSV, GEXF, JSON)
+│   │   └── additional_analyses/   # Análises adicionais
 │   │
-│   └── outputs/                   # Geração de figuras/tabelas
-│       ├── figures.py             # Figuras para monografia
-│       └── tables.py              # Tabelas LaTeX
+│   └── analysis/                  # Scripts de validação
+│       ├── compare_community_metrics.py    # Comparação Louvain vs Infomap
+│       ├── validate_calculations.py        # Validação de métricas
+│       └── ...
 │
-├── results/                       # Resultados das análises
-│   ├── networks/                  # Redes geradas (CSV, GEXF, JSON)
-│   └── additional_analyses/       # Análises adicionais
+├── monografia/                    # Documentação acadêmica (raiz)
+│   ├── main.tex                   # Documento principal
+│   ├── figuras/                   # Figuras geradas
+│   ├── tabelas/                   # Tabelas LaTeX
+│   └── bib/                       # Referências bibliográficas
 │
-├── docs/                          # Documentação
-│   ├── monografia/                # Documento LaTeX
-│   │   ├── main.tex              # Documento principal
-│   │   ├── figuras/              # Figuras geradas
-│   │   └── tabelas/              # Tabelas LaTeX
-│   │
-│   └── apresentacao/              # Slides Beamer
+├── apresentacao/                  # Slides Beamer (raiz)
+│   ├── main.tex                   # Apresentação principal
+│   └── contents/                  # Conteúdo dos slides
 │
-└── tests/                         # Testes (TODO)
+├── DADOS_OFICIAIS.md              # Fonte única de verdade (raiz)
+└── CLAUDE.md                      # Instruções para Claude Code (raiz)
 ```
 
 ## Documentação Detalhada
@@ -97,8 +106,8 @@ Este projeto possui documentação modular e detalhada. Cada componente principa
   - **results/additional_analyses/** - Análises enriquecidas (perfis, hierarquias, rivalidades)
 
 ### Documentação Acadêmica
-- **docs/monografia/** - Monografia LaTeX completa
-- **docs/apresentacao/** - Apresentação Beamer para defesa
+- **../monografia/** - Monografia LaTeX completa (na raiz do projeto)
+- **../apresentacao/** - Apresentação Beamer para defesa (na raiz do projeto)
 
 ### Outros
 - **tests/** - Testes unitários (TODO)
@@ -147,12 +156,12 @@ cd src/outputs
 python figures.py
 ```
 
-Figuras salvas em: `docs/monografia/figuras/`
+Figuras salvas em: `../monografia/figuras/`
 
 ### 4. Compilar Monografia
 
 ```bash
-cd docs/monografia
+cd ../monografia
 pdflatex main.tex
 bibtex main
 pdflatex main.tex
@@ -244,8 +253,8 @@ Se utilizar este trabalho, cite:
 - [src/dashboard/README.md](src/dashboard/README.md) - Dashboard
 
 **Documentos Acadêmicos**
-- [docs/monografia/](docs/monografia/) - Monografia LaTeX
-- [docs/apresentacao/](docs/apresentacao/) - Slides Beamer
+- [../monografia/](../monografia/) - Monografia LaTeX
+- [../apresentacao/](../apresentacao/) - Slides Beamer
 
 **Configuração**
 - [.gitignore](.gitignore) - Arquivos ignorados pelo Git

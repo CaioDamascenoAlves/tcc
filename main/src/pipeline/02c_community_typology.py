@@ -5,9 +5,9 @@ Este script classifica comunidades detectadas pelo algoritmo de Louvain em tipol
 interpretativas baseadas em múltiplas dimensões:
 
 1. Performance (via CDF de PageRank): Elite vs Massa
-2. Geografia (via HHI): Concentrada vs Intermediária vs Diversa
+2. Geografia (via Entropia de Shannon): Concentrada vs Intermediária vs Diversa
 3. Temporalidade (via contagem de eras): Dinastia vs Transição vs Multi-Era
-4. Concentração Bidimensional (HHI x Gini): 4 perfis de concentração
+4. Concentração Bidimensional (Entropia Geográfica x Gini): 4 perfis de concentração
 
 Entrada:
 - community_profiles_enriched.csv
@@ -169,23 +169,27 @@ def classify_performance_cdf(pagerank_values):
     return classification, threshold, percentile, method
 
 
-def classify_geography_hhi(hhi):
+def classify_geography_entropy(entropy):
     """
-    Classifica concentração geográfica baseado no índice HHI.
+    Classifica diversidade geográfica baseado na Entropia de Shannon.
 
-    Thresholds baseados em padrões antitruste:
-    - HHI > 0.25: equivalente a ~4 países dominantes
-    - HHI < 0.10: equivalente a ~10+ países equilibrados
+    Entropia de Shannon mede diversidade/dispersão da distribuição de países.
+    Valores maiores = maior diversidade geográfica.
+
+    Thresholds calibrados empiricamente:
+    - Entropy < 2.0: Baixa diversidade (poucos países dominantes)
+    - 2.0 <= Entropy < 3.5: Diversidade moderada
+    - Entropy >= 3.5: Alta diversidade (distribuição equilibrada)
 
     Args:
-        hhi (float): Índice de Herfindahl-Hirschman
+        entropy (float): Entropia de Shannon da distribuição geográfica
 
     Returns:
         str: CONCENTRADA, INTERMEDIÁRIA ou DIVERSA
     """
-    if hhi > 0.25:
+    if entropy < 2.0:
         return "CONCENTRADA"
-    elif hhi >= 0.10:
+    elif entropy < 3.5:
         return "INTERMEDIÁRIA"
     else:
         return "DIVERSA"
@@ -210,39 +214,39 @@ def classify_temporality(num_eras, temporal_entropy):
         return "MULTI-ERA"
 
 
-def classify_concentration_profile(hhi, gini_pr):
+def classify_concentration_profile(geo_entropy, gini_pr):
     """
     Classifica perfil bidimensional de concentração.
 
-    Dimensão 1: Concentração Geográfica (HHI)
+    Dimensão 1: Diversidade Geográfica (Entropia de Shannon)
     Dimensão 2: Concentração Estrutural (Gini de PageRank)
 
     Thresholds calibrados empiricamente:
-    - HHI: 0.15 (mediana do dataset, separa 50/50)
+    - Entropia Geográfica: 2.5 (mediana empírica)
     - Gini PR: 0.35 (75º percentil, separa top 26% mais heterogêneos)
 
     Args:
-        hhi (float): Índice HHI geográfico
+        geo_entropy (float): Entropia de Shannon geográfica
         gini_pr (float): Gini de PageRank
 
     Returns:
         tuple: (quadrant, profile_label, interpretation)
     """
     # Thresholds calibrados
-    hhi_threshold = 0.15
+    entropy_threshold = 2.5
     gini_threshold = 0.35
 
-    # Classificação
-    hhi_high = hhi >= hhi_threshold
+    # Classificação (entropia ALTA = diversidade, oposto de HHI)
+    geo_diverse = geo_entropy >= entropy_threshold
     gini_high = gini_pr >= gini_threshold
 
-    if hhi_high and gini_high:
+    if (not geo_diverse) and gini_high:
         return "Q1", "Hegemonia-Superstars", "Dominância nacional com emergência de superstars individuais"
-    elif (not hhi_high) and gini_high:
+    elif geo_diverse and gini_high:
         return "Q2", "Elite-Global", "Diversidade geográfica com poucos talentos excepcionais"
-    elif (not hhi_high) and (not gini_high):
+    elif geo_diverse and (not gini_high):
         return "Q3", "Equilíbrio-Global", "Diversidade geográfica com importância distribuída"
-    else:  # hhi_high and not gini_high
+    else:  # not geo_diverse and not gini_high
         return "Q4", "Hegemonia-Sistêmica", "Dominância nacional com importância distribuída (sistema forte)"
 
 
@@ -353,8 +357,8 @@ def analyze_community_typology(base_dir='../../results'):
         # 2. Calcular Gini de PageRank
         gini_pr = calculate_gini(pagerank_values)
 
-        # 3. Classificação Geográfica (HHI já calculado)
-        geo_class = classify_geography_hhi(row['geographic_hhi'])
+        # 3. Classificação Geográfica (Entropia de Shannon já calculada)
+        geo_class = classify_geography_entropy(row['geographic_entropy'])
 
         # 4. Classificação Temporal
         temp_class = classify_temporality(
@@ -383,7 +387,7 @@ def analyze_community_typology(base_dir='../../results'):
 
         # 5. Perfil de Concentração Bidimensional
         quadrant, conc_profile_label, conc_interpretation = classify_concentration_profile(
-            row['geographic_hhi'],
+            row['geographic_entropy'],
             gini_pr
         )
 
@@ -408,7 +412,7 @@ def analyze_community_typology(base_dir='../../results'):
 
             # Geografia
             'geographic_class': geo_class,
-            'hhi': row['geographic_hhi'],
+            'geographic_entropy': row['geographic_entropy'],
 
             # Estrutural (Gini PageRank)
             'gini_pagerank': gini_pr,
@@ -475,25 +479,25 @@ def analyze_community_typology(base_dir='../../results'):
             'Q1_Hegemonia_Superstars': {
                 'count': len(typology_df[typology_df['concentration_quadrant'] == 'Q1']),
                 'examples': typology_df[typology_df['concentration_quadrant'] == 'Q1'][
-                    ['sport', 'sex', 'community_id', 'hhi', 'gini_pagerank']
+                    ['sport', 'sex', 'community_id', 'geographic_entropy', 'gini_pagerank']
                 ].head(3).to_dict('records')
             },
             'Q2_Elite_Global': {
                 'count': len(typology_df[typology_df['concentration_quadrant'] == 'Q2']),
                 'examples': typology_df[typology_df['concentration_quadrant'] == 'Q2'][
-                    ['sport', 'sex', 'community_id', 'hhi', 'gini_pagerank']
+                    ['sport', 'sex', 'community_id', 'geographic_entropy', 'gini_pagerank']
                 ].head(3).to_dict('records')
             },
             'Q3_Equilibrio_Global': {
                 'count': len(typology_df[typology_df['concentration_quadrant'] == 'Q3']),
                 'examples': typology_df[typology_df['concentration_quadrant'] == 'Q3'][
-                    ['sport', 'sex', 'community_id', 'hhi', 'gini_pagerank']
+                    ['sport', 'sex', 'community_id', 'geographic_entropy', 'gini_pagerank']
                 ].head(3).to_dict('records')
             },
             'Q4_Hegemonia_Sistemica': {
                 'count': len(typology_df[typology_df['concentration_quadrant'] == 'Q4']),
                 'examples': typology_df[typology_df['concentration_quadrant'] == 'Q4'][
-                    ['sport', 'sex', 'community_id', 'hhi', 'gini_pagerank']
+                    ['sport', 'sex', 'community_id', 'geographic_entropy', 'gini_pagerank']
                 ].head(3).to_dict('records')
             }
         },
@@ -505,11 +509,11 @@ def analyze_community_typology(base_dir='../../results'):
                 'min': float(typology_df['gini_pagerank'].min()),
                 'max': float(typology_df['gini_pagerank'].max())
             },
-            'hhi_geographic': {
-                'mean': float(typology_df['hhi'].mean()),
-                'std': float(typology_df['hhi'].std()),
-                'min': float(typology_df['hhi'].min()),
-                'max': float(typology_df['hhi'].max())
+            'geographic_entropy': {
+                'mean': float(typology_df['geographic_entropy'].mean()),
+                'std': float(typology_df['geographic_entropy'].std()),
+                'min': float(typology_df['geographic_entropy'].min()),
+                'max': float(typology_df['geographic_entropy'].max())
             }
         }
     }
@@ -543,7 +547,7 @@ def analyze_community_typology(base_dir='../../results'):
 
     # Perfis de concentração
     conc_profiles = typology_df[[
-        'sport', 'sex', 'community_id', 'hhi', 'gini_pagerank',
+        'sport', 'sex', 'community_id', 'geographic_entropy', 'gini_pagerank',
         'concentration_quadrant', 'concentration_profile', 'concentration_interpretation'
     ]].copy()
     conc_path = os.path.join(base_dir, 'community_concentration_profiles.csv')
@@ -580,9 +584,9 @@ def analyze_community_typology(base_dir='../../results'):
         pct = count / len(typology_df) * 100
         print(f"  • {profile}: {count} ({pct:.1f}%)")
 
-    print(f"\nMétricas de Concentração:")
+    print(f"\nMétricas de Diversidade:")
     print(f"  • Gini PageRank médio: {summary['metrics']['gini_pagerank']['mean']:.3f}")
-    print(f"  • HHI Geográfico médio: {summary['metrics']['hhi_geographic']['mean']:.3f}")
+    print(f"  • Entropia Geográfica média: {summary['metrics']['geographic_entropy']['mean']:.3f}")
 
     print("\n" + "=" * 80)
     print("ANÁLISE CONCLUÍDA COM SUCESSO!")

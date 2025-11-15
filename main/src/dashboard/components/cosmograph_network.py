@@ -92,9 +92,6 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
     with open(component_dir / 'network_init.js', 'r', encoding='utf-8') as f:
         network_init_js = f.read()
 
-    with open(component_dir / 'debug_hidden.js', 'r', encoding='utf-8') as f:
-        debug_hidden_js = f.read()
-
 
     # Verificar McLOUGHLIN
 
@@ -341,7 +338,6 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         <script>{control_panel_js}</script>
         <script>{network_controls_js}</script>
         <script>{minimap_js}</script>
-        <script>{debug_hidden_js}</script>
 
         <!-- Inicialização (ÚLTIMO - depende de todos os outros) -->
         <script>{network_init_js}</script>
