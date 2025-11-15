@@ -8,7 +8,7 @@
         \begin{column}{0.48\textwidth}
             \textbf{Resultados Gerais:}
             \begin{itemize}
-                \item \textbf{37 comunidades} detectadas
+                \item \textbf{36 comunidades} detectadas
                 \item \textbf{4.659 atletas} analisados
                 \item \textbf{0 nós isolados} em todas as redes
                 \item Modularidade varia por esporte
@@ -19,7 +19,7 @@
             \begin{itemize}
                 \item Swimming: 26 comunidades
                 \item Basketball: 5 comunidades
-                \item Football: 6 comunidades
+                \item Football: 5 comunidades
             \end{itemize}
         \end{column}
     \end{columns}
@@ -44,7 +44,7 @@
     \vspace{0.3cm}
     \begin{block}{Interpretação}
         \begin{itemize}
-            \item \textbf{Alta modularidade} (Swimming): Comunidades bem definidas por especialização técnica, período temporal e dominância geográfica
+            \item \textbf{Alta modularidade} (Swimming): Comunidades bem definidas por especialização técnica, período temporal e concentração geográfica
             \item \textbf{Baixa modularidade} (Basketball/Football): Rede densamente interconectada com fronteiras difusas entre comunidades
         \end{itemize}
     \end{block}
@@ -61,19 +61,19 @@
         \begin{column}{0.48\textwidth}
             \textbf{Natação:}
             \begin{itemize}
-                \item Alta diversidade temporal
-                \item Entropia média: 2.32
+                \item Diversidade temporal moderada
+                \item Entropia média: 1.60
                 \item Concentração geográfica moderada
-                \item HHI: 0.267
+                \item Comunidades especializadas
             \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{Esportes Coletivos:}
             \begin{itemize}
-                \item Diversidade temporal similar
-                \item Entropia: 2.44-2.53
+                \item Alta diversidade temporal
+                \item Entropia: 2.46-2.53
                 \item Distribuição geográfica equilibrada
-                \item HHI: 0.096-0.141
+                \item Comunidades multi-era
             \end{itemize}
         \end{column}
     \end{columns}
@@ -86,27 +86,28 @@
 \end{frame}
 
 \begin{frame}{Perfis de Medalhas por Comunidade}
-    \framesubtitle{Índice de Dominância}
-    \begin{block}{Métrica Desenvolvida}
-        \textbf{Índice de Dominância} = $(3 \times \%\text{Ouro} + 2 \times \%\text{Prata} + 1 \times \%\text{Bronze}) / 100$
+    \framesubtitle{Distribuição Aproximadamente Equilibrada}
+    \begin{block}{Achado Principal}
+        Distribuição de medalhas nas 36 comunidades apresenta padrão predominantemente equilibrado entre os três tipos.
     \end{block}
 
     \begin{table}[h]
         \centering
         \footnotesize
-        \begin{tabular}{lcc}
+        \begin{tabular}{lcccc}
             \toprule
-            \textbf{Classificação} & \textbf{Índice} & \textbf{Perfil Competitivo} \\
+            \textbf{Estatística} & \textbf{Ouro (\%)} & \textbf{Prata (\%)} & \textbf{Bronze (\%)} & \textbf{N} \\
             \midrule
-            Participante & $< 1.8$ & Baixa proporção de ouros \\
-            Competitiva & $1.8 - 2.2$ & Distribuição equilibrada \\
-            Elite & $> 2.2$ & Alta concentração de ouros \\
+            Média         & 31.8      & 33.4       & 34.8        & 36 \\
+            Mínimo        & 16.7      & 20.0       & 25.0        & -- \\
+            Máximo        & 50.0      & 50.0       & 50.0        & -- \\
             \bottomrule
         \end{tabular}
     \end{table}
 
     \vspace{0.3cm}
-    \begin{block}{Aplicação}
-        Permite classificar comunidades por nível de dominância competitiva, revelando hierarquias estruturais nas redes.
+    \begin{block}{Interpretação}
+        \footnotesize
+        Distribuição aproximadamente uniforme (31.8\%/33.4\%/34.8\%) caracteriza competição sistemática sem monopolização absoluta de posições superiores no pódio.
     \end{block}
 \end{frame}
