@@ -134,3 +134,13 @@ CLAUDE.md
 nul
 main/data/*csv
 main/data/athlete_events.csv
+
+# ============================================================================
+# Documentação de Validação Interna (não comitar)
+# ============================================================================
+AUDITORIA_MODELAGEM.md
+FLUXO_DE_ANALISE.md
+INCONSISTENCIAS_ENCONTRADAS.md
+RESULTADOS_SENSIBILIDADE_TEMPORAL.md
+RESUMO_TRABALHO_VALIDACAO.md
+FUNDAMENTACAO_VALIDACAO.md

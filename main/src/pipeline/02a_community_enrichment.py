@@ -20,14 +20,6 @@ from scipy.stats import entropy
 # FUNÇÕES AUXILIARES
 # ==============================================================================
 
-def calculate_herfindahl_index(counts):
-    """Índice de Herfindahl-Hirschman (HHI) para medir concentração"""
-    total = sum(counts.values())
-    if total == 0:
-        return 0
-    shares = np.array([count/total for count in counts.values()])
-    return np.sum(shares**2)
-
 def calculate_shannon_entropy(counts):
     """Entropia de Shannon para medir diversidade"""
     total = sum(counts.values())
@@ -106,7 +98,6 @@ for sport in df['sport'].unique():
             # =====================================================
             country_counts = comm_data['noc'].value_counts().to_dict()
             num_countries = len(country_counts)
-            geographic_hhi = calculate_herfindahl_index(country_counts)
             geographic_entropy = calculate_shannon_entropy(country_counts)
 
             dominant_country = comm_data['noc'].value_counts().idxmax()
@@ -164,7 +155,6 @@ for sport in df['sport'].unique():
 
                 # Geográfica
                 'num_countries': num_countries,
-                'geographic_hhi': geographic_hhi,
                 'geographic_entropy': geographic_entropy,
                 'dominant_country': dominant_country,
                 'country_dominance': country_dominance,
@@ -249,7 +239,7 @@ summary = {
     'communities_by_sport': results_df.groupby('sport').size().to_dict(),
     'largest_communities': results_df.nlargest(5, 'size')[['sport', 'sex', 'community_id', 'size', 'dominant_country']].to_dict('records'),
     'most_diverse_temporal': results_df.nlargest(5, 'temporal_entropy')[['sport', 'sex', 'community_id', 'temporal_entropy']].to_dict('records'),
-    'most_concentrated_geographic': results_df.nlargest(5, 'geographic_hhi')[['sport', 'sex', 'community_id', 'geographic_hhi', 'dominant_country']].to_dict('records'),
+    'most_diverse_geographic': results_df.nlargest(5, 'geographic_entropy')[['sport', 'sex', 'community_id', 'geographic_entropy', 'num_countries']].to_dict('records'),
 }
 
 with open('../../results/community_summary.json', 'w') as f:
@@ -274,7 +264,7 @@ for sport in results_df['sport'].unique():
     print(f"    • Comunidades: {len(sport_comms)}")
     print(f"    • Tamanho médio: {sport_comms['size'].mean():.1f} atletas")
     print(f"    • Entropia temporal média: {sport_comms['temporal_entropy'].mean():.2f}")
-    print(f"    • HHI geográfico médio: {sport_comms['geographic_hhi'].mean():.3f}")
+    print(f"    • Entropia geográfica média: {sport_comms['geographic_entropy'].mean():.2f}")
     print(f"    • PageRank CV médio: {sport_comms['pagerank_cv'].mean():.2f}")
 
 print("\n" + "=" * 80)

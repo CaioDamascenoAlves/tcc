@@ -1,0 +1,28 @@
+{
+  "dataset": "Swimming Masculino",
+  "num_nodes": 973,
+  "num_edges": 5572,
+  "louvain": {
+    "num_communities": 39,
+    "modularity": 0.7973397213419848,
+    "avg_size": 24.94871794871795,
+    "temporal_entropy_avg": 0.2529683691092497,
+    "geographic_entropy_avg": 1.6965284993222995,
+    "pagerank_cv_avg": 0.6877719959606061,
+    "gini_pagerank_avg": 0.29648564418354917
+  },
+  "infomap": {
+    "num_communities": 68,
+    "modularity": 0.742348679643881,
+    "avg_size": 14.308823529411764,
+    "temporal_entropy_avg": 0.18288558957479778,
+    "geographic_entropy_avg": 1.6557569985904488,
+    "pagerank_cv_avg": 0.7262076777212456,
+    "gini_pagerank_avg": 0.31567358643162813
+  },
+  "differences": {
+    "num_communities_diff": 29,
+    "temporal_entropy_diff": -0.07008277953445191,
+    "geographic_entropy_diff": -0.04077150073185076
+  }
+}
