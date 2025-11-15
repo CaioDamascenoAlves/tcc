@@ -805,9 +805,6 @@ def render_network_tab(data):
     st.caption("Explore as redes competitivas olímpicas de forma interativa")
     st.markdown("---")
 
-    # Obter diretório de resultados
-    results_dir = str(Path(__file__).parent.parent.parent / 'results')
-
     # ========================================================================
     # SELETOR DE REDE ESPECÍFICA
     # ========================================================================
@@ -844,61 +841,32 @@ def render_network_tab(data):
     sex = selected_network["sex"]
     event_type = selected_network["event_type"]
 
-    # Caminhos dos arquivos
-    sport_dir = Path(results_dir) / sport_lower
+    # Usar DataLoader para carregar (funciona com Drive e local)
+    try:
+        loader = DataLoader()
+        network_data = loader.load_sport_network(sport_lower, sex, event_type)
+        df_athletes = network_data['metrics']
+        df_edges = network_data['edges']
+    except Exception as e:
+        st.error(f"Erro ao carregar dados da rede: {e}")
+        return
 
-    if "event_type" in selected_network and selected_network["event_type"]:
-        metrics_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_detailed_metrics.csv"
-        edges_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_original_edges.csv"
-        summary_file = sport_dir / f"{sport_lower}_{sex}_{event_type}_network_summary.json"
+    # Estatísticas básicas da rede (calculadas dos dados carregados)
+    num_nodes_total = len(df_athletes)
+    num_edges_total = len(df_edges)
+    
+    # Tentar calcular densidade e modularidade se possível
+    if 'num_communities' in df_athletes.columns:
+        num_communities = df_athletes['num_communities'].iloc[0] if len(df_athletes) > 0 else 0
     else:
-        metrics_file = sport_dir / f"{sport_lower}_{sex}_detailed_metrics.csv"
-        edges_file = sport_dir / f"{sport_lower}_{sex}_original_edges.csv"
-        summary_file = sport_dir / f"{sport_lower}_{sex}_network_summary.json"
-
-    # Verificar se arquivos existem
-    if not metrics_file.exists():
-        st.error(f"Arquivo de métricas não encontrado: {metrics_file}")
-        return
-
-    if not edges_file.exists():
-        st.error(f"Arquivo de arestas não encontrado: {edges_file}")
-        return
-
-    if not summary_file.exists():
-        st.error(f"Arquivo de sumário não encontrado: {summary_file}")
-        return
-
-    # Carregar dados
-    df_athletes = pd.read_csv(metrics_file)
-    df_edges = pd.read_csv(edges_file)
-
-    # Carregar dados originais completos para obter histórico completo de medalhas e anos
-    athlete_events_file = PATHS['athlete_events']
-    if athlete_events_file.exists():
-        # Carregar apenas colunas necessárias para economizar memória
-        df_full_history = pd.read_csv(athlete_events_file, usecols=['ID', 'Games', 'Medal', 'Sport', 'Sex'])
-        # Renomear ID para athlete_id para consistência
-        df_full_history = df_full_history.rename(columns={'ID': 'athlete_id'})
-        # Filtrar pelo esporte e sexo atual
-        df_full_history = df_full_history[
-            (df_full_history['Sport'] == selected_network['sport']) &
-            (df_full_history['Sex'] == sex) &
-            (df_full_history['Medal'].notna())  # Apenas medalhistas
-        ]
-    else:
-        st.warning("Arquivo athlete_events.csv não encontrado. Informações de histórico podem estar incompletas.")
-        df_full_history = None
-
-    with open(summary_file, 'r', encoding='utf-8') as f:
-        network_summary = json.load(f)
-
-    # Extrair estatísticas da rede
-    num_nodes_total = network_summary["original_network"]["num_nodes"]
-    num_edges_total = network_summary["original_network"]["num_edges"]
-    density = network_summary["original_network"]["density"]
-    modularity = network_summary["original_community"]["modularity"]
-    num_communities = network_summary["original_community"]["num_communities"]
+        num_communities = df_athletes['original_community'].nunique() if 'original_community' in df_athletes.columns else 0
+    
+    # Densidade aproximada
+    max_edges = num_nodes_total * (num_nodes_total - 1) if num_nodes_total > 1 else 1
+    density = num_edges_total / max_edges if max_edges > 0 else 0
+    
+    # Modularidade (placeholder se não disponível)
+    modularity = 0.0
 
     # ========================================================================
     # MOSTRAR INFORMAÇÕES DA REDE
@@ -914,7 +882,7 @@ def render_network_tab(data):
     with col3:
         st.metric("Densidade", f"{density:.4f}")
     with col4:
-        st.metric("Modularidade", f"{modularity:.3f}")
+        st.metric("Modularidade", f"{modularity:.3f}" if modularity > 0 else "N/A")
     with col5:
         st.metric("Comunidades", num_communities)
 
