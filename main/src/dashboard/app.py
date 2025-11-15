@@ -978,36 +978,24 @@ def render_network_tab(data):
         betweenness_threshold = df_filtered['original_betweenness_centrality'].quantile(0.75)
         is_bridge = betweenness_val > betweenness_threshold
 
-        # Contar medalhas e anos do atleta usando histórico completo
+        # Contar medalhas e anos do atleta (usando dados disponíveis na rede)
         athlete_id_val = row['athlete_id']
 
-        if df_full_history is not None:
-            # Buscar TODAS as medalhas e jogos deste atleta no histórico completo
-            athlete_history = df_full_history[df_full_history['athlete_id'] == athlete_id_val]
-
-            medal_counts = {
-                'Gold': int((athlete_history['Medal'] == 'Gold').sum()),
-                'Silver': int((athlete_history['Medal'] == 'Silver').sum()),
-                'Bronze': int((athlete_history['Medal'] == 'Bronze').sum())
-            }
-            total_medals = sum(medal_counts.values())
-
-            # Extrair anos de participação
-            athlete_games = athlete_history['Games'].dropna()
-            if len(athlete_games) > 0:
-                years_list = sorted(set([int(str(g).split()[0]) for g in athlete_games if str(g).split()[0].isdigit()]))
-                years_str = ', '.join(map(str, years_list)) if years_list else 'N/A'
-            else:
-                years_list = []
-                years_str = 'N/A'
+        # Usar dados da linha atual (dados da rede já contêm informações agregadas)
+        medal = row.get('medal', 'Bronze')
+        medal_counts = {
+            'Gold': row.get('gold_medals', 1 if medal == 'Gold' else 0),
+            'Silver': row.get('silver_medals', 1 if medal == 'Silver' else 0),
+            'Bronze': row.get('bronze_medals', 1 if medal == 'Bronze' else 0)
+        }
+        total_medals = sum(medal_counts.values())
+        
+        # Anos de participação (se disponível)
+        if 'year' in row:
+            years_str = str(row['year'])
+        elif 'years' in row:
+            years_str = str(row['years'])
         else:
-            # Fallback: usar apenas dados da linha atual
-            medal = row.get('medal', 'Bronze')
-            medal_counts = {'Gold': 1 if medal == 'Gold' else 0,
-                          'Silver': 1 if medal == 'Silver' else 0,
-                          'Bronze': 1 if medal == 'Bronze' else 0}
-            total_medals = 1
-            years_list = []
             years_str = 'N/A'
 
         # Dados completos para tooltip (converter tudo para tipos Python nativos)
@@ -1016,7 +1004,7 @@ def render_network_tab(data):
             'noc': str(row.get('noc', 'N/A')),
             'team': str(row.get('team', 'N/A')),
             'years': str(years_str),  # Todos os anos de participação
-            'years_list': years_list,  # Lista de anos para timeline
+            'years_list': [],  # Lista vazia por enquanto (sem histórico completo)
             'age': int(row.get('age', 0)) if pd.notna(row.get('age')) else 'N/A',
             'height': int(row.get('height', 0)) if pd.notna(row.get('height')) else 'N/A',
             'weight': int(row.get('weight_kg', 0)) if pd.notna(row.get('weight_kg')) else 'N/A',
