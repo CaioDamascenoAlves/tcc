@@ -217,6 +217,26 @@ As arestas direcionadas conectam atletas que competiram no mesmo evento:
 
 Isso cria redes onde atletas bem-sucedidos se tornam hubs centrais recebendo conexões de competidores que derrotaram.
 
+**Validação:** Sistema de pesos 5-3-2 testado contra 6 alternativas, Jaccard = 0.832, Spearman = 0.992 (ROBUSTO)
+
+---
+
+## PARÂMETROS DO PAGERANK
+
+**Damping Factor (alpha):** 0.85
+- Valor estabelecido por Brin & Page (1998) no artigo original do PageRank
+- Padrão do NetworkX e amplamente adotado na literatura
+- Representa 85% de probabilidade de seguir arestas vs 15% de teleporte aleatório
+
+**Validação Empírica:**
+- Testado em: Swimming Masculino Individual (511 atletas, 10.708 arestas)
+- Valores testados: 0.70, 0.75, 0.80, 0.85, 0.90, 0.95
+- **Jaccard médio:** 0.80 (80% de sobreposição no top 10)
+- **Spearman médio:** 0.999 (correlação quase perfeita)
+- **Consenso:** 8/10 atletas no top 10 em todos os valores de alpha
+- **Conclusão:** Sistema ROBUSTO, alpha = 0.85 é apropriado
+- **Arquivo:** `main/analysis/test_pagerank_damping.py`
+
 ---
 
 ## ARQUIVOS GERADOS
