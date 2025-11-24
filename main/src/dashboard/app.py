@@ -1025,19 +1025,37 @@ def render_network_tab(data):
     # Estatísticas básicas da rede (calculadas dos dados carregados)
     num_nodes_total = len(df_athletes)
     num_edges_total = len(df_edges)
-    
-    # Tentar calcular densidade e modularidade se possível
-    if 'num_communities' in df_athletes.columns:
-        num_communities = df_athletes['num_communities'].iloc[0] if len(df_athletes) > 0 else 0
-    else:
-        num_communities = df_athletes['original_community'].nunique() if 'original_community' in df_athletes.columns else 0
-    
+
+    # Carregar summaries para obter modularidade e número correto de comunidades
+    summaries_path = PATHS['all_summaries']
+    modularity = 0.0
+    num_communities_from_summary = 0
+
+    if summaries_path.exists():
+        try:
+            with open(summaries_path, 'r', encoding='utf-8') as f:
+                summaries = json.load(f)
+
+            # Buscar a rede específica no JSON (é uma lista, não dict)
+            for network_summary in summaries:
+                if (network_summary.get('sport') == selected_sport and
+                    network_summary.get('sex') == selected_sex and
+                    network_summary.get('event_type') == selected_event_type):
+                    if 'original_community' in network_summary:
+                        modularity = network_summary['original_community'].get('modularity', 0.0)
+                        num_communities_from_summary = network_summary['original_community'].get('num_communities', 0)
+                    break
+        except Exception as e:
+            print(f"Erro ao carregar summaries: {e}")
+
+    # Usar número de comunidades do summary, fallback para contagem no dataframe
+    num_communities = num_communities_from_summary if num_communities_from_summary > 0 else (
+        df_athletes['original_community'].nunique() if 'original_community' in df_athletes.columns else 0
+    )
+
     # Densidade aproximada
     max_edges = num_nodes_total * (num_nodes_total - 1) if num_nodes_total > 1 else 1
     density = num_edges_total / max_edges if max_edges > 0 else 0
-    
-    # Modularidade (placeholder se não disponível)
-    modularity = 0.0
 
     # ========================================================================
     # MOSTRAR INFORMAÇÕES DA REDE

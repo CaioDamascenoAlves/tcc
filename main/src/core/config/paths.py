@@ -24,6 +24,7 @@ PATHS = {
     'consolidated_athletes': MAIN_ROOT / 'results' / 'networks' / 'consolidated_athletes.csv',
     'consolidated_edges': MAIN_ROOT / 'results' / 'networks' / 'consolidated_edges.csv',
     'network_summaries': MAIN_ROOT / 'results' / 'networks' / 'summaries.json',
+    'all_summaries': MAIN_ROOT / 'results' / 'all_network_summaries.json',
 
     # Análises adicionais
     'additional_analyses_dir': MAIN_ROOT / 'results' / 'additional_analyses',
