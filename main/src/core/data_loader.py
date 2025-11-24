@@ -176,6 +176,36 @@ class DataLoader:
         self._cached_data[cache_key] = df
         return df
 
+    def load_community_profiles(self) -> pd.DataFrame:
+        """
+        Carrega perfis completos de comunidades com métricas de entropia.
+
+        Returns:
+            DataFrame com colunas:
+            - sport, sex, community_id, size
+            - temporal_entropy, geographic_entropy
+            - year_start, year_end, span_years
+            - dominant_era, dominant_country
+            - medal counts, pagerank stats, etc.
+        """
+        cache_key = 'community_profiles'
+
+        if cache_key in self._cached_data:
+            return self._cached_data[cache_key]
+
+        path = PATHS['community_profiles']
+
+        if not path.exists():
+            raise FileNotFoundError(f"Arquivo não encontrado: {path}")
+
+        print(f"Carregando perfis de comunidades de: {path}")
+        df = pd.read_csv(path)
+
+        print(f"  [OK] {len(df)} comunidades carregadas com entropia temporal/geográfica")
+
+        self._cached_data[cache_key] = df
+        return df
+
     def load_all(self) -> Dict[str, pd.DataFrame]:
         """
         Carrega TODOS os datasets de uma vez.
@@ -198,6 +228,7 @@ class DataLoader:
             'hierarchy': self.load_community_hierarchy(),
             'connectivity': self.load_inter_connectivity(),
             'rivalries': self.load_top_rivalries(),
+            'community_profiles': self.load_community_profiles(),
         }
 
         print("\n" + "=" * 80)

@@ -35,9 +35,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Configuração
-RESULTS_DIR = Path(__file__).parent.parent / "../../results"
+RESULTS_DIR = Path(__file__).parent.parent.parent / "results"
 OUTPUT_DIR = RESULTS_DIR / "additional_analyses"
-OUTPUT_DIR.mkdir(exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 print("=" * 80)
 print("ANÁLISES ADICIONAIS DE COMUNIDADES".center(80))
@@ -280,9 +280,13 @@ def analyze_community_hierarchy():
     if inter_file.exists():
         inter_data = pd.read_csv(inter_file)
 
-        # Merge para adicionar segregation_score
+        # Calcular média de segregation_score por (sport, sex)
+        # pois Swimming tem múltiplas redes (individual e team)
+        inter_avg = inter_data.groupby(['sport', 'sex'])['segregation_score'].mean().reset_index()
+
+        # Merge para adicionar segregation_score médio
         profiles = profiles.merge(
-            inter_data[['sport', 'sex', 'segregation_score']],
+            inter_avg[['sport', 'sex', 'segregation_score']],
             on=['sport', 'sex'],
             how='left'
         )

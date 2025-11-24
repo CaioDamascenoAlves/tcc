@@ -196,7 +196,7 @@ def render_sidebar(data):
         st.metric("Atletas", f"{len(data['athletes']):,}")
         st.metric("Esportes", len(sports_available))
     with col2:
-        st.metric("Comunidades", f"{len(data['hierarchy']):,}")
+        st.metric("Comunidades", f"{len(data['communities']):,}")
         st.metric("Rivalidades", f"{len(data['rivalries']):,}")
 
     st.sidebar.markdown("---")
@@ -452,10 +452,10 @@ def render_communities_tab(data):
         - **Intermediária**: Comunidades com centralidade moderada - grupos competitivos estáveis
         - **Periférica**: Comunidades com baixo PageRank médio - grupos menos centrais ou emergentes
 
-        **Perfis Competitivos:**
-        - **Elite**: Alto percentual de medalhas de ouro (dominância alta)
-        - **Competitiva**: Distribuição balanceada entre ouro, prata e bronze
-        - **Participante**: Maior concentração de medalhas de bronze
+        **Distribuição de Medalhas:**
+        - Análise da distribuição de medalhas (ouro, prata, bronze) por comunidade
+        - Distribuição aproximadamente equilibrada entre os três tipos
+        - Média geral: 31.8% ouro, 33.4% prata, 34.8% bronze
 
         **Segregação Estrutural:**
         Mede o grau de isolamento entre comunidades. Alta segregação indica pouca interação entre grupos,
@@ -463,7 +463,7 @@ def render_communities_tab(data):
         """)
 
     # Subtabs
-    subtab1, subtab2, subtab3 = st.tabs(["Hierarquia", "Perfis Competitivos", "Segregação"])
+    subtab1, subtab2, subtab3, subtab4 = st.tabs(["Hierarquia", "Distribuição de Medalhas", "Segregação", "Diversidade Temporal"])
 
     with subtab1:
         render_subsection("Hierarquia de Comunidades", "Análise da hierarquia estrutural baseada em PageRank médio")
@@ -478,57 +478,95 @@ def render_communities_tab(data):
 
         # Estatísticas por nível
         render_subsection("Estatísticas por Nível Hierárquico")
+
+        st.info("""
+        **Classificação hierárquica** baseada em centralidade estrutural (PageRank):
+        - **Núcleo (20%)**: Comunidades com alta centralidade estrutural (PageRank médio ~0.004)
+        - **Intermediária (42%)**: Centralidade moderada (PageRank médio ~0.002)
+        - **Periférica (38%)**: Menor centralidade estrutural (PageRank médio ~0.001)
+
+        A centralidade estrutural não equivale necessariamente a volume de medalhas.
+        """)
+
         col1, col2, col3 = st.columns(3)
 
-        # Normalizar hierarchy_level para remover acentos
-        hierarchy_normalized = data['hierarchy'].copy()
-        hierarchy_normalized['hierarchy_level_norm'] = hierarchy_normalized['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+        # Usar community_profiles (36 comunidades) e calcular hierarquia dinamicamente
+        import numpy as np
+        communities_df = data['communities'].copy()
 
-        # Mapa de labels com acentos para exibição
+        # Calcular percentis de PageRank para classificação
+        communities_df['pagerank_percentile'] = communities_df['pagerank_mean'].rank(pct=True) * 100
+
+        # Classificar conforme monografia: Periférica (bottom 38%), Intermediária (38-80%), Núcleo (top 20%)
+        communities_df['hierarchy_level'] = pd.cut(
+            communities_df['pagerank_percentile'],
+            bins=[0, 38, 80, 100],
+            labels=['Periférica', 'Intermediária', 'Núcleo'],
+            include_lowest=True
+        )
+
+        # Contagem por nível
+        level_counts = communities_df['hierarchy_level'].value_counts()
+        level_stats = communities_df.groupby('hierarchy_level')['pagerank_mean'].mean()
+
+        # Mapa de labels
         label_map = {
-            'Nucleo': 'Núcleo',
-            'Intermediaria': 'Intermediária',
-            'Periferica': 'Periférica'
+            'Núcleo': 'Núcleo',
+            'Intermediária': 'Intermediária',
+            'Periférica': 'Periférica'
         }
 
-        for i, level in enumerate(['Nucleo', 'Intermediaria', 'Periferica']):
-            subset = hierarchy_normalized[hierarchy_normalized['hierarchy_level_norm'] == level]
+        for i, level in enumerate(['Núcleo', 'Intermediária', 'Periférica']):
+            count = level_counts.get(level, 0)
+            pr_mean = level_stats.get(level, 0)
 
             with [col1, col2, col3][i]:
                 st.metric(
                     label_map[level],
-                    f"{len(subset)} comunidades",
-                    help=f"PageRank médio: {subset['pagerank_mean'].mean():.6f}" if len(subset) > 0 else "Sem dados"
+                    f"{count} comunidades",
+                    help=f"PageRank médio: {pr_mean:.6f}" if count > 0 else "Sem dados"
                 )
 
     with subtab2:
-        render_subsection("Perfis Competitivos", "Classificação baseada no índice de dominância (distribuição de medalhas)")
+        render_subsection("Distribuição de Medalhas por Comunidade", "Estatísticas descritivas da distribuição de medalhas")
         st.markdown("""
-        **Elite**: Alto percentual de ouro | **Competitiva**: Balanceado | **Participante**: Mais bronze.
+        **Padrão predominantemente equilibrado**: Distribuição aproximadamente uniforme caracteriza
+        competição sistemática sem monopolização absoluta de posições superiores no pódio.
         """)
 
-        col1, col2 = st.columns(2)
+        # Verificar se temos dados de medal_profile
+        if 'medal_profile' in data and data['medal_profile'] is not None and len(data['medal_profile']) > 0:
+            medal_data = data['medal_profile']
 
-        with col1:
-            fig = histogram_dominance(data['medal_profile'], interactive=True)
-            st.plotly_chart(fig, use_container_width=True, key="communities_dominance_hist")
+            # Estatísticas descritivas
+            col1, col2, col3 = st.columns(3)
 
-        with col2:
-            fig = stacked_bar_profile_distribution(data['medal_profile'], interactive=True)
-            st.plotly_chart(fig, use_container_width=True, key="communities_profiles_stacked")
+            with col1:
+                st.metric(
+                    "Média Ouro (%)",
+                    f"{medal_data['gold_pct'].mean():.1f}%",
+                    help="Percentual médio de medalhas de ouro nas comunidades"
+                )
+            with col2:
+                st.metric(
+                    "Média Prata (%)",
+                    f"{medal_data['silver_pct'].mean():.1f}%",
+                    help="Percentual médio de medalhas de prata nas comunidades"
+                )
+            with col3:
+                st.metric(
+                    "Média Bronze (%)",
+                    f"{medal_data['bronze_pct'].mean():.1f}%",
+                    help="Percentual médio de medalhas de bronze nas comunidades"
+                )
 
-        st.markdown("---")
+            st.markdown("---")
 
-        # Comparação por esporte
-        render_subsection("Comparação por Esporte")
-        fig = boxplot_metric_by_category(
-            data['medal_profile'],
-            metric_column='dominance_index',
-            category_column='sport',
-            interactive=True,
-            title='Índice de Dominância por Esporte'
-        )
-        st.plotly_chart(fig, use_container_width=True, key="communities_dominance_boxplot")
+            # Visualização da distribuição
+            fig = stacked_bar_profile_distribution(medal_data, interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="communities_medals_stacked")
+        else:
+            st.info("Dados de distribuição de medalhas não disponíveis para visualização.")
 
     with subtab3:
         render_subsection("Segregação Estrutural", "Análise da conectividade intra vs inter-comunidade")
@@ -547,6 +585,91 @@ def render_communities_tab(data):
             data['connectivity'][['sport', 'sex', 'intra_edges', 'inter_edges', 'segregation_score']],
             use_container_width=True
         )
+
+    with subtab4:
+        render_subsection("Diversidade Temporal (Entropia de Shannon)", "Análise da distribuição temporal de atletas por comunidade")
+        st.markdown("""
+        **Alta entropia**: Alta diversidade temporal - atletas distribuídos em múltiplas eras
+        **Baixa entropia**: Baixa diversidade temporal - atletas concentrados em poucas eras
+        """)
+
+        # Verificar se temos dados de community_profiles com entropia
+        if 'communities' in data and data['communities'] is not None and len(data['communities']) > 0:
+            profiles_df = data['communities']
+
+            # Estatísticas por esporte
+            st.markdown("### Entropia Temporal por Esporte")
+
+            entropy_stats = profiles_df.groupby('sport')['temporal_entropy'].agg(['mean', 'min', 'max', 'std']).reset_index()
+
+            col1, col2, col3 = st.columns(3)
+
+            sports = ['Swimming', 'Basketball', 'Football']
+            sport_labels = {'Swimming': 'Swimming', 'Basketball': 'Basketball', 'Football': 'Football'}
+
+            for idx, sport in enumerate(sports):
+                sport_data = entropy_stats[entropy_stats['sport'] == sport]
+                if len(sport_data) > 0:
+                    with [col1, col2, col3][idx]:
+                        st.metric(
+                            sport_labels[sport],
+                            f"{sport_data['mean'].values[0]:.2f}",
+                            help=f"Entropia temporal média. Min: {sport_data['min'].values[0]:.2f}, Max: {sport_data['max'].values[0]:.2f}"
+                        )
+
+            st.markdown("---")
+
+            # Interpretação
+            st.info("""
+            **Interpretação dos valores (da monografia):**
+            - **Swimming (1.60)**: Diversidade temporal moderada - comunidades especializadas por era
+            - **Basketball (2.46)**: Alta diversidade temporal - comunidades multi-era
+            - **Football (2.53)**: Alta diversidade temporal - comunidades multi-era
+
+            Esportes coletivos apresentam comunidades que agregam atletas de múltiplas décadas devido
+            à natureza densamente conectada destas redes.
+            """)
+
+            st.markdown("---")
+
+            # Gráfico de distribuição
+            import plotly.graph_objects as go
+
+            fig = go.Figure()
+
+            for sport in sports:
+                sport_df = profiles_df[profiles_df['sport'] == sport]
+                fig.add_trace(go.Box(
+                    y=sport_df['temporal_entropy'],
+                    name=sport_labels[sport],
+                    boxmean='sd'
+                ))
+
+            fig.update_layout(
+                title='Distribuição de Entropia Temporal por Esporte',
+                yaxis_title='Entropia de Shannon (Temporal)',
+                xaxis_title='Esporte',
+                height=400,
+                showlegend=False
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key="entropy_boxplot")
+
+            st.markdown("---")
+
+            # Tabela detalhada
+            render_subsection("Entropia por Comunidade")
+
+            display_cols = ['sport', 'sex', 'community_id', 'size', 'temporal_entropy', 'geographic_entropy', 'year_start', 'year_end']
+            available_cols = [col for col in display_cols if col in profiles_df.columns]
+
+            st.dataframe(
+                profiles_df[available_cols].sort_values('temporal_entropy', ascending=False),
+                use_container_width=True,
+                height=400
+            )
+        else:
+            st.warning("Dados de entropia temporal não disponíveis. Execute a análise completa para gerar esses dados.")
 
 
 # ============================================================================
@@ -1262,7 +1385,7 @@ def render_temporal_tab(data):
     st.markdown("---")
 
     # Timeline Visual Interativa com Plotly
-    render_section_title("Linha do Tempo Histórica", "4 eras olímpicas de 1896 a 2016")
+    render_section_title("Linha do Tempo Histórica", "4 eras olímpicas de 1896 a 2021")
 
     st.caption("💡 **Dica:** Passe o mouse sobre as barras para ver detalhes de cada era")
 
@@ -1342,7 +1465,7 @@ def render_temporal_tab(data):
         - **Contexto**: Globalização e democratização do esporte olímpico
         - **Participação**: 800 → 900+ atletas, participação global
         - **Características**: Profissionalização total, avanço feminino (paridade), tecnologia avançada
-        - **Estrutura de Rede**: Democratização do PageRank, diversificação geográfica, HHI em queda
+        - **Estrutura de Rede**: Democratização do PageRank, diversificação geográfica, globalização do esporte
 
         ---
 

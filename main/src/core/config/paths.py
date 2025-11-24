@@ -31,6 +31,7 @@ PATHS = {
     'inter_connectivity': MAIN_ROOT / 'results' / 'additional_analyses' / 'inter_community_connectivity.csv',
     'community_hierarchy': MAIN_ROOT / 'results' / 'additional_analyses' / 'community_hierarchy.csv',
     'top_rivalries': MAIN_ROOT / 'results' / 'additional_analyses' / 'top_rivalry_pairs.csv',
+    'community_profiles': MAIN_ROOT / 'results' / 'community_profiles_enriched.csv',
 
     # Dados base
     'athlete_events': MAIN_ROOT / 'data' / 'athlete_events.csv',

@@ -114,6 +114,10 @@ class DataLoader:
         """Alias para load_inter_community_connectivity (compatibilidade)."""
         return self.load_inter_community_connectivity()
 
+    def load_community_profiles(self) -> pd.DataFrame:
+        """Carrega perfis completos de comunidades com métricas de entropia."""
+        return self._load_csv('community_profiles_enriched.csv', 'community_profiles')
+
     def load_consolidated_analysis(self) -> pd.DataFrame:
         """Carrega análise consolidada de redes esportivas."""
         return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_analysis')
