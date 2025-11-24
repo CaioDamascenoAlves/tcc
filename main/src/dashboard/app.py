@@ -1027,11 +1027,11 @@ def render_network_tab(data):
     num_edges_total = len(df_edges)
 
     # Carregar summaries para obter modularidade e número correto de comunidades
-    summaries_path = PATHS['all_summaries']
+    summaries_path = PATHS.get('all_summaries', PATHS.get('results_dir').parent / 'all_network_summaries.json')
     modularity = 0.0
     num_communities_from_summary = 0
 
-    if summaries_path.exists():
+    if summaries_path and summaries_path.exists():
         try:
             with open(summaries_path, 'r', encoding='utf-8') as f:
                 summaries = json.load(f)
