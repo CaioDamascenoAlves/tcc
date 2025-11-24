@@ -225,7 +225,7 @@ def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
         DataFrame com métricas comparativas por esporte
     """
     athletes_df = data['athletes']
-    hierarchy_df = data['hierarchy']
+    communities_df = data.get('communities', data.get('hierarchy', pd.DataFrame()))  # Usar communities, fallback para hierarchy
     medal_profile_df = data['medal_profile']
 
     # Esportes disponíveis
@@ -236,12 +236,12 @@ def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     for sport in sports:
         # Filtrar dados do esporte
         sport_athletes = athletes_df[athletes_df['sport'] == sport]
-        sport_hierarchy = hierarchy_df[hierarchy_df['sport'] == sport]
+        sport_communities = communities_df[communities_df['sport'] == sport]
         sport_profile = medal_profile_df[medal_profile_df['sport'] == sport]
 
         # === ESTRUTURA DA REDE ===
         num_athletes = len(sport_athletes)
-        num_communities = len(sport_hierarchy)
+        num_communities = len(sport_communities)
 
         # Densidade (aproximada via degree médio / total possível)
         avg_degree = sport_athletes['original_total_degree'].mean() if 'original_total_degree' in sport_athletes.columns else 0
@@ -264,7 +264,7 @@ def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
 
         # === COMUNIDADES ===
         # Modularidade estimada pelo tamanho médio das comunidades
-        avg_community_size = sport_hierarchy['size'].mean() if 'size' in sport_hierarchy.columns else 0
+        avg_community_size = sport_communities['size'].mean() if 'size' in sport_communities.columns else 0
         modularity_label = (
             "Alta" if avg_community_size < 50 else
             "Média" if avg_community_size < 150 else
@@ -272,7 +272,7 @@ def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
         )
 
         # Segregação média
-        avg_segregation = sport_hierarchy['segregation_score'].mean() if 'segregation_score' in sport_hierarchy.columns else 0
+        avg_segregation = sport_communities['segregation_score'].mean() if 'segregation_score' in sport_communities.columns else 0
         segregation_label = (
             "Alta" if avg_segregation > 0.7 else
             "Média" if avg_segregation > 0.4 else
@@ -309,9 +309,9 @@ def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
             growth = 0
 
         # === HIERARQUIA ===
-        if 'hierarchy_level' in sport_hierarchy.columns:
+        if 'hierarchy_level' in sport_communities.columns:
             # Normalizar para remover acentos
-            hierarchy_norm = sport_hierarchy.copy()
+            hierarchy_norm = sport_communities.copy()
             hierarchy_norm['hierarchy_level_norm'] = hierarchy_norm['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
 
             nucleo_count = len(hierarchy_norm[hierarchy_norm['hierarchy_level_norm'] == 'Nucleo'])

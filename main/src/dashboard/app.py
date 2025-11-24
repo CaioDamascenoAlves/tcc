@@ -196,7 +196,8 @@ def render_sidebar(data):
         st.metric("Atletas", f"{len(data['athletes']):,}")
         st.metric("Esportes", len(sports_available))
     with col2:
-        st.metric("Comunidades", f"{len(data['communities']):,}")
+        num_communities = len(data.get('communities', [])) if 'communities' in data and data['communities'] is not None else 0
+        st.metric("Comunidades", f"{num_communities:,}")
         st.metric("Rivalidades", f"{len(data['rivalries']):,}")
 
     st.sidebar.markdown("---")
@@ -323,6 +324,17 @@ def filter_data(data, filters):
         else:
             filtered['medal_profile'] = pd.DataFrame()
 
+        # Communities
+        if 'communities' in data:
+            df = data['communities'].copy()
+            if filters['sports']:
+                df = df[df['sport'].isin(filters['sports'])]
+            if filters['sex']:
+                df = df[df['sex'].isin(filters['sex'])]
+            filtered['communities'] = df
+        else:
+            filtered['communities'] = pd.DataFrame()
+
         # Hierarchy
         df = data['hierarchy'].copy()
         if filters['sports']:
@@ -385,9 +397,10 @@ def render_overview_tab(data):
         )
 
     with col2:
+        num_communities = len(data['communities']) if 'communities' in data and data['communities'] is not None else 0
         st.metric(
             "Comunidades Detectadas",
-            f"{len(set(data['hierarchy']['community_id'])) if 'community_id' in data['hierarchy'].columns else len(data['medal_profile'])}",
+            f"{num_communities:,}",
             help="Comunidades distintas identificadas por Louvain (considerando esporte e gênero)"
         )
 
@@ -490,24 +503,16 @@ def render_communities_tab(data):
 
         col1, col2, col3 = st.columns(3)
 
-        # Usar community_profiles (36 comunidades) e calcular hierarquia dinamicamente
-        import numpy as np
-        communities_df = data['communities'].copy()
+        # Usar hierarchy que já tem hierarchy_level calculado
+        if 'hierarchy' not in data or data['hierarchy'] is None or len(data['hierarchy']) == 0:
+            st.warning("Dados de hierarquia não disponíveis. Execute a análise completa para gerar esses dados.")
+            return
 
-        # Calcular percentis de PageRank para classificação
-        communities_df['pagerank_percentile'] = communities_df['pagerank_mean'].rank(pct=True) * 100
-
-        # Classificar conforme monografia: Periférica (bottom 38%), Intermediária (38-80%), Núcleo (top 20%)
-        communities_df['hierarchy_level'] = pd.cut(
-            communities_df['pagerank_percentile'],
-            bins=[0, 38, 80, 100],
-            labels=['Periférica', 'Intermediária', 'Núcleo'],
-            include_lowest=True
-        )
+        hierarchy_df = data['hierarchy'].copy()
 
         # Contagem por nível
-        level_counts = communities_df['hierarchy_level'].value_counts()
-        level_stats = communities_df.groupby('hierarchy_level')['pagerank_mean'].mean()
+        level_counts = hierarchy_df['hierarchy_level'].value_counts()
+        level_stats = hierarchy_df.groupby('hierarchy_level')['pagerank_mean'].mean()
 
         # Mapa de labels
         label_map = {
@@ -534,37 +539,80 @@ def render_communities_tab(data):
         competição sistemática sem monopolização absoluta de posições superiores no pódio.
         """)
 
-        # Verificar se temos dados de medal_profile
-        if 'medal_profile' in data and data['medal_profile'] is not None and len(data['medal_profile']) > 0:
-            medal_data = data['medal_profile']
+        # Verificar se temos dados de communities com medalhas
+        if 'communities' in data and data['communities'] is not None and len(data['communities']) > 0:
+            medal_data = data['communities']
 
-            # Estatísticas descritivas
-            col1, col2, col3 = st.columns(3)
+            # Verificar se as colunas de medalhas existem
+            if all(col in medal_data.columns for col in ['gold_count', 'silver_count', 'bronze_count', 'total_medals']):
+                # Calcular percentuais
+                medal_data = medal_data.copy()
+                medal_data['gold_pct'] = (medal_data['gold_count'] / medal_data['total_medals'] * 100).fillna(0)
+                medal_data['silver_pct'] = (medal_data['silver_count'] / medal_data['total_medals'] * 100).fillna(0)
+                medal_data['bronze_pct'] = (medal_data['bronze_count'] / medal_data['total_medals'] * 100).fillna(0)
 
-            with col1:
-                st.metric(
-                    "Média Ouro (%)",
-                    f"{medal_data['gold_pct'].mean():.1f}%",
-                    help="Percentual médio de medalhas de ouro nas comunidades"
+                # Estatísticas descritivas
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    st.metric(
+                        "Média Ouro (%)",
+                        f"{medal_data['gold_pct'].mean():.1f}%",
+                        help="Percentual médio de medalhas de ouro nas comunidades"
+                    )
+                with col2:
+                    st.metric(
+                        "Média Prata (%)",
+                        f"{medal_data['silver_pct'].mean():.1f}%",
+                        help="Percentual médio de medalhas de prata nas comunidades"
+                    )
+                with col3:
+                    st.metric(
+                        "Média Bronze (%)",
+                        f"{medal_data['bronze_pct'].mean():.1f}%",
+                        help="Percentual médio de medalhas de bronze nas comunidades"
+                    )
+
+                st.markdown("---")
+
+                # Visualização da distribuição - usar gráfico simples de barras empilhadas
+                import plotly.graph_objects as go
+
+                # Agrupar por esporte
+                sport_medals = medal_data.groupby('sport')[['gold_pct', 'silver_pct', 'bronze_pct']].mean()
+
+                fig = go.Figure()
+                fig.add_trace(go.Bar(
+                    name='Ouro',
+                    x=sport_medals.index,
+                    y=sport_medals['gold_pct'],
+                    marker_color='gold'
+                ))
+                fig.add_trace(go.Bar(
+                    name='Prata',
+                    x=sport_medals.index,
+                    y=sport_medals['silver_pct'],
+                    marker_color='silver'
+                ))
+                fig.add_trace(go.Bar(
+                    name='Bronze',
+                    x=sport_medals.index,
+                    y=sport_medals['bronze_pct'],
+                    marker_color='#CD7F32'
+                ))
+
+                fig.update_layout(
+                    barmode='stack',
+                    title='Distribuição Média de Medalhas por Esporte',
+                    xaxis_title='Esporte',
+                    yaxis_title='Percentual (%)',
+                    yaxis_range=[0, 100],
+                    height=400
                 )
-            with col2:
-                st.metric(
-                    "Média Prata (%)",
-                    f"{medal_data['silver_pct'].mean():.1f}%",
-                    help="Percentual médio de medalhas de prata nas comunidades"
-                )
-            with col3:
-                st.metric(
-                    "Média Bronze (%)",
-                    f"{medal_data['bronze_pct'].mean():.1f}%",
-                    help="Percentual médio de medalhas de bronze nas comunidades"
-                )
 
-            st.markdown("---")
-
-            # Visualização da distribuição
-            fig = stacked_bar_profile_distribution(medal_data, interactive=True)
-            st.plotly_chart(fig, use_container_width=True, key="communities_medals_stacked")
+                st.plotly_chart(fig, use_container_width=True, key="communities_medals_stacked")
+            else:
+                st.info("Colunas de medalhas não encontradas nos dados de comunidades.")
         else:
             st.info("Dados de distribuição de medalhas não disponíveis para visualização.")
 
