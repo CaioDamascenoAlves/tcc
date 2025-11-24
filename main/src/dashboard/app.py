@@ -1028,7 +1028,7 @@ def render_network_tab(data):
 
     # Carregar summaries para obter modularidade e número correto de comunidades
     summaries_path = PATHS.get('all_summaries', PATHS.get('results_dir').parent / 'all_network_summaries.json')
-    modularity = 0.0
+    modularity = None  # Usar None ao invés de 0.0 para diferenciar "não carregado" de "zero"
     num_communities_from_summary = 0
 
     if summaries_path and summaries_path.exists():
@@ -1038,15 +1038,15 @@ def render_network_tab(data):
 
             # Buscar a rede específica no JSON (é uma lista, não dict)
             for network_summary in summaries:
-                if (network_summary.get('sport') == selected_sport and
-                    network_summary.get('sex') == selected_sex and
-                    network_summary.get('event_type') == selected_event_type):
+                if (network_summary.get('sport') == selected_network["sport"] and
+                    network_summary.get('sex') == selected_network["sex"] and
+                    network_summary.get('event_type') == selected_network["event_type"]):
                     if 'original_community' in network_summary:
-                        modularity = network_summary['original_community'].get('modularity', 0.0)
+                        modularity = network_summary['original_community'].get('modularity', None)
                         num_communities_from_summary = network_summary['original_community'].get('num_communities', 0)
                     break
         except Exception as e:
-            print(f"Erro ao carregar summaries: {e}")
+            st.warning(f"Aviso ao carregar summaries: {e}")
 
     # Usar número de comunidades do summary, fallback para contagem no dataframe
     num_communities = num_communities_from_summary if num_communities_from_summary > 0 else (
@@ -1071,7 +1071,7 @@ def render_network_tab(data):
     with col3:
         st.metric("Densidade", f"{density:.4f}")
     with col4:
-        st.metric("Modularidade", f"{modularity:.3f}" if modularity > 0 else "N/A")
+        st.metric("Modularidade", f"{modularity:.3f}" if modularity is not None else "N/A")
     with col5:
         st.metric("Comunidades", num_communities)
 
