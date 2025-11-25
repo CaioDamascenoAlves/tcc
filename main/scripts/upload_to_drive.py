@@ -126,18 +126,18 @@ def upload_file(service, file_path, folder_id):
 
 
 def get_all_csv_files(results_dir):
-    """Retorna lista de todos os CSVs em results/ e subdiretórios."""
-    csv_files = []
+    """Retorna lista de todos os CSVs e JSONs em results/ e subdiretórios."""
+    data_files = []
     for root, dirs, files in os.walk(results_dir):
         for file in files:
-            if file.endswith('.csv'):
+            if file.endswith(('.csv', '.json')):  # Incluir CSVs e JSONs
                 full_path = Path(root) / file
                 relative_path = full_path.relative_to(results_dir)
-                csv_files.append({
+                data_files.append({
                     'full_path': full_path,
                     'relative_path': str(relative_path).replace('\\', '/')  # Normalizar
                 })
-    return csv_files
+    return data_files
 
 
 def main():
@@ -155,10 +155,10 @@ def main():
     print(f"\n[2/4] Configurando pasta '{DRIVE_FOLDER_NAME}'...")
     folder_id = find_or_create_folder(service, DRIVE_FOLDER_NAME)
     
-    # Lista arquivos CSV
-    print("\n[3/4] Listando arquivos CSV...")
+    # Lista arquivos CSV e JSON
+    print("\n[3/4] Listando arquivos CSV e JSON...")
     csv_files = get_all_csv_files(RESULTS_DIR)
-    print(f"✓ Encontrados {len(csv_files)} arquivos CSV")
+    print(f"✓ Encontrados {len(csv_files)} arquivos (CSV + JSON)")
     
     # Upload de cada arquivo
     print("\n[4/4] Fazendo upload...")
