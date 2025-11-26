@@ -1,0 +1,39 @@
+name: Keep Streamlit App Alive
+
+on:
+  schedule:
+    # Executa a cada 10 minutos (bem dentro do limite do GitHub Actions)
+    - cron: '*/10 * * * *'
+  workflow_dispatch:  # Permite executar manualmente
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Streamlit App
+        run: |
+          # Substitua pela URL do seu app no Streamlit Community Cloud
+          APP_URL="https://dashboard-tcc.rglg.org"
+
+          echo "🏓 Pinging Streamlit app at $(date)"
+
+          # Faz requisição HTTP e mostra headers
+          RESPONSE=$(curl -I -s -w "\nHTTP_CODE:%{http_code}\n" "$APP_URL")
+
+          echo "$RESPONSE"
+
+          # Verifica se retornou 200 OK
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE" | cut -d: -f2)
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ App is alive and responding!"
+          else
+            echo "⚠️ App returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Log Activity
+        run: |
+          echo "Last ping: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          echo "Next ping in ~10 minutes"

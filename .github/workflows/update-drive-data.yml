@@ -1,0 +1,78 @@
+name: Auto-Upload Data to Google Drive
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      # Só executa quando arquivos em results/ mudam
+      - 'main/results/**/*.csv'
+      - 'main/results/**/*.json'
+      - 'main/src/pipeline/**'  # Ou quando scripts de análise mudam
+  workflow_dispatch:  # Permite executar manualmente
+
+jobs:
+  upload-to-drive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+
+      - name: Setup Google Credentials
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+        run: |
+          echo "📝 Setting up Google Drive credentials..."
+
+          # Salvar credentials.json
+          echo "$GOOGLE_CREDENTIALS" > main/credentials.json
+
+          # Salvar token.json (se existir)
+          if [ ! -z "$GOOGLE_TOKEN" ]; then
+            echo "$GOOGLE_TOKEN" > main/token.json
+            echo "✅ Token OAuth encontrado - sem necessidade de autenticação"
+          else
+            echo "⚠️ Token OAuth não encontrado - primeira execução precisará de autenticação manual"
+          fi
+
+      - name: Upload Files to Google Drive
+        run: |
+          cd main/scripts
+          echo "🚀 Iniciando upload para Google Drive..."
+          python upload_to_drive.py
+
+      - name: Commit Updated drive_files.json
+        run: |
+          # Configurar git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # Adicionar drive_files.json atualizado
+          git add main/drive_files.json
+
+          # Commit apenas se houver mudanças
+          git diff --staged --quiet || git commit -m "🤖 Auto-update drive_files.json [skip ci]"
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      - name: Summary
+        run: |
+          echo "✅ Upload concluído com sucesso!"
+          echo "📊 Arquivos atualizados no Google Drive"
+          echo "🔄 drive_files.json commitado automaticamente"
