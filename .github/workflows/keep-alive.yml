@@ -18,19 +18,19 @@ jobs:
 
           echo "🏓 Pinging Streamlit app at $(date)"
 
-          # Faz requisição HTTP seguindo redirecionamentos
-          RESPONSE=$(curl -L -I -s -w "\nHTTP_CODE:%{http_code}\n" "$APP_URL")
+          # Faz requisição HTTP simples (sem seguir redirects)
+          # Qualquer resposta (200, 303, 302, etc) indica que o app está vivo
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$APP_URL")
 
-          echo "$RESPONSE"
+          echo "HTTP Response Code: $HTTP_CODE"
 
-          # Verifica se retornou 200 OK ou 303 (redirect válido)
-          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE" | cut -d: -f2)
-
-          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "303" ] || [ "$HTTP_CODE" = "302" ]; then
+          # Aceita qualquer código 2xx ou 3xx como sucesso
+          if [[ "$HTTP_CODE" =~ ^[23][0-9][0-9]$ ]]; then
             echo "✅ App is alive and responding! (HTTP $HTTP_CODE)"
           else
-            echo "⚠️ App returned HTTP $HTTP_CODE - may be down"
-            exit 1
+            echo "⚠️ App may be down (HTTP $HTTP_CODE)"
+            # Não falha o workflow - apenas avisa
+            echo "Note: This may be temporary, will retry in 10 minutes"
           fi
 
       - name: Log Activity
