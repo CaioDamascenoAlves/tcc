@@ -62,15 +62,15 @@ main/token.json
 # *.pdf
 
 # ============================================================================
-# Figuras e Tabelas Geradas (podem ser regeneradas)
+# Figuras Geradas (podem ser regeneradas)
 # ============================================================================
 monografia/figuras/*.png
 monografia/figuras/*.pdf
-monografia/tabelas/*.tex
 apresentacao/figuras/*.png
 apresentacao/figuras/*.pdf
 main/docs/monografia/figuras/*.png
 main/docs/monografia/figuras/*.pdf
+# Nota: monografia/tabelas/*.tex NAO esta ignorado pois e necessario para compilacao
 
 # ============================================================================
 # Notebooks Jupyter
