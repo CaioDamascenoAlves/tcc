@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -56,7 +59,7 @@ jobs:
           echo "🚀 Iniciando upload para Google Drive..."
           python upload_to_drive.py
 
-      - name: Commit Updated drive_files.json
+      - name: Commit and Push Updated drive_files.json
         run: |
           # Configurar git
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -66,13 +69,12 @@ jobs:
           git add main/drive_files.json
 
           # Commit apenas se houver mudanças
-          git diff --staged --quiet || git commit -m "🤖 Auto-update drive_files.json [skip ci]"
-
-      - name: Push Changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-update drive_files.json [skip ci]"
+            git push
+          else
+            echo "Nenhuma mudança em drive_files.json"
+          fi
 
       - name: Summary
         run: |
