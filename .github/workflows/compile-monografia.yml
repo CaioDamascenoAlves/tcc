@@ -90,20 +90,20 @@ jobs:
           tag_name: ${{ steps.create_tag.outputs.tag_name }}
           name: Monografia Build - ${{ steps.date.outputs.date }}
           body: |
-             **Compilação Automática da Monografia**
+            Compilacao Automatica da Monografia
 
-            **Detalhes:**
-            -  Data: ${{ steps.date.outputs.date }}
-            -  Commit: ${{ github.sha }}
-            -  Branch: ${{ github.ref_name }}
+            Detalhes:
+            - Data: ${{ steps.date.outputs.date }}
+            - Commit: ${{ github.sha }}
+            - Branch: ${{ github.ref_name }}
 
-            **Arquivos:**
-            - `main.pdf` - Monografia completa compilada
+            Arquivos:
+            - main.pdf - Monografia completa compilada
 
             ---
-             Compilado automaticamente via GitHub Actions
+            Compilado automaticamente via GitHub Actions
 
-             Para citação acadêmica formal, aguarde a versão final com DOI via Zenodo após aprovação do TCC.
+            Para citacao academica formal, aguarde a versao final com DOI via Zenodo apos aprovacao do TCC.
           files: monografia/main.pdf
           draft: false
           prerelease: false
@@ -119,5 +119,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ' **Monografia compilada com sucesso!**\n\n O PDF foi gerado e está disponível nos artefatos do workflow.\n\n[Baixar artefato do build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+              body: 'Monografia compilada com sucesso!\n\nO PDF foi gerado e esta disponivel nos artefatos do workflow.\n\n[Baixar artefato do build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
             })
