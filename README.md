@@ -1,60 +1,73 @@
-# TCC - Análise de Redes Complexas Aplicada ao Esporte Olímpico
+# Analise de Redes Complexas Aplicada ao Esporte Olimpico
 
-**Trabalho de Conclusão de Curso**
-Sistemas de Informação - Universidade Federal de Ouro Preto (UFOP)
-2025/2026
+Trabalho de Conclusao de Curso - Sistemas de Informacao
+Universidade Federal de Ouro Preto (UFOP) - 2025
 
----
-
-## Estrutura do Repositório
-
-Este repositório contém todo o material do TCC, organizado em 3 componentes principais:
-
-### 1. Código e Análises - [main/](main/)
-
-Implementação completa do projeto:
-- **Código-fonte** Python organizado em módulos
-- **Pipeline de análise** de redes olímpicas
-- **Dashboard interativo** Streamlit
-- **Geração de figuras** e tabelas para monografia
-- **Documentação técnica** completa
-
-Ver: **[main/README.md](main/README.md)** para detalhes
-
-### 2. Monografia - [monografia/](monografia/)
-
-Documento acadêmico em LaTeX:
-- Texto completo do TCC
-- Seguindo normas ABNT (abntex2)
-- Figuras e tabelas geradas automaticamente
-- Referencias bibliograficas
-
-### 3. Apresentação - [apresentacao/](apresentacao/)
-
-Slides para defesa:
-- Apresentação em Beamer
-- Resumo executivo do trabalho
-- Principais resultados e visualizações
+[![Compilacao Automatica](https://github.com/CaioDamascenoAlves/tcc/actions/workflows/compile-monografia.yml/badge.svg)](https://github.com/CaioDamascenoAlves/tcc/actions/workflows/compile-monografia.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## Início Rápido
+## Descricao
 
-### Executar Análises
+Este trabalho aplica teoria de redes complexas para analisar competicoes olimpicas. O projeto modela relacoes competitivas entre atletas atraves de grafos direcionados ponderados, utilizando algoritmos de PageRank, deteccao de comunidades (Louvain) e metricas de centralidade.
+
+**Dataset principal:** 120 years of Olympic history (Kaggle)
+**Periodo analisado:** 1896-2021
+**Atletas medalhistas:** 4.659 atletas em Swimming, Basketball e Football
+
+---
+
+## Estrutura do Repositorio
+
+```
+tcc/
+├── main/                      # Implementacao e codigo-fonte
+│   ├── src/                   # Codigo Python
+│   ├── data/                  # Datasets
+│   ├── results/               # Resultados de analise
+│   └── README.md
+│
+├── monografia/                # Documento academico LaTeX
+│   ├── textuais/              # Capitulos
+│   ├── figuras/               # Figuras
+│   ├── tabelas/               # Tabelas
+│   ├── bib/                   # Referencias
+│   └── main.pdf               # PDF compilado
+│
+├── apresentacao/              # Slides para defesa
+│
+├── scripts/                   # Utilitarios
+│
+├── .github/workflows/         # CI/CD
+│
+├── LICENSE                    # MIT License
+└── CITATION.cff               # Metadados para citacao
+```
+
+---
+
+## Inicio Rapido
+
+### Prerequisitos
+
+Python 3.8+, dependencias em requirements.txt
+
+### Executar Analise
 
 ```bash
 cd main/src/pipeline
 python 01_network_generation.py
+python 02_centrality_analysis.py
+python 03_community_detection.py
 ```
 
-### Visualizar Dashboard
+### Dashboard Interativo
 
 ```bash
-cd main
-start_dashboard.bat
+cd main/src/dashboard
+streamlit run app.py
 ```
-
-Acesse: http://localhost:8501
 
 ### Compilar Monografia
 
@@ -66,37 +79,87 @@ pdflatex main.tex
 pdflatex main.tex
 ```
 
----
-
-## Documentação
-
-- **[main/README.md](main/README.md)** - Documentação técnica completa
-- **[CLAUDE.md](CLAUDE.md)** - Instruções para Claude Code
-- **[main/src/](main/src/)** - Documentação de módulos individuais
+PDF pre-compilado disponivel: [monografia-latest.pdf](monografia-latest.pdf)
 
 ---
 
-## Arquivos Arquivados
+## Metodologia
 
-Documentos temporários e de desenvolvimento foram movidos para:
-- **[_archived_docs/](_archived_docs/)** - MDs de análises e planejamento
+### Construcao das Redes
+
+- **Nos:** Atletas medalhistas
+- **Arestas:** Direcionadas, ponderadas por hierarquia de medalhas
+- **Ponderacao:** Ouro-Prata (3), Ouro-Bronze (5), Prata-Bronze (2)
+
+### Metricas Aplicadas
+
+- PageRank adaptado para contexto esportivo
+- Centralidade de grau (in-degree, out-degree)
+- Betweenness centrality
+- Modularidade e deteccao de comunidades (Louvain)
+
+### Esportes Analisados
+
+- **Swimming:** 2.176 atletas, eventos individuais + coletivos
+- **Basketball:** 558 atletas, esporte coletivo
+- **Football:** 1.925 atletas, esporte coletivo
 
 ---
 
-## Dependências
+## Resultados Principais
 
-```bash
-Python 3.10+
-pip install pandas numpy networkx matplotlib seaborn plotly streamlit python-louvain scikit-learn
+- **36 comunidades detectadas** nas tres modalidades
+- **Diferencas estruturais:** Swimming apresenta modularidade 0.73 vs 0.003 (Basketball) e 0.0006 (Football)
+- **Atletas-ponte identificados** via betweenness centrality
+- **Hierarquias de performance** reveladas por PageRank
+
+Detalhes completos na monografia: [monografia/main.pdf](monografia/main.pdf)
+
+---
+
+## Compilacao Automatica
+
+GitHub Actions compila automaticamente a monografia a cada modificacao:
+- PDF atualizado: [monografia-latest.pdf](monografia-latest.pdf)
+- Releases com timestamp: [Releases](https://github.com/CaioDamascenoAlves/tcc/releases)
+- Workflow: [compile-monografia.yml](.github/workflows/compile-monografia.yml)
+
+---
+
+## Citacao
+
+```bibtex
+@misc{alves2025olympic_networks,
+  author  = {Alves, Caio Damasceno},
+  title   = {Analise de Redes Complexas aplicada ao Esporte Olimpico},
+  year    = {2025},
+  school  = {Universidade Federal de Ouro Preto},
+  type    = {Trabalho de Conclusao de Curso},
+  url     = {https://github.com/CaioDamascenoAlves/tcc}
+}
 ```
 
-LaTeX: abntex2, babel, graphicx, amsmath, booktabs, hyperref
+Metadados completos: [CITATION.cff](CITATION.cff)
 
 ---
 
-## Licença
+## Licencas
 
-MIT License - Ver arquivo LICENSE
+- **Codigo Python:** [MIT License](LICENSE)
+- **Monografia LaTeX:** [LPPL 1.3c](monografia/LICENSE)
+- **Apresentacao:** [LPPL 1.3c](apresentacao/LICENSE)
 
-**Instituição**: UFOP
-**Ano**: 2025/2026
+---
+
+## Documentacao
+
+- [main/README.md](main/README.md) - Documentacao tecnica
+- [monografia/README.md](monografia/README.md) - Informacoes sobre compilacao
+- [main/src/dashboard/README.md](main/src/dashboard/README.md) - Guia do dashboard
+
+---
+
+**Autor:** Caio Damasceno Alves
+**Instituicao:** UFOP - Instituto de Ciencias Exatas e Aplicadas
+**Curso:** Sistemas de Informacao
+**Ano:** 2025

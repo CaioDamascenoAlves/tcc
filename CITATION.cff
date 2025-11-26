@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: "Se voce utilizar este software ou metodologia em sua pesquisa, por favor cite-o conforme abaixo."
+type: software
+title: "Analise de Redes Complexas aplicada ao Esporte Olimpico"
+authors:
+  - family-names: "Alves"
+    given-names: "Caio Damasceno"
+    orcid: ""
+repository-code: "https://github.com/CaioDamascenoAlves/tcc"
+url: "https://github.com/CaioDamascenoAlves/tcc"
+abstract: >-
+  Este trabalho aplica teoria de redes complexas para analisar
+  competicoes olimpicas. O projeto modela relacoes competitivas
+  entre atletas atraves de grafos direcionados ponderados,
+  utilizando algoritmos de PageRank, deteccao de comunidades
+  (Louvain) e metricas de centralidade. A implementacao processa
+  120 anos de dados olimpicos (1896-2021) analisando 4.659 atletas
+  medalhistas em Swimming, Basketball e Football.
+keywords:
+  - "redes complexas"
+  - "analise esportiva"
+  - "PageRank"
+  - "deteccao de comunidades"
+  - "grafos direcionados"
+  - "olimpiadas"
+  - "ciencia de redes"
+license: MIT
+license-url: "https://github.com/CaioDamascenoAlves/tcc/blob/master/LICENSE"
+version: 1.0.0
+date-released: "2025-01-15"
+preferred-citation:
+  type: thesis
+  title: "Analise de Redes Complexas aplicada ao Esporte Olimpico"
+  authors:
+    - family-names: "Alves"
+      given-names: "Caio Damasceno"
+  year: 2025
+  institution:
+    name: "Universidade Federal de Ouro Preto"
+  department: "Instituto de Ciencias Exatas e Aplicadas"
+  thesis-type: "Trabalho de Conclusao de Curso"
+  url: "https://github.com/CaioDamascenoAlves/tcc"
+  notes: >-
+    Para citacao academica formal, aguarde a versao final com DOI
+    via Zenodo apos aprovacao do TCC.
+references:
+  - type: dataset
+    title: "120 years of Olympic history: athletes and results"
+    authors:
+      - name: "Randi Griffin"
+    url: "https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results"
+    database: "Kaggle"
