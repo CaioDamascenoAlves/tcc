@@ -181,7 +181,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         <!-- Busca de Atleta -->
         <div id="athlete-search-container">
             <div id="athlete-search-box">
-                <span class="search-icon">🔍</span>
+                <span class="search-icon"></span>
                 <input
                     type="text"
                     id="athlete-search-input"
@@ -189,7 +189,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                     autocomplete="off"
                     spellcheck="false"
                 />
-                <button id="clear-search" onclick="clearSearch()">✕</button>
+                <button id="clear-search" onclick="clearSearch()"></button>
                 <div id="search-suggestions"></div>
             </div>
         </div>
@@ -230,7 +230,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         <div id="athlete-toast">
             <div class="toast-header">
                 <h3 id="toast-athlete-name">Atleta</h3>
-                <button class="toast-close-btn" onclick="closeAthleteToast()">✕</button>
+                <button class="toast-close-btn" onclick="closeAthleteToast()"></button>
             </div>
             <div class="toast-content">
                 <div class="toast-section">
@@ -259,15 +259,15 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                     <div class="toast-section-title">Medalhas Conquistadas</div>
                     <div class="toast-medals">
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon">🥇</span>
+                            <span class="toast-medal-icon"></span>
                             <span class="toast-medal-count" id="toast-gold">0</span>
                         </div>
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon">🥈</span>
+                            <span class="toast-medal-icon"></span>
                             <span class="toast-medal-count" id="toast-silver">0</span>
                         </div>
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon">🥉</span>
+                            <span class="toast-medal-icon"></span>
                             <span class="toast-medal-count" id="toast-bronze">0</span>
                         </div>
                     </div>
@@ -310,13 +310,13 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
             </div>
             <div class="toast-actions">
                 <button class="toast-action-btn toast-action-btn-primary" onclick="highlightRivals()">
-                    👥 Ver Rivais Diretos
+                     Ver Rivais Diretos
                 </button>
                 <button class="toast-action-btn toast-action-btn-secondary" onclick="isolateSubnetwork()">
-                    🔍 Isolar Subrede
+                     Isolar Subrede
                 </button>
                 <button class="toast-action-btn toast-action-btn-secondary" onclick="focusOnNode()">
-                    🎯 Centralizar na Rede
+                     Centralizar na Rede
                 </button>
             </div>
         </div>
@@ -371,7 +371,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                     alert('ERRO: Biblioteca vis-network não foi carregada.');
                     return;
                 }}
-                console.log('✓ vis-network disponível');
+                console.log(' vis-network disponível');
 
                 // Verificar se initNetwork existe
                 if (typeof initNetwork === 'undefined') {{
@@ -379,12 +379,12 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                     alert('ERRO: Função initNetwork não foi carregada.');
                     return;
                 }}
-                console.log('✓ initNetwork disponível');
+                console.log(' initNetwork disponível');
 
                 console.log('>>> Chamando initNetwork...');
                 try {{
                     initNetwork(nodesData, linksData, colorPalette, config, keyName);
-                    console.log('✓ initNetwork executada com sucesso');
+                    console.log(' initNetwork executada com sucesso');
                 }} catch (error) {{
                     console.error('ERRO ao executar initNetwork:', error);
                     console.error('Stack:', error.stack);

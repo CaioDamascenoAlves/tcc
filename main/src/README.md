@@ -6,10 +6,10 @@ Este diretório contém todo o código-fonte do projeto, organizado em módulos 
 
 ```
 src/
-├── core/              # Módulos reutilizáveis e configurações
-├── pipeline/          # Scripts de análise numerados
-├── dashboard/         # Aplicação Streamlit interativa
-└── outputs/           # Geração de figuras e tabelas
+ core/ # Módulos reutilizáveis e configurações
+ pipeline/ # Scripts de análise numerados
+ dashboard/ # Aplicação Streamlit interativa
+ outputs/ # Geração de figuras e tabelas
 ```
 
 ## Módulos

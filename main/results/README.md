@@ -10,19 +10,19 @@ Aproximadamente **432 MB** de resultados (não commitados no Git).
 
 ```
 results/
-├── networks/              # Redes geradas (CSV, GEXF, JSON)
-│   ├── consolidated_athletes.csv
-│   ├── consolidated_edges.csv
-│   ├── summaries.json
-│   ├── swimming/
-│   ├── basketball/
-│   └── football/
-│
-└── additional_analyses/   # Análises adicionais
-    ├── medal_profile_by_community.csv
-    ├── community_hierarchy.csv
-    ├── inter_community_connectivity.csv
-    └── top_rivalry_pairs.csv
+ networks/ # Redes geradas (CSV, GEXF, JSON)
+ consolidated_athletes.csv
+ consolidated_edges.csv
+ summaries.json
+ swimming/
+ basketball/
+ football/
+ 
+ additional_analyses/ # Análises adicionais
+ medal_profile_by_community.csv
+ community_hierarchy.csv
+ inter_community_connectivity.csv
+ top_rivalry_pairs.csv
 ```
 
 ## Como Gerar

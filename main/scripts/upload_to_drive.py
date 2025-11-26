@@ -73,7 +73,7 @@ def find_or_create_folder(service, folder_name):
     items = results.get('files', [])
     
     if items:
-        print(f"✓ Pasta '{folder_name}' já existe (ID: {items[0]['id']})")
+        print(f" Pasta '{folder_name}' já existe (ID: {items[0]['id']})")
         return items[0]['id']
     
     # Cria nova pasta
@@ -82,7 +82,7 @@ def find_or_create_folder(service, folder_name):
         'mimeType': 'application/vnd.google-apps.folder'
     }
     folder = service.files().create(body=file_metadata, fields='id').execute()
-    print(f"✓ Pasta '{folder_name}' criada (ID: {folder['id']})")
+    print(f" Pasta '{folder_name}' criada (ID: {folder['id']})")
     return folder['id']
 
 
@@ -114,7 +114,7 @@ def upload_file(service, file_path, folder_id):
             fields='id'
         ).execute()
         file_id = file['id']
-        print(f"  ✓ Enviado: {file_name} (ID: {file_id})")
+        print(f"   Enviado: {file_name} (ID: {file_id})")
     
     # Tornar arquivo público (qualquer pessoa com link pode ver)
     service.permissions().create(
@@ -149,7 +149,7 @@ def main():
     # Autentica
     print("\n[1/4] Autenticando...")
     service = authenticate()
-    print("✓ Autenticado com sucesso!")
+    print(" Autenticado com sucesso!")
     
     # Cria/encontra pasta
     print(f"\n[2/4] Configurando pasta '{DRIVE_FOLDER_NAME}'...")
@@ -158,7 +158,7 @@ def main():
     # Lista arquivos CSV e JSON
     print("\n[3/4] Listando arquivos CSV e JSON...")
     csv_files = get_all_csv_files(RESULTS_DIR)
-    print(f"✓ Encontrados {len(csv_files)} arquivos (CSV + JSON)")
+    print(f" Encontrados {len(csv_files)} arquivos (CSV + JSON)")
     
     # Upload de cada arquivo
     print("\n[4/4] Fazendo upload...")
@@ -184,15 +184,15 @@ def main():
     with open(mapping_file, 'w', encoding='utf-8') as f:
         json.dump(drive_mapping, f, indent=2, ensure_ascii=False)
     
-    print(f"\n✓ Mapeamento salvo em: {mapping_file}")
-    print(f"✓ Total de arquivos enviados: {len(drive_mapping)}")
+    print(f"\n Mapeamento salvo em: {mapping_file}")
+    print(f" Total de arquivos enviados: {len(drive_mapping)}")
     
     # Estatísticas
     total_size = sum(item['size_mb'] for item in drive_mapping.values())
-    print(f"✓ Tamanho total: {total_size:.2f} MB")
+    print(f" Tamanho total: {total_size:.2f} MB")
     
     print("\n" + "=" * 60)
-    print("✓ UPLOAD CONCLUÍDO COM SUCESSO!")
+    print(" UPLOAD CONCLUÍDO COM SUCESSO!")
     print("=" * 60)
     print(f"\nPasta no Drive: {DRIVE_FOLDER_NAME}")
     print(f"Link: https://drive.google.com/drive/folders/{folder_id}")

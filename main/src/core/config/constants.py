@@ -81,7 +81,7 @@ TABLE_FORMATS = {
 
 DASHBOARD_CONFIG = {
     'page_title': 'Análise de Redes Olímpicas',
-    'page_icon': '🏅',
+    'page_icon': '',
     'layout': 'wide',
     'initial_sidebar_state': 'expanded',
 }

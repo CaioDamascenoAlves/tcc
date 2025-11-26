@@ -65,10 +65,10 @@ def test_full_mining():
         full_path = os.path.join(base_dir, expected)
         if os.path.exists(full_path):
             found_count += 1
-            print(f"  ✓ {expected}")
+            print(f"   {expected}")
         else:
             missing_files.append(expected)
-            print(f"  ✗ {expected}")
+            print(f"   {expected}")
 
     print(f"\n{'='*50}")
     print(f"RESULTADO: {found_count}/{len(expected_files)} arquivos encontrados")
@@ -78,7 +78,7 @@ def test_full_mining():
         for missing in missing_files:
             print(f"  - {missing}")
     else:
-        print("\n🎉 SUCESSO! Todas as 16 redes foram geradas!")
+        print("\n SUCESSO! Todas as 16 redes foram geradas!")
 
     return found_count == len(expected_files)
 

@@ -6,17 +6,17 @@ Dashboard Streamlit para exploração visual e interativa dos resultados de aná
 
 ```
 dashboard/
-├── app.py              # Aplicação principal Streamlit
-├── visualization/      # Gráficos e plots reutilizáveis
-│   ├── base.py         # Funções base de visualização
-│   ├── plots.py        # Plots principais
-│   ├── plots_extended.py  # Plots adicionais
-│   └── timeline_plots.py  # Visualizações temporais
-├── components/         # Componentes interativos
-│   ├── cosmograph_network.py  # Visualização de rede 3D
-│   └── timeline_fullwidth.py  # Timeline full-width
-└── analysis/           # Análises e tabelas
-    └── comparative_table.py   # Tabelas comparativas
+ app.py # Aplicação principal Streamlit
+ visualization/ # Gráficos e plots reutilizáveis
+ base.py # Funções base de visualização
+ plots.py # Plots principais
+ plots_extended.py # Plots adicionais
+ timeline_plots.py # Visualizações temporais
+ components/ # Componentes interativos
+ cosmograph_network.py # Visualização de rede 3D
+ timeline_fullwidth.py # Timeline full-width
+ analysis/ # Análises e tabelas
+ comparative_table.py # Tabelas comparativas
 ```
 
 ## Executar Dashboard
@@ -87,30 +87,30 @@ Acesse: http://localhost:8501
 **Estrutura:**
 ```python
 def main():
-    # 1. Configuração da página
-    st.set_page_config(...)
+ # 1. Configuração da página
+ st.set_page_config(...)
 
-    # 2. Carregar dados (com cache)
-    data = load_data()
+ # 2. Carregar dados (com cache)
+ data = load_data()
 
-    # 3. Sidebar com filtros
-    render_sidebar(data)
+ # 3. Sidebar com filtros
+ render_sidebar(data)
 
-    # 4. Renderizar abas
-    tabs = st.tabs([...])
-    with tabs[0]:
-        render_overview_tab(data)
-    with tabs[1]:
-        render_communities_tab(data)
-    # ...
+ # 4. Renderizar abas
+ tabs = st.tabs([...])
+ with tabs[0]:
+ render_overview_tab(data)
+ with tabs[1]:
+ render_communities_tab(data)
+ # ...
 ```
 
 **Cache de Dados:**
 ```python
 @st.cache_data
 def load_data():
-    loader = DataLoader()
-    return loader.load_all()
+ loader = DataLoader()
+ return loader.load_all()
 ```
 
 ### `visualization/` - Gráficos Reutilizáveis
@@ -121,9 +121,9 @@ Funções que retornam objetos de plot (matplotlib, seaborn, plotly):
 from dashboard.visualization import scatter_size_vs_pagerank
 
 fig = scatter_size_vs_pagerank(
-    data=hierarchy_df,
-    title="Tamanho vs PageRank",
-    colors=COLORS
+ data=hierarchy_df,
+ title="Tamanho vs PageRank",
+ colors=COLORS
 )
 st.pyplot(fig)
 ```
@@ -143,8 +143,8 @@ Componentes complexos que encapsulam lógica e visualização:
 from dashboard.components import render_cosmograph
 
 render_cosmograph(
-    network_file="results/networks/swimming/swimming_M_individual.gexf",
-    metrics_file="results/networks/swimming/swimming_M_individual_detailed_metrics.csv"
+ network_file="results/networks/swimming/swimming_M_individual.gexf",
+ metrics_file="results/networks/swimming/swimming_M_individual_detailed_metrics.csv"
 )
 ```
 
@@ -156,9 +156,9 @@ Funções de análise que não são apenas visualização:
 from dashboard.analysis import render_comparative_table
 
 render_comparative_table(
-    data=athletes_df,
-    sports=['Swimming', 'Basketball'],
-    metric='original_pagerank'
+ data=athletes_df,
+ sports=['Swimming', 'Basketball'],
+ metric='original_pagerank'
 )
 ```
 
@@ -169,21 +169,21 @@ render_comparative_table(
 1. Criar função de renderização em `app.py`:
 ```python
 def render_minha_aba(data):
-    st.header("Minha Análise")
-    # ... lógica da aba
+ st.header("Minha Análise")
+ # ... lógica da aba
 ```
 
 2. Adicionar à lista de tabs:
 ```python
 tabs = st.tabs([
-    "Visão Geral",
-    # ... outras abas
-    "Minha Aba"  # Nova aba
+ "Visão Geral",
+ # ... outras abas
+ "Minha Aba" # Nova aba
 ])
 
 # ... outras abas
 with tabs[8]:
-    render_minha_aba(data)
+ render_minha_aba(data)
 ```
 
 ### Adicionar Novo Plot
@@ -191,9 +191,9 @@ with tabs[8]:
 1. Criar função em `visualization/plots.py`:
 ```python
 def meu_plot(data, title="", colors=None):
-    fig, ax = plt.subplots(figsize=(10, 6))
-    # ... lógica do plot
-    return fig
+ fig, ax = plt.subplots(figsize=(10, 6))
+ # ... lógica do plot
+ return fig
 ```
 
 2. Exportar em `visualization/__init__.py`:
@@ -201,8 +201,8 @@ def meu_plot(data, title="", colors=None):
 from .plots import meu_plot
 
 __all__ = [
-    # ... outros
-    'meu_plot',
+ # ... outros
+ 'meu_plot',
 ]
 ```
 
@@ -218,19 +218,19 @@ st.pyplot(fig)
 
 ### Cache Agressivo
 ```python
-@st.cache_data(ttl=3600)  # Cache por 1 hora
+@st.cache_data(ttl=3600) # Cache por 1 hora
 def load_heavy_data():
-    # ... operação pesada
-    return data
+ # ... operação pesada
+ return data
 ```
 
 ### Lazy Loading
 Carregue dados apenas quando necessário:
 ```python
 if st.button("Mostrar análise detalhada"):
-    # Só carrega quando usuário clica
-    detailed_data = load_detailed_analysis()
-    st.dataframe(detailed_data)
+ # Só carrega quando usuário clica
+ detailed_data = load_detailed_analysis()
+ st.dataframe(detailed_data)
 ```
 
 ### Limitar Visualizações
@@ -263,7 +263,7 @@ st.sidebar.write("Debug:", st.session_state)
 
 # Expandir para ver dados
 with st.expander("Ver dados brutos"):
-    st.dataframe(df)
+ st.dataframe(df)
 ```
 
 ## TODO

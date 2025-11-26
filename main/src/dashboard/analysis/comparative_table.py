@@ -199,7 +199,7 @@ def create_table_with_tooltips(df_transposed, metric_explanations):
         tooltip_text = metric_explanations.get(metric, {}).get('description', '')
         html += f'<td class="metric-cell">{metric}'
         if tooltip_text:
-            html += f' <span class="tooltip-icon">ⓘ</span>'
+            html += f' <span class="tooltip-icon"></span>'
             html += f'<span class="tooltip-text">{tooltip_text}</span>'
         html += '</td>'
         
@@ -410,7 +410,7 @@ def create_plotly_table(df: pd.DataFrame, title: str, add_info_icon: bool = True
     Args:
         df: DataFrame com dados (índice = Esporte, colunas = métricas)
         title: Título da tabela
-        add_info_icon: Se True, adiciona ⓘ no header para indicar que há explicações
+        add_info_icon: Se True, adiciona  no header para indicar que há explicações
         add_highlights: Se True, destaca valores máximos/mínimos
 
     Returns:
@@ -426,7 +426,7 @@ def create_plotly_table(df: pd.DataFrame, title: str, add_info_icon: bool = True
             if col == 'Esporte':
                 header_values.append(col)
             else:
-                header_values.append(f"{col} ⓘ")
+                header_values.append(f"{col} ")
     else:
         header_values = list(df_reset.columns)
 
@@ -510,7 +510,7 @@ def render_metric_explanations(metrics: list):
     Args:
         metrics: Lista de nomes de métricas para explicar
     """
-    with st.expander("📖 Sobre as Métricas da Tabela"):
+    with st.expander(" Sobre as Métricas da Tabela"):
         st.markdown("Clique em cada métrica para ver sua explicação detalhada:")
 
         for metric in metrics:
@@ -521,7 +521,7 @@ def render_metric_explanations(metrics: list):
                     st.markdown(f"**Interpretação:** {info['interpretation']}")
                     st.markdown("---")
             else:
-                st.caption(f"ℹ️ {metric}: Métrica calculada a partir dos dados da rede")
+                st.caption(f"ℹ {metric}: Métrica calculada a partir dos dados da rede")
 
 
 def render_comparative_table(data: Dict[str, pd.DataFrame]):
@@ -544,7 +544,7 @@ def render_comparative_table(data: Dict[str, pd.DataFrame]):
 
     csv = convert_df_to_csv(df)
     st.download_button(
-        label="📥 Download Tabela Comparativa (CSV)",
+        label=" Download Tabela Comparativa (CSV)",
         data=csv,
         file_name="tabela_comparativa_esportes.csv",
         mime="text/csv",
@@ -576,7 +576,7 @@ def render_comparative_table(data: Dict[str, pd.DataFrame]):
 
         # Legenda de cores
         st.markdown("---")
-        st.caption("**Legenda:** 🟢 Verde = Valor máximo | 🔴 Vermelho = Valor mínimo")
+        st.caption("**Legenda:**  Verde = Valor máximo |  Vermelho = Valor mínimo")
 
         # Insights automáticos
         st.markdown("**Destaques Principais**")

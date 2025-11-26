@@ -416,12 +416,12 @@ print(f"  Entropia Geográfica: Δ = {summary['differences']['geographic_entropy
 
 if abs(summary['differences']['temporal_entropy_diff']) < 0.2 and \
    abs(summary['differences']['geographic_entropy_diff']) < 0.2:
-    print("\n✓ RESULTADO: Diferenças PEQUENAS nas métricas agregadas")
+    print("\n RESULTADO: Diferenças PEQUENAS nas métricas agregadas")
     print("  → Louvain captura adequadamente estrutura comunitária")
     print("  → Infomap encontra mais comunidades mas padrões similares")
     print("  → RECOMENDAÇÃO: Usar Louvain (simplicidade + interpretabilidade)")
 else:
-    print("\n✗ RESULTADO: Diferenças SIGNIFICATIVAS nas métricas")
+    print("\n RESULTADO: Diferenças SIGNIFICATIVAS nas métricas")
     print("  → Infomap revela estrutura substancialmente diferente")
     print("  → RECOMENDAÇÃO: Considerar usar AMBOS ou apenas Infomap")
 

@@ -89,7 +89,7 @@ TOOLTIP_TEMPLATES = {
     'athlete': """
 <b>{name}</b><br>
 País: {noc}<br>
-Medalhas: {gold}🥇 {silver}🥈 {bronze}🥉<br>
+Medalhas: {gold} {silver} {bronze}<br>
 PageRank: {pagerank:.4f} (Top {percentile:.1f}%)<br>
 Comunidade: C{community_id} - {dominant_country}<br>
 Era: {min_year}-{max_year}

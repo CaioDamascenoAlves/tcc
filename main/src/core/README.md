@@ -6,15 +6,15 @@ Biblioteca interna de módulos compartilhados por todo o projeto.
 
 ```
 core/
-├── config/           # Configurações centralizadas
-│   ├── paths.py      # Caminhos de arquivos
-│   ├── constants.py  # Constantes do projeto
-│   ├── styles.py     # Estilos de visualização
-│   └── __init__.py   # Exporta tudo
-│
-├── data_loader.py    # Carregamento de dados com cache
-├── metrics.py        # Cálculos de métricas
-└── __init__.py       # Exporta DataLoader e MetricsCalculator
+ config/ # Configurações centralizadas
+ paths.py # Caminhos de arquivos
+ constants.py # Constantes do projeto
+ styles.py # Estilos de visualização
+ __init__.py # Exporta tudo
+ 
+ data_loader.py # Carregamento de dados com cache
+ metrics.py # Cálculos de métricas
+ __init__.py # Exporta DataLoader e MetricsCalculator
 ```
 
 ## Módulos
@@ -29,16 +29,16 @@ Define todos os caminhos de arquivos:
 from core.config import PATHS
 
 # Dados de entrada
-PATHS['athlete_events']           # data/athlete_events.csv
-PATHS['consolidated_athletes']    # results/networks/consolidated_athletes.csv
+PATHS['athlete_events'] # data/athlete_events.csv
+PATHS['consolidated_athletes'] # results/networks/consolidated_athletes.csv
 
 # Análises adicionais
-PATHS['medal_profile']            # results/additional_analyses/medal_profile_by_community.csv
-PATHS['community_hierarchy']      # results/additional_analyses/community_hierarchy.csv
+PATHS['medal_profile'] # results/additional_analyses/medal_profile_by_community.csv
+PATHS['community_hierarchy'] # results/additional_analyses/community_hierarchy.csv
 
 # Saídas
-PATHS['monografia_figuras']       # docs/monografia/figuras/
-PATHS['monografia_tabelas']       # docs/monografia/tabelas/
+PATHS['monografia_figuras'] # docs/monografia/figuras/
+PATHS['monografia_tabelas'] # docs/monografia/tabelas/
 ```
 
 #### `constants.py`
@@ -49,15 +49,15 @@ from core.config import SPORTS_LIST, MEDAL_WEIGHTS, DOMINANCE_THRESHOLDS
 SPORTS_LIST = ['Swimming', 'Basketball', 'Football']
 
 MEDAL_WEIGHTS = {
-    'Gold': 3,
-    'Silver': 2,
-    'Bronze': 1
+ 'Gold': 3,
+ 'Silver': 2,
+ 'Bronze': 1
 }
 
 DOMINANCE_THRESHOLDS = {
-    'participante': 1.8,
-    'competitiva': 2.2,
-    'elite': float('inf')
+ 'participante': 1.8,
+ 'competitiva': 2.2,
+ 'elite': float('inf')
 }
 ```
 
@@ -67,12 +67,12 @@ Paletas de cores e estilos de visualização:
 from core.config import COLORS, UFOP_WINE, PLOT_STYLE_INTERACTIVE
 
 COLORS = {
-    'Swimming': '#1f77b4',
-    'Basketball': '#ff7f0e',
-    'Football': '#2ca02c',
+ 'Swimming': '#1f77b4',
+ 'Basketball': '#ff7f0e',
+ 'Football': '#2ca02c',
 }
 
-UFOP_WINE = '#6F1D1D'  # Vinho institucional UFOP
+UFOP_WINE = '#6F1D1D' # Vinho institucional UFOP
 ```
 
 ### `data_loader.py` - Carregamento de Dados
@@ -88,11 +88,11 @@ loader = DataLoader()
 data = loader.load_all()
 
 # data = {
-#     'athletes': DataFrame,
-#     'medal_profile': DataFrame,
-#     'hierarchy': DataFrame,
-#     'connectivity': DataFrame,
-#     'rivalries': DataFrame,
+# 'athletes': DataFrame,
+# 'medal_profile': DataFrame,
+# 'hierarchy': DataFrame,
+# 'connectivity': DataFrame,
+# 'rivalries': DataFrame,
 # }
 
 # Carregar dados específicos
@@ -118,9 +118,9 @@ calc = MetricsCalculator()
 
 # Índice de Dominância (fórmula 3-2-1)
 dominance = calc.calculate_dominance_index(
-    gold_pct=50.0,
-    silver_pct=30.0,
-    bronze_pct=20.0
+ gold_pct=50.0,
+ silver_pct=30.0,
+ bronze_pct=20.0
 )
 # dominance = 2.3 (elite)
 

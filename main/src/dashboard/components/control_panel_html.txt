@@ -3,413 +3,413 @@
 
 <!-- Botão Flutuante -->
 <button id="control-panel-toggle" onclick="toggleControlPanel()">
-    ⚙️
+ 
 </button>
 
 <!-- Drawer Lateral -->
 <div id="control-panel-drawer">
-    <!-- Header -->
-    <div class="drawer-header">
-        <div class="drawer-title">Controles</div>
-        <button class="drawer-close-btn" onclick="toggleControlPanel()">✕</button>
-    </div>
+ <!-- Header -->
+ <div class="drawer-header">
+ <div class="drawer-title">Controles</div>
+ <button class="drawer-close-btn" onclick="toggleControlPanel()"> </button>
+ </div>
 
-    <!-- Conteúdo -->
-    <div class="drawer-content">
+ <!-- Conteúdo -->
+ <div class="drawer-content">
 
-        <!-- Seção: Filtros -->
-        <div class="drawer-section">
-            <div class="drawer-section-header active" onclick="toggleSection(this)">
-                <div class="drawer-section-title">
-                    <span class="drawer-section-icon">🔍</span>
-                    <span>Filtros</span>
-                </div>
-                <span class="drawer-section-arrow">▼</span>
-            </div>
-            <div class="drawer-section-body expanded">
-                <div class="drawer-section-content">
-                    <!-- Status dos Filtros -->
-                    <div id="filter-status" style="padding: 8px; background: #e8f5e9; border-radius: 4px; margin-bottom: 12px; display: none;">
-                        <div style="font-size: 12px; color: #2e7d32; font-weight: 500;">
-                            ✓ Exibindo <span id="visible-nodes-count">0</span> nós e <span id="visible-edges-count">0</span> arestas
-                        </div>
-                    </div>
+ <!-- Seção: Filtros -->
+ <div class="drawer-section">
+ <div class="drawer-section-header active" onclick="toggleSection(this)">
+ <div class="drawer-section-title">
+ <span class="drawer-section-icon"> </span>
+ <span>Filtros</span>
+ </div>
+ <span class="drawer-section-arrow"> </span>
+ </div>
+ <div class="drawer-section-body expanded">
+ <div class="drawer-section-content">
+ <!-- Status dos Filtros -->
+ <div id="filter-status" style="padding: 8px; background: #e8f5e9; border-radius: 4px; margin-bottom: 12px; display: none;">
+ <div style="font-size: 12px; color: #2e7d32; font-weight: 500;">
+ Exibindo <span id="visible-nodes-count">0</span> nós e <span id="visible-edges-count">0</span> arestas
+ </div>
+ </div>
 
-                    <!-- Filtro de Nós (Top N) -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Número de Atletas
-                            <span class="slider-value" id="top-n-value">TODOS</span>
-                        </label>
-                        <input type="range" id="top-n-slider" class="control-slider"
-                               min="10" max="1000" step="10" value="1000"
-                               oninput="changeTopN(this.value)">
-                        <p class="control-info" style="font-size: 11px; margin-top: 4px;">Mostra os N atletas com maior PageRank</p>
-                    </div>
+ <!-- Filtro de Nós (Top N) -->
+ <div class="control-group">
+ <label class="control-label">
+ Número de Atletas
+ <span class="slider-value" id="top-n-value">TODOS</span>
+ </label>
+ <input type="range" id="top-n-slider" class="control-slider"
+ min="10" max="1000" step="10" value="1000"
+ oninput="changeTopN(this.value)">
+ <p class="control-info" style="font-size: 11px; margin-top: 4px;">Mostra os N atletas com maior PageRank</p>
+ </div>
 
-                    <!-- Filtro de Peso Mínimo das Arestas -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Peso Mínimo das Arestas
-                            <span class="slider-value" id="min-weight-value">1</span>
-                        </label>
-                        <input type="range" id="min-weight-slider" class="control-slider"
-                               min="1" max="10" step="1" value="1"
-                               oninput="changeMinEdgeWeight(this.value)">
-                        <p class="control-info" style="font-size: 11px; margin-top: 4px;">Filtra conexões fracas</p>
-                    </div>
+ <!-- Filtro de Peso Mínimo das Arestas -->
+ <div class="control-group">
+ <label class="control-label">
+ Peso Mínimo das Arestas
+ <span class="slider-value" id="min-weight-value">1</span>
+ </label>
+ <input type="range" id="min-weight-slider" class="control-slider"
+ min="1" max="10" step="1" value="1"
+ oninput="changeMinEdgeWeight(this.value)">
+ <p class="control-info" style="font-size: 11px; margin-top: 4px;">Filtra conexões fracas</p>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- Botão Reset Filtros -->
-                    <button class="control-button control-button-primary" onclick="resetAllFilters()" style="width: 100%;">
-                        🔄 Resetar Todos os Filtros
-                    </button>
-                </div>
-            </div>
-        </div>
+ <!-- Botão Reset Filtros -->
+ <button class="control-button control-button-primary" onclick="resetAllFilters()" style="width: 100%;">
+ Resetar Todos os Filtros
+ </button>
+ </div>
+ </div>
+ </div>
 
-        <!-- Seção: Aparência -->
-        <div class="drawer-section">
-            <div class="drawer-section-header" onclick="toggleSection(this)">
-                <div class="drawer-section-title">
-                    <span class="drawer-section-icon">🎨</span>
-                    <span>Aparência</span>
-                </div>
-                <span class="drawer-section-arrow">▼</span>
-            </div>
-            <div class="drawer-section-body">
-                <div class="drawer-section-content">
-                    <!-- Colorir Por -->
-                    <div class="control-group">
-                        <label class="control-label">Colorir Por</label>
-                        <select id="color-by-select" class="control-select" onchange="changeColorBy(this.value)">
-                            <option value="Comunidade">Comunidade</option>
-                            <option value="País (NOC)">País (NOC)</option>
-                            <option value="Década">Década</option>
-                            <option value="Tipo de Medalha">Tipo de Medalha</option>
-                        </select>
-                    </div>
+ <!-- Seção: Aparência -->
+ <div class="drawer-section">
+ <div class="drawer-section-header" onclick="toggleSection(this)">
+ <div class="drawer-section-title">
+ <span class="drawer-section-icon"> </span>
+ <span>Aparência</span>
+ </div>
+ <span class="drawer-section-arrow"> </span>
+ </div>
+ <div class="drawer-section-body">
+ <div class="drawer-section-content">
+ <!-- Colorir Por -->
+ <div class="control-group">
+ <label class="control-label">Colorir Por</label>
+ <select id="color-by-select" class="control-select" onchange="changeColorBy(this.value)">
+ <option value="Comunidade">Comunidade</option>
+ <option value="País (NOC)">País (NOC)</option>
+ <option value="Década">Década</option>
+ <option value="Tipo de Medalha">Tipo de Medalha</option>
+ </select>
+ </div>
 
-                    <!-- Esquema de Cores -->
-                    <div class="control-group">
-                        <label class="control-label">Esquema de Cores</label>
-                        <div class="color-palette-grid">
-                            <div class="color-palette-item active" style="background: linear-gradient(135deg, #8B2635, #2E5A88, #2A7F62, #D4A017);"
-                                 onclick="changeColorScheme('default')" data-scheme="default"></div>
-                            <div class="color-palette-item" style="background: linear-gradient(135deg, #FFB3BA, #FFDFBA, #BAFFC9, #BAE1FF);"
-                                 onclick="changeColorScheme('pastel')" data-scheme="pastel"></div>
-                            <div class="color-palette-item" style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #FFA07A, #F7DC6F);"
-                                 onclick="changeColorScheme('vibrant')" data-scheme="vibrant"></div>
-                            <div class="color-palette-item" style="background: linear-gradient(135deg, #1A535C, #4ECDC4, #FF6B6B, #FFE66D);"
-                                 onclick="changeColorScheme('cool')" data-scheme="cool"></div>
-                        </div>
-                    </div>
+ <!-- Esquema de Cores -->
+ <div class="control-group">
+ <label class="control-label">Esquema de Cores</label>
+ <div class="color-palette-grid">
+ <div class="color-palette-item active" style="background: linear-gradient(135deg, #8B2635, #2E5A88, #2A7F62, #D4A017);"
+ onclick="changeColorScheme('default')" data-scheme="default"></div>
+ <div class="color-palette-item" style="background: linear-gradient(135deg, #FFB3BA, #FFDFBA, #BAFFC9, #BAE1FF);"
+ onclick="changeColorScheme('pastel')" data-scheme="pastel"></div>
+ <div class="color-palette-item" style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #FFA07A, #F7DC6F);"
+ onclick="changeColorScheme('vibrant')" data-scheme="vibrant"></div>
+ <div class="color-palette-item" style="background: linear-gradient(135deg, #1A535C, #4ECDC4, #FF6B6B, #FFE66D);"
+ onclick="changeColorScheme('cool')" data-scheme="cool"></div>
+ </div>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- TAMANHO DOS NÓS -->
-                    <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
-                        <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Tamanho dos Nós</div>
-                        <p class="control-info" style="margin: 0; font-size: 10px;">Controle o tamanho visual dos atletas</p>
-                    </div>
+ <!-- TAMANHO DOS NÓS -->
+ <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
+ <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Tamanho dos Nós</div>
+ <p class="control-info" style="margin: 0; font-size: 10px;">Controle o tamanho visual dos atletas</p>
+ </div>
 
-                    <!-- Métrica para Tamanho -->
-                    <div class="control-group">
-                        <label class="control-label">Tamanho Baseado Em</label>
-                        <select id="node-size-metric" class="control-select" onchange="changeNodeSizeMetric(this.value)">
-                            <option value="pagerank">PageRank (Importância Global)</option>
-                            <option value="betweenness">Betweenness (Ponte/Intermediação)</option>
-                            <option value="degree">Degree Total (Conexões)</option>
-                            <option value="degree_in">In-Degree (Recebe Conexões)</option>
-                            <option value="degree_out">Out-Degree (Faz Conexões)</option>
-                            <option value="medals">Total de Medalhas</option>
-                            <option value="uniform">Uniforme (Todos Iguais)</option>
-                        </select>
-                        <p class="control-info">Define qual métrica determina o tamanho visual</p>
-                    </div>
+ <!-- Métrica para Tamanho -->
+ <div class="control-group">
+ <label class="control-label">Tamanho Baseado Em</label>
+ <select id="node-size-metric" class="control-select" onchange="changeNodeSizeMetric(this.value)">
+ <option value="pagerank">PageRank (Importância Global)</option>
+ <option value="betweenness">Betweenness (Ponte/Intermediação)</option>
+ <option value="degree">Degree Total (Conexões)</option>
+ <option value="degree_in">In-Degree (Recebe Conexões)</option>
+ <option value="degree_out">Out-Degree (Faz Conexões)</option>
+ <option value="medals">Total de Medalhas</option>
+ <option value="uniform">Uniforme (Todos Iguais)</option>
+ </select>
+ <p class="control-info">Define qual métrica determina o tamanho visual</p>
+ </div>
 
-                    <!-- Range de Tamanho dos Nós -->
-                    <div class="control-group">
-                        <label class="control-label">Escala de Tamanho</label>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <div style="flex: 1;">
-                                <span style="font-size: 11px; color: #666;">Mínimo: <span id="node-size-min-value">5</span></span>
-                                <input type="range" id="node-size-min-slider" class="control-slider"
-                                       min="3" max="20" step="1" value="5"
-                                       oninput="changeNodeSizeMin(this.value)">
-                            </div>
-                            <div style="flex: 1;">
-                                <span style="font-size: 11px; color: #666;">Máximo: <span id="node-size-max-value">50</span></span>
-                                <input type="range" id="node-size-max-slider" class="control-slider"
-                                       min="30" max="200" step="10" value="50"
-                                       oninput="changeNodeSizeMax(this.value)">
-                            </div>
-                        </div>
-                    </div>
+ <!-- Range de Tamanho dos Nós -->
+ <div class="control-group">
+ <label class="control-label">Escala de Tamanho</label>
+ <div style="display: flex; gap: 10px; margin-top: 8px;">
+ <div style="flex: 1;">
+ <span style="font-size: 11px; color: #666;">Mínimo: <span id="node-size-min-value">5</span></span>
+ <input type="range" id="node-size-min-slider" class="control-slider"
+ min="3" max="20" step="1" value="5"
+ oninput="changeNodeSizeMin(this.value)">
+ </div>
+ <div style="flex: 1;">
+ <span style="font-size: 11px; color: #666;">Máximo: <span id="node-size-max-value">50</span></span>
+ <input type="range" id="node-size-max-slider" class="control-slider"
+ min="30" max="200" step="10" value="50"
+ oninput="changeNodeSizeMax(this.value)">
+ </div>
+ </div>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- ARESTAS -->
-                    <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
-                        <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Aparência das Arestas</div>
-                        <p class="control-info" style="margin: 0; font-size: 10px;">Controle visual das conexões</p>
-                    </div>
+ <!-- ARESTAS -->
+ <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
+ <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Aparência das Arestas</div>
+ <p class="control-info" style="margin: 0; font-size: 10px;">Controle visual das conexões</p>
+ </div>
 
-                    <!-- Cor das Arestas -->
-                    <div class="control-group">
-                        <label class="control-label">Cor das Arestas</label>
-                        <select id="edge-color-mode" class="control-select" onchange="changeEdgeColorMode(this.value)">
-                            <option value="solid">Cor Sólida (Cinza)</option>
-                            <option value="from">Cor do Nó de Origem</option>
-                            <option value="to">Cor do Nó de Destino</option>
-                            <option value="gradient">Gradiente (Origem → Destino)</option>
-                        </select>
-                        <p class="control-info">Define como as conexões são coloridas</p>
-                    </div>
+ <!-- Cor das Arestas -->
+ <div class="control-group">
+ <label class="control-label">Cor das Arestas</label>
+ <select id="edge-color-mode" class="control-select" onchange="changeEdgeColorMode(this.value)">
+ <option value="solid">Cor Sólida (Cinza)</option>
+ <option value="from">Cor do Nó de Origem</option>
+ <option value="to">Cor do Nó de Destino</option>
+ <option value="gradient">Gradiente (Origem → Destino)</option>
+ </select>
+ <p class="control-info">Define como as conexões são coloridas</p>
+ </div>
 
-                    <!-- Opacidade das Arestas -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Opacidade
-                            <span class="slider-value" id="edge-opacity-value">0.3</span>
-                        </label>
-                        <input type="range" id="edge-opacity-slider" class="control-slider"
-                               min="0.05" max="1" step="0.05" value="0.3"
-                               oninput="changeEdgeOpacity(this.value)">
-                    </div>
+ <!-- Opacidade das Arestas -->
+ <div class="control-group">
+ <label class="control-label">
+ Opacidade
+ <span class="slider-value" id="edge-opacity-value">0.3</span>
+ </label>
+ <input type="range" id="edge-opacity-slider" class="control-slider"
+ min="0.05" max="1" step="0.05" value="0.3"
+ oninput="changeEdgeOpacity(this.value)">
+ </div>
 
-                    <!-- Espessura das Arestas -->
-                    <div class="control-group">
-                        <label class="control-label">Espessura (por Peso)</label>
-                        <div style="display: flex; gap: 10px; margin-top: 8px;">
-                            <div style="flex: 1;">
-                                <span style="font-size: 11px; color: #666;">Mínima: <span id="edge-width-min-value">1</span></span>
-                                <input type="range" id="edge-width-min-slider" class="control-slider"
-                                       min="0.5" max="3" step="0.5" value="1"
-                                       oninput="changeEdgeWidthMin(this.value)">
-                            </div>
-                            <div style="flex: 1;">
-                                <span style="font-size: 11px; color: #666;">Máxima: <span id="edge-width-max-value">5</span></span>
-                                <input type="range" id="edge-width-max-slider" class="control-slider"
-                                       min="3" max="15" step="1" value="5"
-                                       oninput="changeEdgeWidthMax(this.value)">
-                            </div>
-                        </div>
-                        <p class="control-info">Arestas com maior peso ficam mais grossas</p>
-                    </div>
+ <!-- Espessura das Arestas -->
+ <div class="control-group">
+ <label class="control-label">Espessura (por Peso)</label>
+ <div style="display: flex; gap: 10px; margin-top: 8px;">
+ <div style="flex: 1;">
+ <span style="font-size: 11px; color: #666;">Mínima: <span id="edge-width-min-value">1</span></span>
+ <input type="range" id="edge-width-min-slider" class="control-slider"
+ min="0.5" max="3" step="0.5" value="1"
+ oninput="changeEdgeWidthMin(this.value)">
+ </div>
+ <div style="flex: 1;">
+ <span style="font-size: 11px; color: #666;">Máxima: <span id="edge-width-max-value">5</span></span>
+ <input type="range" id="edge-width-max-slider" class="control-slider"
+ min="3" max="15" step="1" value="5"
+ oninput="changeEdgeWidthMax(this.value)">
+ </div>
+ </div>
+ <p class="control-info">Arestas com maior peso ficam mais grossas</p>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- Mostrar Labels -->
-                    <div class="control-group">
-                        <div class="control-toggle" onclick="toggleLabels()">
-                            <span class="toggle-label">Mostrar Labels</span>
-                            <div class="toggle-switch" id="labels-toggle">
-                                <div class="toggle-switch-knob"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+ <!-- Mostrar Labels -->
+ <div class="control-group">
+ <div class="control-toggle" onclick="toggleLabels()">
+ <span class="toggle-label">Mostrar Labels</span>
+ <div class="toggle-switch" id="labels-toggle">
+ <div class="toggle-switch-knob"></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- Seção: Física -->
-        <div class="drawer-section">
-            <div class="drawer-section-header" onclick="toggleSection(this)">
-                <div class="drawer-section-title">
-                    <span class="drawer-section-icon">⚡</span>
-                    <span>Física e Movimento</span>
-                </div>
-                <span class="drawer-section-arrow">▼</span>
-            </div>
-            <div class="drawer-section-body">
-                <div class="drawer-section-content">
-                    <!-- Ativar Física -->
-                    <div class="control-group">
-                        <div class="control-toggle" onclick="togglePhysicsFromPanel()">
-                            <span class="toggle-label">Ativar Física</span>
-                            <div class="toggle-switch" id="physics-toggle">
-                                <div class="toggle-switch-knob"></div>
-                            </div>
-                        </div>
-                        <p class="control-info">Quando ativada, os nós se movem dinamicamente. Desative para layout estático.</p>
-                    </div>
+ <!-- Seção: Física -->
+ <div class="drawer-section">
+ <div class="drawer-section-header" onclick="toggleSection(this)">
+ <div class="drawer-section-title">
+ <span class="drawer-section-icon"> </span>
+ <span>Física e Movimento</span>
+ </div>
+ <span class="drawer-section-arrow"> </span>
+ </div>
+ <div class="drawer-section-body">
+ <div class="drawer-section-content">
+ <!-- Ativar Física -->
+ <div class="control-group">
+ <div class="control-toggle" onclick="togglePhysicsFromPanel()">
+ <span class="toggle-label">Ativar Física</span>
+ <div class="toggle-switch" id="physics-toggle">
+ <div class="toggle-switch-knob"></div>
+ </div>
+ </div>
+ <p class="control-info">Quando ativada, os nós se movem dinamicamente. Desative para layout estático.</p>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- ForceAtlas2 Parameters -->
-                    <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
-                        <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">ForceAtlas2 - Forças</div>
-                        <p class="control-info" style="margin: 0; font-size: 10px;">Ajuste as forças do algoritmo de layout</p>
-                    </div>
+ <!-- ForceAtlas2 Parameters -->
+ <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
+ <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">ForceAtlas2 - Forças</div>
+ <p class="control-info" style="margin: 0; font-size: 10px;">Ajuste as forças do algoritmo de layout</p>
+ </div>
 
-                    <!-- Força Gravitacional -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Gravitational Constant
-                            <span class="slider-value" id="gravity-value">-800</span>
-                        </label>
-                        <input type="range" id="gravity-slider" class="control-slider"
-                               min="-2000" max="-100" step="50" value="-800"
-                               oninput="changeGravity(this.value)">
-                        <p class="control-info">Atração para o centro (negativo = repulsão)</p>
-                    </div>
+ <!-- Força Gravitacional -->
+ <div class="control-group">
+ <label class="control-label">
+ Gravitational Constant
+ <span class="slider-value" id="gravity-value">-800</span>
+ </label>
+ <input type="range" id="gravity-slider" class="control-slider"
+ min="-2000" max="-100" step="50" value="-800"
+ oninput="changeGravity(this.value)">
+ <p class="control-info">Atração para o centro (negativo = repulsão)</p>
+ </div>
 
-                    <!-- Central Gravity -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Central Gravity
-                            <span class="slider-value" id="central-gravity-value">0.005</span>
-                        </label>
-                        <input type="range" id="central-gravity-slider" class="control-slider"
-                               min="0.001" max="0.05" step="0.001" value="0.005"
-                               oninput="changeCentralGravity(this.value)">
-                        <p class="control-info">Força de atração para o centro da rede</p>
-                    </div>
+ <!-- Central Gravity -->
+ <div class="control-group">
+ <label class="control-label">
+ Central Gravity
+ <span class="slider-value" id="central-gravity-value">0.005</span>
+ </label>
+ <input type="range" id="central-gravity-slider" class="control-slider"
+ min="0.001" max="0.05" step="0.001" value="0.005"
+ oninput="changeCentralGravity(this.value)">
+ <p class="control-info">Força de atração para o centro da rede</p>
+ </div>
 
-                    <!-- Comprimento das Molas -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Spring Length
-                            <span class="slider-value" id="spring-length-value">150</span>
-                        </label>
-                        <input type="range" id="spring-length-slider" class="control-slider"
-                               min="50" max="400" step="10" value="150"
-                               oninput="changeSpringLength(this.value)">
-                        <p class="control-info">Distância ideal entre nós conectados</p>
-                    </div>
+ <!-- Comprimento das Molas -->
+ <div class="control-group">
+ <label class="control-label">
+ Spring Length
+ <span class="slider-value" id="spring-length-value">150</span>
+ </label>
+ <input type="range" id="spring-length-slider" class="control-slider"
+ min="50" max="400" step="10" value="150"
+ oninput="changeSpringLength(this.value)">
+ <p class="control-info">Distância ideal entre nós conectados</p>
+ </div>
 
-                    <!-- Constante das Molas -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Spring Constant
-                            <span class="slider-value" id="spring-constant-value">0.04</span>
-                        </label>
-                        <input type="range" id="spring-constant-slider" class="control-slider"
-                               min="0.001" max="0.2" step="0.001" value="0.04"
-                               oninput="changeSpringConstant(this.value)">
-                        <p class="control-info">Rigidez das conexões entre nós</p>
-                    </div>
+ <!-- Constante das Molas -->
+ <div class="control-group">
+ <label class="control-label">
+ Spring Constant
+ <span class="slider-value" id="spring-constant-value">0.04</span>
+ </label>
+ <input type="range" id="spring-constant-slider" class="control-slider"
+ min="0.001" max="0.2" step="0.001" value="0.04"
+ oninput="changeSpringConstant(this.value)">
+ <p class="control-info">Rigidez das conexões entre nós</p>
+ </div>
 
-                    <!-- Damping -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Damping (Atrito)
-                            <span class="slider-value" id="damping-value">0.98</span>
-                        </label>
-                        <input type="range" id="damping-slider" class="control-slider"
-                               min="0.5" max="0.99" step="0.01" value="0.98"
-                               oninput="changeDamping(this.value)">
-                        <p class="control-info">Atrito do movimento (maior = para mais rápido)</p>
-                    </div>
+ <!-- Damping -->
+ <div class="control-group">
+ <label class="control-label">
+ Damping (Atrito)
+ <span class="slider-value" id="damping-value">0.98</span>
+ </label>
+ <input type="range" id="damping-slider" class="control-slider"
+ min="0.5" max="0.99" step="0.01" value="0.98"
+ oninput="changeDamping(this.value)">
+ <p class="control-info">Atrito do movimento (maior = para mais rápido)</p>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- Velocidade e Precisão -->
-                    <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
-                        <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Simulação - Velocidade</div>
-                        <p class="control-info" style="margin: 0; font-size: 10px;">Controle a velocidade de convergência</p>
-                    </div>
+ <!-- Velocidade e Precisão -->
+ <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 12px;">
+ <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 4px;">Simulação - Velocidade</div>
+ <p class="control-info" style="margin: 0; font-size: 10px;">Controle a velocidade de convergência</p>
+ </div>
 
-                    <!-- Max Velocity -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Velocidade Máxima
-                            <span class="slider-value" id="max-velocity-value">20</span>
-                        </label>
-                        <input type="range" id="max-velocity-slider" class="control-slider"
-                               min="5" max="100" step="5" value="20"
-                               oninput="changeMaxVelocity(this.value)">
-                        <p class="control-info">Limita velocidade máxima dos nós</p>
-                    </div>
+ <!-- Max Velocity -->
+ <div class="control-group">
+ <label class="control-label">
+ Velocidade Máxima
+ <span class="slider-value" id="max-velocity-value">20</span>
+ </label>
+ <input type="range" id="max-velocity-slider" class="control-slider"
+ min="5" max="100" step="5" value="20"
+ oninput="changeMaxVelocity(this.value)">
+ <p class="control-info">Limita velocidade máxima dos nós</p>
+ </div>
 
-                    <!-- Min Velocity -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Velocidade Mínima (Stop)
-                            <span class="slider-value" id="min-velocity-value">1.5</span>
-                        </label>
-                        <input type="range" id="min-velocity-slider" class="control-slider"
-                               min="0.1" max="5" step="0.1" value="1.5"
-                               oninput="changeMinVelocity(this.value)">
-                        <p class="control-info">Quando parar a simulação (menor = mais preciso)</p>
-                    </div>
+ <!-- Min Velocity -->
+ <div class="control-group">
+ <label class="control-label">
+ Velocidade Mínima (Stop)
+ <span class="slider-value" id="min-velocity-value">1.5</span>
+ </label>
+ <input type="range" id="min-velocity-slider" class="control-slider"
+ min="0.1" max="5" step="0.1" value="1.5"
+ oninput="changeMinVelocity(this.value)">
+ <p class="control-info">Quando parar a simulação (menor = mais preciso)</p>
+ </div>
 
-                    <!-- Timestep -->
-                    <div class="control-group">
-                        <label class="control-label">
-                            Timestep (Tamanho do Passo)
-                            <span class="slider-value" id="timestep-value">0.5</span>
-                        </label>
-                        <input type="range" id="timestep-slider" class="control-slider"
-                               min="0.1" max="1.0" step="0.05" value="0.5"
-                               oninput="changeTimestep(this.value)">
-                        <p class="control-info">Tamanho do passo da simulação</p>
-                    </div>
+ <!-- Timestep -->
+ <div class="control-group">
+ <label class="control-label">
+ Timestep (Tamanho do Passo)
+ <span class="slider-value" id="timestep-value">0.5</span>
+ </label>
+ <input type="range" id="timestep-slider" class="control-slider"
+ min="0.1" max="1.0" step="0.05" value="0.5"
+ oninput="changeTimestep(this.value)">
+ <p class="control-info">Tamanho do passo da simulação</p>
+ </div>
 
-                    <div class="control-divider"></div>
+ <div class="control-divider"></div>
 
-                    <!-- Botão Reset Física -->
-                    <button class="control-button control-button-primary" onclick="resetPhysicsDefaults()" style="width: 100%;">
-                        🔄 Restaurar Padrões
-                    </button>
-                </div>
-            </div>
-        </div>
+ <!-- Botão Reset Física -->
+ <button class="control-button control-button-primary" onclick="resetPhysicsDefaults()" style="width: 100%;">
+ Restaurar Padrões
+ </button>
+ </div>
+ </div>
+ </div>
 
-        <!-- Seção: Exportar -->
-        <div class="drawer-section">
-            <div class="drawer-section-header" onclick="toggleSection(this)">
-                <div class="drawer-section-title">
-                    <span class="drawer-section-icon">💾</span>
-                    <span>Exportar</span>
-                </div>
-                <span class="drawer-section-arrow">▼</span>
-            </div>
-            <div class="drawer-section-body">
-                <div class="drawer-section-content">
-                    <div class="control-button-grid">
-                        <button class="control-button control-button-secondary" onclick="exportPNG()">
-                            <span>📷</span> PNG
-                        </button>
-                        <button class="control-button control-button-secondary" onclick="exportSVG()">
-                            <span>🎨</span> SVG
-                        </button>
-                        <button class="control-button control-button-secondary" onclick="exportGEXF()">
-                            <span>🕸️</span> GEXF
-                        </button>
-                        <button class="control-button control-button-secondary" onclick="exportCSV()">
-                            <span>📊</span> CSV
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+ <!-- Seção: Exportar -->
+ <div class="drawer-section">
+ <div class="drawer-section-header" onclick="toggleSection(this)">
+ <div class="drawer-section-title">
+ <span class="drawer-section-icon"> </span>
+ <span>Exportar</span>
+ </div>
+ <span class="drawer-section-arrow"> </span>
+ </div>
+ <div class="drawer-section-body">
+ <div class="drawer-section-content">
+ <div class="control-button-grid">
+ <button class="control-button control-button-secondary" onclick="exportPNG()">
+ <span> </span> PNG
+ </button>
+ <button class="control-button control-button-secondary" onclick="exportSVG()">
+ <span> </span> SVG
+ </button>
+ <button class="control-button control-button-secondary" onclick="exportGEXF()">
+ <span> </span> GEXF
+ </button>
+ <button class="control-button control-button-secondary" onclick="exportCSV()">
+ <span> </span> CSV
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- Seção: Sobre -->
-        <div class="drawer-section">
-            <div class="drawer-section-header" onclick="toggleSection(this)">
-                <div class="drawer-section-title">
-                    <span class="drawer-section-icon">ℹ️</span>
-                    <span>Sobre</span>
-                </div>
-                <span class="drawer-section-arrow">▼</span>
-            </div>
-            <div class="drawer-section-body">
-                <div class="drawer-section-content">
-                    <p style="font-size: 13px; line-height: 1.6; color: #555;">
-                        <strong>Visualização Interativa de Redes Olímpicas</strong><br>
-                        Use os controles acima para personalizar a aparência e comportamento da rede.<br><br>
-                        <strong>Atalhos:</strong><br>
-                        • Ctrl+K: Buscar atleta<br>
-                        • ESC: Reset zoom<br>
-                        • F: Tela cheia<br>
-                        • P: Toggle física
-                    </p>
-                </div>
-            </div>
-        </div>
+ <!-- Seção: Sobre -->
+ <div class="drawer-section">
+ <div class="drawer-section-header" onclick="toggleSection(this)">
+ <div class="drawer-section-title">
+ <span class="drawer-section-icon">ℹ </span>
+ <span>Sobre</span>
+ </div>
+ <span class="drawer-section-arrow"> </span>
+ </div>
+ <div class="drawer-section-body">
+ <div class="drawer-section-content">
+ <p style="font-size: 13px; line-height: 1.6; color: #555;">
+ <strong>Visualização Interativa de Redes Olímpicas</strong><br>
+ Use os controles acima para personalizar a aparência e comportamento da rede.<br><br>
+ <strong>Atalhos:</strong><br>
+ • Ctrl+K: Buscar atleta<br>
+ • ESC: Reset zoom<br>
+ • F: Tela cheia<br>
+ • P: Toggle física
+ </p>
+ </div>
+ </div>
+ </div>
 
-    </div>
+ </div>
 </div>

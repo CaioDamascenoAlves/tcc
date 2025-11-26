@@ -16,7 +16,7 @@ jobs:
           # URL do seu app no Streamlit Community Cloud
           APP_URL="https://dashboard-tcc.streamlit.app/"
 
-          echo "🏓 Pinging Streamlit app at $(date)"
+          echo " Pinging Streamlit app at $(date)"
 
           # Faz requisição HTTP simples (sem seguir redirects)
           # Qualquer resposta (200, 303, 302, etc) indica que o app está vivo
@@ -26,9 +26,9 @@ jobs:
 
           # Aceita qualquer código 2xx ou 3xx como sucesso
           if [[ "$HTTP_CODE" =~ ^[23][0-9][0-9]$ ]]; then
-            echo "✅ App is alive and responding! (HTTP $HTTP_CODE)"
+            echo " App is alive and responding! (HTTP $HTTP_CODE)"
           else
-            echo "⚠️ App may be down (HTTP $HTTP_CODE)"
+            echo " App may be down (HTTP $HTTP_CODE)"
             # Não falha o workflow - apenas avisa
             echo "Note: This may be temporary, will retry in 10 minutes"
           fi

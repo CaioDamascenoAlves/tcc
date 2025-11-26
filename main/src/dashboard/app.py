@@ -41,7 +41,7 @@ from dashboard.analysis import render_comparative_table
 
 st.set_page_config(
     page_title="Análise de Redes Olímpicas",
-    page_icon="🏅",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -107,7 +107,7 @@ def render_sidebar(data):
     st.sidebar.markdown("---")
 
     # Guia de Interpretação
-    with st.sidebar.expander("📖 Guia de Uso", expanded=False):
+    with st.sidebar.expander(" Guia de Uso", expanded=False):
         st.markdown("""
         ### Como usar este dashboard
 
@@ -134,7 +134,7 @@ def render_sidebar(data):
         - **Betweenness:** Atletas-ponte entre grupos
         - **Comunidades:** Grupos detectados por Louvain
 
-        **Dica:** Clique nos ícones ⓘ e expanders 📖 para explicações detalhadas!
+        **Dica:** Clique nos ícones  e expanders  para explicações detalhadas!
         """)
 
     st.sidebar.markdown("---")
@@ -213,7 +213,7 @@ def render_sidebar(data):
     csv_data = convert_df_to_csv(data['athletes'])
 
     st.sidebar.download_button(
-        label="📥 Download CSV (Atletas)",
+        label=" Download CSV (Atletas)",
         data=csv_data,
         file_name="olympic_athletes_network.csv",
         mime="text/csv",
@@ -227,7 +227,7 @@ def render_sidebar(data):
     st.sidebar.caption("Análise de Redes Complexas")
 
     # Dica sobre tema
-    with st.sidebar.expander("⚙️ Configuração de Tema"):
+    with st.sidebar.expander(" Configuração de Tema"):
         st.markdown("""
         **Tema recomendado:** Light
 
@@ -1081,7 +1081,7 @@ def render_network_tab(data):
     # FILTROS E OPÇÕES
     # ========================================================================
 
-    st.info("⚙️ **Controles**: Todos os controles de visualização (filtros, cores, layout) estão disponíveis no painel interativo dentro do grafo abaixo.")
+    st.info(" **Controles**: Todos os controles de visualização (filtros, cores, layout) estão disponíveis no painel interativo dentro do grafo abaixo.")
 
     # Configurações padrão - SEM filtros! Mostrar TUDO
     show_top_n = num_nodes_total  # TODOS os nós
@@ -1256,7 +1256,7 @@ def render_network_tab(data):
             max_edges = 6000
 
     if len(df_edges_filtered) > max_edges:
-        st.info(f"ℹ️ Otimização: Exibindo as {max_edges:,} arestas de maior peso (de {len(df_edges_filtered):,} totais). Aumente o peso mínimo para ver conexões mais relevantes.")
+        st.info(f"ℹ Otimização: Exibindo as {max_edges:,} arestas de maior peso (de {len(df_edges_filtered):,} totais). Aumente o peso mínimo para ver conexões mais relevantes.")
         df_edges_filtered = df_edges_filtered.nlargest(max_edges, 'weight')
 
     for _, edge in df_edges_filtered.iterrows():
@@ -1284,7 +1284,7 @@ def render_network_tab(data):
 
 
     if nodes_removed > 0:
-        st.info(f"ℹ️ Removidos {nodes_removed} nós isolados (sem conexões diretas após filtros)")
+        st.info(f"ℹ Removidos {nodes_removed} nós isolados (sem conexões diretas após filtros)")
 
     # ========================================================================
     # ESTATÍSTICAS DA REDE VISÍVEL
@@ -1295,15 +1295,15 @@ def render_network_tab(data):
     # Aviso de desempenho baseado na quantidade real de arestas
     total_elements = len(nodes) + len(links)
     if total_elements > 4000:
-        st.error(f"🚨 **AVISO:** Renderizando {len(nodes):,} nós e {len(links):,} arestas. A visualização pode ficar lenta. Aumente o peso mínimo das arestas!")
+        st.error(f" **AVISO:** Renderizando {len(nodes):,} nós e {len(links):,} arestas. A visualização pode ficar lenta. Aumente o peso mínimo das arestas!")
     elif total_elements > 2500:
-        st.warning(f"⚠️ **Atenção:** {len(nodes):,} nós e {len(links):,} arestas. Considere aumentar o peso mínimo das arestas.")
+        st.warning(f" **Atenção:** {len(nodes):,} nós e {len(links):,} arestas. Considere aumentar o peso mínimo das arestas.")
     elif len(links) > 3000:
-        st.info(f"ℹ️ Muitas arestas ({len(links):,}). Se a visualização ficar lenta, aumente o peso mínimo.")
+        st.info(f"ℹ Muitas arestas ({len(links):,}). Se a visualização ficar lenta, aumente o peso mínimo.")
     
     # Aviso sobre física
     if physics_enabled and (len(nodes) > 500 or len(links) > 2000):
-        st.warning("⚠️ Física ativada com muitos elementos pode causar lentidão significativa.")
+        st.warning(" Física ativada com muitos elementos pode causar lentidão significativa.")
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -1407,7 +1407,7 @@ def render_network_tab(data):
     # INFORMAÇÕES ADICIONAIS
     # ========================================================================
 
-    with st.expander("ℹ️ Ajuda e Instruções", expanded=False):
+    with st.expander("ℹ Ajuda e Instruções", expanded=False):
         st.markdown("""
         ### Como usar a visualização interativa:
 
@@ -1453,7 +1453,7 @@ def render_temporal_tab(data):
     # Timeline Visual Interativa com Plotly
     render_section_title("Linha do Tempo Histórica", "4 eras olímpicas de 1896 a 2021")
 
-    st.caption("💡 **Dica:** Passe o mouse sobre as barras para ver detalhes de cada era")
+    st.caption(" **Dica:** Passe o mouse sobre as barras para ver detalhes de cada era")
 
     # Criar timeline responsiva com Plotly (limpa e objetiva)
     timeline_fig = create_olympic_timeline(OLYMPIC_ERAS, height=350)
@@ -1471,12 +1471,12 @@ def render_temporal_tab(data):
         with cols[idx]:
             # Ícone visual da era
             era_icons = {
-                'Belle Époque': '🎭',
-                'Entre-Guerras': '⚔️',
-                'Guerra Fria': '🥊',
-                'Pós-Guerra Fria': '🌍'
+                'Belle Époque': '',
+                'Entre-Guerras': '',
+                'Guerra Fria': '',
+                'Pós-Guerra Fria': ''
             }
-            era_icon = era_icons.get(era_info['name'], '📅')
+            era_icon = era_icons.get(era_info['name'], '')
 
             with st.expander(f"{era_icon} **{era_info['name']}**", expanded=False):
                 # Badge com período
@@ -1485,49 +1485,49 @@ def render_temporal_tab(data):
                 st.markdown(f"*{era_info['description']}*")
                 st.markdown("")
 
-                st.markdown("**📊 Características:**")
+                st.markdown("** Características:**")
                 for char in era_info['characteristics']:
                     st.markdown(f"• {char}")
 
                 st.markdown("")
-                st.markdown("**📌 Eventos-Chave:**")
+                st.markdown("** Eventos-Chave:**")
                 for event in era_info['events']:
                     event_icons = {
-                        'olympic': '🏅',
-                        'political': '⚔️',
-                        'social': '👥',
-                        'sport': '🏆',
-                        'geographic': '🌍'
+                        'olympic': '',
+                        'political': '',
+                        'social': '',
+                        'sport': '',
+                        'geographic': ''
                     }
-                    icon = event_icons.get(event['type'], '📌')
+                    icon = event_icons.get(event['type'], '')
                     st.markdown(f"**{event['year']}** {icon} *{event['event']}*")
 
     st.markdown("---")
 
-    with st.expander("📖 Sobre as Eras Olímpicas", expanded=False):
+    with st.expander(" Sobre as Eras Olímpicas", expanded=False):
         st.markdown("""
         A evolução olímpica pode ser dividida em **4 grandes eras históricas**, cada uma com características
         estruturais e competitivas distintas:
 
-        ### 🎭 Belle Époque (1896-1912)
+        ###  Belle Époque (1896-1912)
         - **Contexto**: Primeiros Jogos Olímpicos da era moderna
         - **Participação**: ~100 atletas por edição, predominância europeia
         - **Características**: Exclusão feminina, esportes tradicionais, amadorismo estrito
         - **Estrutura de Rede**: Pequena, altamente concentrada, poucas conexões internacionais
 
-        ### ⚔️ Entre-Guerras (1920-1936)
+        ###  Entre-Guerras (1920-1936)
         - **Contexto**: Crescimento pós-Primeira Guerra Mundial
         - **Participação**: ~300-400 atletas, expansão geográfica (América do Sul, Ásia)
         - **Características**: Primeiras participações femininas oficiais, profissionalização incipiente
         - **Estrutura de Rede**: Crescimento moderado, início da diversificação geográfica
 
-        ### 🥊 Guerra Fria (1948-1988)
+        ###  Guerra Fria (1948-1988)
         - **Contexto**: Esporte como campo de batalha ideológica (EUA vs URSS)
         - **Participação**: 400 → 800+ atletas, crescimento exponencial
         - **Características**: Boicotes políticos (1980, 1984), profissionalização em países socialistas
         - **Estrutura de Rede**: Altíssima concentração em blocos, polarização estrutural, PageRank elevado
 
-        ### 🌍 Pós-Guerra Fria (1992-2016)
+        ###  Pós-Guerra Fria (1992-2016)
         - **Contexto**: Globalização e democratização do esporte olímpico
         - **Participação**: 800 → 900+ atletas, participação global
         - **Características**: Profissionalização total, avanço feminino (paridade), tecnologia avançada
@@ -1535,7 +1535,7 @@ def render_temporal_tab(data):
 
         ---
 
-        **💡 Como interpretar os gráficos abaixo:**
+        ** Como interpretar os gráficos abaixo:**
         - **Faixas coloridas de fundo**: Delimitam cada era histórica
         - **Labels no topo**: Identificam as eras
         - **Anotações nos gráficos**: Destacam transições e eventos importantes

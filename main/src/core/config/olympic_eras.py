@@ -135,13 +135,13 @@ def get_timeline_data():
         # Adicionar eventos-chave da era
         for key_event in era_data['key_events']:
             event_type_icons = {
-                'olympic': '🏅',
-                'political': '⚔️',
-                'social': '👥',
-                'sport': '🏆',
-                'geographic': '🌍'
+                'olympic': '',
+                'political': '',
+                'social': '',
+                'sport': '',
+                'geographic': ''
             }
-            icon = event_type_icons.get(key_event['type'], '📌')
+            icon = event_type_icons.get(key_event['type'], '')
 
             events.append({
                 'start_date': {

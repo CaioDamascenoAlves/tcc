@@ -6,8 +6,8 @@ Este diretório contém toda a documentação acadêmica formal do projeto TCC.
 
 ```
 docs/
-├── monografia/       # Monografia LaTeX (documento principal)
-└── apresentacao/     # Apresentação Beamer (defesa)
+ monografia/ # Monografia LaTeX (documento principal)
+ apresentacao/ # Apresentação Beamer (defesa)
 ```
 
 ## Monografia
@@ -31,23 +31,23 @@ Saída: `main.pdf`
 
 ```
 monografia/
-├── main.tex                  # Documento principal
-├── preambulo/                # Elementos pré-textuais
-│   ├── capa.tex
-│   ├── folha_rosto.tex
-│   ├── resumo.tex
-│   └── abstract.tex
-├── textuais/                 # Conteúdo principal
-│   ├── introducao.tex
-│   ├── revisao.tex
-│   ├── desenvolvimento.tex
-│   ├── resultados.tex
-│   └── conclusao.tex
-├── postextuais/              # Elementos pós-textuais
-│   ├── referencias.bib
-│   └── apendices.tex
-├── figuras/                  # Figuras geradas (PNG 300 DPI)
-└── tabelas/                  # Tabelas LaTeX geradas
+ main.tex # Documento principal
+ preambulo/ # Elementos pré-textuais
+ capa.tex
+ folha_rosto.tex
+ resumo.tex
+ abstract.tex
+ textuais/ # Conteúdo principal
+ introducao.tex
+ revisao.tex
+ desenvolvimento.tex
+ resultados.tex
+ conclusao.tex
+ postextuais/ # Elementos pós-textuais
+ referencias.bib
+ apendices.tex
+ figuras/ # Figuras geradas (PNG 300 DPI)
+ tabelas/ # Tabelas LaTeX geradas
 ```
 
 ### Gerar Figuras e Tabelas
@@ -92,9 +92,9 @@ Saída: `main.pdf`
 
 ```
 apresentacao/
-├── main.tex           # Slides Beamer
-├── figuras/           # Figuras para slides
-└── logos/             # Logos institucionais
+ main.tex # Slides Beamer
+ figuras/ # Figuras para slides
+ logos/ # Logos institucionais
 ```
 
 ### Tema Beamer
@@ -115,10 +115,10 @@ Usa tema customizado com:
 Inclusão em LaTeX:
 ```latex
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figuras/fig_size_vs_pagerank.png}
-  \caption{Relação entre tamanho e centralidade estrutural das comunidades}
-  \label{fig:size_pagerank}
+ \centering
+ \includegraphics[width=0.8\textwidth]{figuras/fig_size_vs_pagerank.png}
+ \caption{Relação entre tamanho e centralidade estrutural das comunidades}
+ \label{fig:size_pagerank}
 \end{figure}
 ```
 
@@ -130,10 +130,10 @@ Inclusão em LaTeX:
 Inclusão em LaTeX:
 ```latex
 \begin{table}[htbp]
-  \centering
-  \caption{Estatísticas das comunidades detectadas}
-  \label{tab:comunidades}
-  \input{tabelas/tab_comunidades_summary.tex}
+ \centering
+ \caption{Estatísticas das comunidades detectadas}
+ \label{tab:comunidades}
+ \input{tabelas/tab_comunidades_summary.tex}
 \end{table}
 ```
 

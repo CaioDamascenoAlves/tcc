@@ -40,7 +40,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
         run: |
-          echo "📝 Setting up Google Drive credentials..."
+          echo " Setting up Google Drive credentials..."
 
           # Salvar credentials.json
           echo "$GOOGLE_CREDENTIALS" > main/credentials.json
@@ -48,15 +48,15 @@ jobs:
           # Salvar token.json (se existir)
           if [ ! -z "$GOOGLE_TOKEN" ]; then
             echo "$GOOGLE_TOKEN" > main/token.json
-            echo "✅ Token OAuth encontrado - sem necessidade de autenticação"
+            echo " Token OAuth encontrado - sem necessidade de autenticação"
           else
-            echo "⚠️ Token OAuth não encontrado - primeira execução precisará de autenticação manual"
+            echo " Token OAuth não encontrado - primeira execução precisará de autenticação manual"
           fi
 
       - name: Upload Files to Google Drive
         run: |
           cd main/scripts
-          echo "🚀 Iniciando upload para Google Drive..."
+          echo " Iniciando upload para Google Drive..."
           python upload_to_drive.py
 
       - name: Commit and Push Updated drive_files.json
@@ -78,6 +78,6 @@ jobs:
 
       - name: Summary
         run: |
-          echo "✅ Upload concluído com sucesso!"
-          echo "📊 Arquivos atualizados no Google Drive"
-          echo "🔄 drive_files.json commitado automaticamente"
+          echo " Upload concluído com sucesso!"
+          echo " Arquivos atualizados no Google Drive"
+          echo " drive_files.json commitado automaticamente"

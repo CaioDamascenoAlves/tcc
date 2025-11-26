@@ -30,7 +30,7 @@ A aplicação do algoritmo de Louvain \citeonline{Blondel2008Louvain} resultou n
 
 As comunidades detectadas na natação apresentam entropia de Shannon \citeonline{Rajaram2017ShannonEntropy} temporal média de 1.60 e geográfica de 2.59. Comunidades individuais abrangem múltiplas décadas, sugerindo que agrupamentos refletem não apenas períodos temporais isolados, mas combinações de fatores estruturais mais complexos. A maior comunidade de natação masculina (378 atletas) distribui-se temporalmente entre 1908 e 2016, com concentração na Guerra Fria (28\% dos atletas) mas mantendo participação significativa em todas as eras olímpicas. Esta diversidade temporal, combinada com dominância geográfica moderada (USA com 31.5\%), caracteriza comunidade heterogênea. A análise de PageRank dentro das comunidades revela hierarquias de performance: Michael Phelps apresenta PageRank de 0.027, valor substancialmente superior à média da comunidade (0.0017), evidenciando heterogeneidade característica de esportes individuais onde superstars despontam claramente.
 
-Basketball e Football apresentam padrões estruturais radicalmente distintos da natação. A modularidade extremamente baixa (Basketball: 0.003, Football: 0.0006) aproxima-se dos valores esperados em redes aleatórias, indicando que comunidades detectadas não representam agrupamentos fortemente segregados, mas sim partições algorítmicas de redes altamente densas. A literatura estabelece empiricamente que modularidade superior a 0.3 caracteriza estrutura comunitária significativa \citeonline{Newman2006Modularity}, threshold substancialmente excedido por Swimming (0.73) mas não atingido por esportes coletivos. Embora validação formal através de null models (comparação com redes aleatórias preservando distribuição de grau) não tenha sido implementada, a magnitude da diferença observada (Swimming apresenta modularidade 243× superior a Basketball e 1216× superior a Football) suporta robustamente a distinção qualitativa entre modalidades com estrutura comunitária genuína versus partições algorítmicas. Esta diferença estrutural fundamental reflete a natureza dos torneios olímpicos em esportes coletivos: número limitado de equipes competindo em formato eliminatório produz redes densamente conectadas onde praticamente todos os competidores enfrentam-se direta ou indiretamente. Football masculino exemplifica este fenômeno: 1.275 atletas formam essencialmente uma única estrutura interconectada, dividida pelo algoritmo em apenas 2 comunidades massivas (781 e 428 atletas) com diversidade temporal excepcional (12 décadas em média) e geográfica elevada (33.5 países por comunidade). As comunidades detectadas em esportes coletivos devem ser interpretadas como agrupamentos estatísticos de atletas com padrões de conectividade similares, não como grupos estruturalmente segregados como observado em Swimming. A dominância brasileira no Football (8.8\%) contrasta com a americana na natação (31.5\%), revelando diferentes padrões de hegemonia competitiva. O PageRank médio em esportes coletivos é substancialmente inferior (Football: 0.0008 vs Swimming: 0.0018), com menor variabilidade (CV=0.58 vs 0.71), refletindo a natureza coletiva onde importância individual é diluída pela interdependência entre membros da equipe.
+Basketball e Football apresentam padrões estruturais radicalmente distintos da natação. A modularidade extremamente baixa (Basketball: 0.003, Football: 0.0006) aproxima-se dos valores esperados em redes aleatórias, indicando que comunidades detectadas não representam agrupamentos fortemente segregados, mas sim partições algorítmicas de redes altamente densas. A literatura estabelece empiricamente que modularidade superior a 0.3 caracteriza estrutura comunitária significativa \citeonline{Fortunato2010CommunityDetection}, threshold substancialmente excedido por Swimming (0.73) mas não atingido por esportes coletivos. Embora validação formal através de null models (comparação com redes aleatórias preservando distribuição de grau) não tenha sido implementada, a magnitude da diferença observada (Swimming apresenta modularidade 243× superior a Basketball e 1216× superior a Football) suporta robustamente a distinção qualitativa entre modalidades com estrutura comunitária genuína versus partições algorítmicas. Esta diferença estrutural fundamental reflete a natureza dos torneios olímpicos em esportes coletivos: número limitado de equipes competindo em formato eliminatório produz redes densamente conectadas onde praticamente todos os competidores enfrentam-se direta ou indiretamente. Football masculino exemplifica este fenômeno: 1.275 atletas formam essencialmente uma única estrutura interconectada, dividida pelo algoritmo em apenas 2 comunidades massivas (781 e 428 atletas) com diversidade temporal excepcional (12 décadas em média) e geográfica elevada (33.5 países por comunidade). As comunidades detectadas em esportes coletivos devem ser interpretadas como agrupamentos estatísticos de atletas com padrões de conectividade similares, não como grupos estruturalmente segregados como observado em Swimming. A dominância brasileira no Football (8.8\%) contrasta com a americana na natação (31.5\%), revelando diferentes padrões de hegemonia competitiva. O PageRank médio em esportes coletivos é substancialmente inferior (Football: 0.0008 vs Swimming: 0.0018), com menor variabilidade (CV=0.58 vs 0.71), refletindo a natureza coletiva onde importância individual é diluída pela interdependência entre membros da equipe.
 
 A análise temporal revelou que 50\% das comunidades de Swimming (13 de 26) abrangem múltiplas eras olímpicas com entropia temporal superior a 1.5, sugerindo que comunidades refletem características técnicas persistentes que transcendem períodos históricos. Basketball apresentou comunidades temporalmente mais concentradas (era dominante representa 45\% dos atletas em média), sugerindo maior influência de fatores temporais. A dominância de eras específicas varia sistematicamente: natação concentra-se na Guerra Fria, Basketball na era moderna, e Football distribui-se uniformemente. USA domina 8 das 26 comunidades em Swimming, mas apenas 2 em Basketball e nenhuma em Football, sugerindo diferentes estruturas de hegemonia competitiva.
 
@@ -54,12 +54,12 @@ A classificação hierárquica das comunidades identificou três níveis: Núcle
   \label{tab:medal_distribution_stats}
   \begin{tabular}{lcccc}
     \hline
-    Estatística & Ouro (\%) & Prata (\%) & Bronze (\%) & N Comunidades \\
+    Estatística   & Ouro (\%) & Prata (\%) & Bronze (\%) & N Comunidades \\
     \hline
-    Média         & 31,8      & 33,4       & 34,8        & 36 \\
-    Mínimo        & 16,7      & 20,0       & 25,0        & -- \\
-    Máximo        & 50,0      & 50,0       & 50,0        & -- \\
-    Desvio Padrão & 5,7       & 5,9        & 4,9         & -- \\
+    Média         & 31,8      & 33,4       & 34,8        & 36            \\
+    Mínimo        & 16,7      & 20,0       & 25,0        & --            \\
+    Máximo        & 50,0      & 50,0       & 50,0        & --            \\
+    Desvio Padrão & 5,7       & 5,9        & 4,9         & --            \\
     \hline
   \end{tabular}
 \end{table}
@@ -71,18 +71,18 @@ A classificação hierárquica das comunidades identificou três níveis: Núcle
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{@{}cllcccccc@{}}
       \hline
-      \# & Esporte & Sexo & Comunidade & País & Tamanho & Ouro\% & Prata\% & Bronze\% \\
+      \# & Esporte    & Sexo & Comunidade & País & Tamanho & Ouro\% & Prata\% & Bronze\% \\
       \hline
-      1  & Swimming & F & C2 & USA & 219 & 41,1 & 26,9 & 32,0 \\
-      2  & Swimming & F & C4 & USA & 70  & 38,6 & 28,6 & 32,9 \\
-      3  & Basketball & M & C1 & USA & 210 & 36,7 & 28,1 & 35,2 \\
-      4  & Basketball & F & C1 & USA & 98  & 35,7 & 32,6 & 31,6 \\
-      5  & Football & F & C1 & GER & 94  & 35,1 & 35,1 & 29,8 \\
-      6  & Basketball & M & C0 & USA & 346 & 33,8 & 35,0 & 31,2 \\
-      7  & Swimming & M & C4 & FRA & 19  & 31,6 & 36,8 & 31,6 \\
-      8  & Swimming & F & C1 & AUS & 285 & 31,2 & 33,0 & 35,8 \\
-      9  & Football & M & C0 & URU & 792 & 30,8 & 34,2 & 35,0 \\
-      10 & Swimming & M & C0 & USA & 293 & 30,4 & 34,1 & 35,5 \\
+      1  & Swimming   & F    & C2         & USA  & 219     & 41,1   & 26,9    & 32,0     \\
+      2  & Swimming   & F    & C4         & USA  & 70      & 38,6   & 28,6    & 32,9     \\
+      3  & Basketball & M    & C1         & USA  & 210     & 36,7   & 28,1    & 35,2     \\
+      4  & Basketball & F    & C1         & USA  & 98      & 35,7   & 32,6    & 31,6     \\
+      5  & Football   & F    & C1         & GER  & 94      & 35,1   & 35,1    & 29,8     \\
+      6  & Basketball & M    & C0         & USA  & 346     & 33,8   & 35,0    & 31,2     \\
+      7  & Swimming   & M    & C4         & FRA  & 19      & 31,6   & 36,8    & 31,6     \\
+      8  & Swimming   & F    & C1         & AUS  & 285     & 31,2   & 33,0    & 35,8     \\
+      9  & Football   & M    & C0         & URU  & 792     & 30,8   & 34,2    & 35,0     \\
+      10 & Swimming   & M    & C0         & USA  & 293     & 30,4   & 34,1    & 35,5     \\
       \hline
     \end{tabular}%
   }
@@ -116,20 +116,20 @@ A identificação de rivalidades estruturais através de contagem de confrontos 
   \caption{Índice de segregação estrutural por esporte, sexo e tipo de rede. Razão Intra/Inter > 1,0 indica comunidade segregada; < 1,0 indica alta integração. Swimming apresenta duas linhas por sexo correspondendo a eventos individuais e coletivos (revezamentos).}
   \label{tab:segregation}
   \resizebox{\textwidth}{!}{%
-  \begin{tabular}{llllllll}
-    \hline
-    Esporte    & Sexo & Tipo       & Arestas Intra & Arestas Inter & Razão Intra\% & Razão Inter\% & Segregação \\
-    \hline
-    Basketball & F    & Coletivo   & 21.397        & 19.767        & 52,0          & 48,0          & 1,08       \\
-    Basketball & M    & Coletivo   & 66.111        & 67.209        & 49,6          & 50,4          & 0,98       \\
-    Football   & F    & Coletivo   & 11.594        & 19.963        & 36,7          & 63,3          & 0,58       \\
-    Football   & M    & Coletivo   & 291.970       & 264.996       & 52,4          & 47,6          & 1,10       \\
-    Swimming   & F    & Individual & 10.647        & 9.667         & 52,4          & 47,6          & 1,10       \\
-    Swimming   & F    & Coletivo   & 56.587        & 47.818        & 54,2          & 45,8          & 1,18       \\
-    Swimming   & M    & Individual & 11.951        & 12.662        & 48,6          & 51,4          & 0,94       \\
-    Swimming   & M    & Coletivo   & 55.022        & 70.771        & 43,7          & 56,3          & 0,78       \\
-    \hline
-  \end{tabular}%
+    \begin{tabular}{llllllll}
+      \hline
+      Esporte    & Sexo & Tipo       & Arestas Intra & Arestas Inter & Razão Intra\% & Razão Inter\% & Segregação \\
+      \hline
+      Basketball & F    & Coletivo   & 21.397        & 19.767        & 52,0          & 48,0          & 1,08       \\
+      Basketball & M    & Coletivo   & 66.111        & 67.209        & 49,6          & 50,4          & 0,98       \\
+      Football   & F    & Coletivo   & 11.594        & 19.963        & 36,7          & 63,3          & 0,58       \\
+      Football   & M    & Coletivo   & 291.970       & 264.996       & 52,4          & 47,6          & 1,10       \\
+      Swimming   & F    & Individual & 10.647        & 9.667         & 52,4          & 47,6          & 1,10       \\
+      Swimming   & F    & Coletivo   & 56.587        & 47.818        & 54,2          & 45,8          & 1,18       \\
+      Swimming   & M    & Individual & 11.951        & 12.662        & 48,6          & 51,4          & 0,94       \\
+      Swimming   & M    & Coletivo   & 55.022        & 70.771        & 43,7          & 56,3          & 0,78       \\
+      \hline
+    \end{tabular}%
   }
 \end{table}
 
@@ -146,18 +146,18 @@ A identificação de rivalidades estruturais através de contagem de confrontos 
   \label{tab:top10_rivalries}
   \begin{tabular}{llllcl}
     \hline
-    Rank & Esporte    & Sexo & Direção      & Confrontos & Interpretação \\
+    Rank & Esporte    & Sexo & Direção & Confrontos & Interpretação \\
     \hline
-    1    & Basketball & M    & C2 → C0      & 31.941     & C0 domina C2  \\
-    2    & Basketball & M    & C0 → C2      & 29.916     & (reverso)     \\
-    3    & Basketball & F    & C0 → C1      & 10.374     & C1 domina C0  \\
-    4    & Basketball & F    & C1 → C0      & 9.393      & (reverso)     \\
-    5    & Football   & F    & C0 → C2      & 5.715      & C2 domina C0  \\
-    6    & Football   & F    & C2 → C0      & 5.367      & (reverso)     \\
-    7    & Basketball & M    & C1 → C0      & 1.676      & C0 domina C1  \\
-    8    & Basketball & M    & C0 → C1      & 1.527      & (reverso)     \\
-    9    & Football   & F    & C1 → C0      & 1.553      & C0 domina C1  \\
-    10   & Basketball & M    & C1 → C2      & 1.087      & C2 domina C1  \\
+    1    & Basketball & M    & C2 → C0 & 31.941     & C0 domina C2  \\
+    2    & Basketball & M    & C0 → C2 & 29.916     & (reverso)     \\
+    3    & Basketball & F    & C0 → C1 & 10.374     & C1 domina C0  \\
+    4    & Basketball & F    & C1 → C0 & 9.393      & (reverso)     \\
+    5    & Football   & F    & C0 → C2 & 5.715      & C2 domina C0  \\
+    6    & Football   & F    & C2 → C0 & 5.367      & (reverso)     \\
+    7    & Basketball & M    & C1 → C0 & 1.676      & C0 domina C1  \\
+    8    & Basketball & M    & C0 → C1 & 1.527      & (reverso)     \\
+    9    & Football   & F    & C1 → C0 & 1.553      & C0 domina C1  \\
+    10   & Basketball & M    & C1 → C2 & 1.087      & C2 domina C1  \\
     \hline
   \end{tabular}
 \end{table}

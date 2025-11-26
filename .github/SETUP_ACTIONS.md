@@ -31,12 +31,12 @@ Cole o JSON completo no campo Value do secret.
 **Formato esperado:**
 ```json
 {
-  "installed": {
-    "client_id": "seu-client-id.apps.googleusercontent.com",
-    "project_id": "seu-projeto",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    ...
-  }
+ "installed": {
+ "client_id": "seu-client-id.apps.googleusercontent.com",
+ "project_id": "seu-projeto",
+ "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+ ...
+ }
 }
 ```
 
@@ -60,10 +60,10 @@ Cole o JSON completo no campo Value do secret.
 **Formato esperado:**
 ```json
 {
-  "token": "ya29.a0...",
-  "refresh_token": "1//0g...",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  ...
+ "token": "ya29.a0...",
+ "refresh_token": "1//0g...",
+ "token_uri": "https://oauth2.googleapis.com/token",
+ ...
 }
 ```
 
@@ -74,7 +74,7 @@ Cole o JSON completo no campo Value do secret.
 Edite `.github/workflows/keep-alive.yml` e substitua a URL:
 
 ```yaml
-APP_URL="https://dashboard-tcc.rglg.org"  # ← Substitua pela sua URL
+APP_URL="https://dashboard-tcc.rglg.org" # ← Substitua pela sua URL
 ```
 
 **Como encontrar sua URL:**
@@ -112,30 +112,30 @@ APP_URL="https://dashboard-tcc.rglg.org"  # ← Substitua pela sua URL
 
 **Logs típicos:**
 ```
-🏓 Pinging Streamlit app at Tue Nov 26 14:30:00 UTC 2024
+ Pinging Streamlit app at Tue Nov 26 14:30:00 UTC 2024
 HTTP/1.1 200 OK
-✅ App is alive and responding!
+ App is alive and responding!
 ```
 
 ### Auto-Upload Workflow
 
 - **Triggers:**
-  - Quando você faz push de mudanças em `main/results/**`
-  - Quando você faz push de mudanças em `main/src/pipeline/**`
-  - Manualmente via Actions
+ - Quando você faz push de mudanças em `main/results/**`
+ - Quando você faz push de mudanças em `main/src/pipeline/**`
+ - Manualmente via Actions
 - **Função:**
-  - Faz upload de CSVs e JSONs para Google Drive
-  - Atualiza `drive_files.json` automaticamente
-  - Faz commit das mudanças
+ - Faz upload de CSVs e JSONs para Google Drive
+ - Atualiza `drive_files.json` automaticamente
+ - Faz commit das mudanças
 
 **Logs típicos:**
 ```
-📝 Setting up Google Drive credentials...
-✅ Token OAuth encontrado
-🚀 Iniciando upload para Google Drive...
-✓ Encontrados 45 arquivos (CSV + JSON)
-✓ UPLOAD CONCLUÍDO COM SUCESSO!
-🔄 drive_files.json commitado automaticamente
+ Setting up Google Drive credentials...
+ Token OAuth encontrado
+ Iniciando upload para Google Drive...
+ Encontrados 45 arquivos (CSV + JSON)
+ UPLOAD CONCLUÍDO COM SUCESSO!
+ drive_files.json commitado automaticamente
 ```
 
 ---
@@ -172,7 +172,7 @@ HTTP/1.1 200 OK
 ### GitHub Actions Limites (Free Tier)
 
 - **2000 minutos/mês** de execução
-- Keep-alive: ~10 segundos a cada 10 min = ~4320 exec/mês = **~12 horas/mês** ✅
+- Keep-alive: ~10 segundos a cada 10 min = ~4320 exec/mês = **~12 horas/mês** 
 - Upload: ~30 segundos por execução = **variável** (depende de quantos commits)
 - **Total estimado:** < 20 horas/mês (bem dentro do limite)
 
@@ -180,7 +180,7 @@ HTTP/1.1 200 OK
 
 - **10,000 requisições/dia** (queries)
 - **1,000 requisições/100 segundos/usuário**
-- Upload automático está bem dentro dos limites ✅
+- Upload automático está bem dentro dos limites 
 
 ---
 

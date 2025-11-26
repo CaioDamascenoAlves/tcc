@@ -26,8 +26,8 @@
 - **Eventos distintos**: 1.063
 - **Comitês Olímpicos Nacionais (NOCs)**: 231
 - **Temporada**:
-  - Jogos de Verão: ~224.000 registros (82%)
-  - Jogos de Inverno: ~48.000 registros (18%)
+ - Jogos de Verão: ~224.000 registros (82%)
+ - Jogos de Inverno: ~48.000 registros (18%)
 
 ### Medalhas no Dataset Completo
 - **Total de conquistas de medalhas**: 42.173 (15.5% do dataset)
@@ -52,12 +52,12 @@
 ### Dataset Analisado (após geração de redes)
 - **Total de atletas nas redes**: 4.659
 - **Distribuição por sexo**:
-  - Masculino: 3.059 atletas
-  - Feminino: 1.600 atletas
+ - Masculino: 3.059 atletas
+ - Feminino: 1.600 atletas
 - **Distribuição por esporte (atletas únicos antes de criar redes)**:
-  - Swimming: 1.781 atletas (90 eventos)
-  - Basketball: 915 atletas (2 eventos)
-  - Football: 1.568 atletas (2 eventos)
+ - Swimming: 1.781 atletas (90 eventos)
+ - Basketball: 915 atletas (2 eventos)
+ - Football: 1.568 atletas (2 eventos)
 
 ---
 
@@ -282,8 +282,8 @@ Cada combinação esporte-gênero-tipo gera:
 - **Arestas direcionadas**: 5.572
 - **Período**: 1896-2021
 - **Algoritmos comparados**:
-  - **Louvain**: Simetrização + otimização de modularidade
-  - **Infomap**: Preserva direcionalidade via compressão de passeios aleatórios
+ - **Louvain**: Simetrização + otimização de modularidade
+ - **Infomap**: Preserva direcionalidade via compressão de passeios aleatórios
 
 ### Resultados da Comparação
 
@@ -292,7 +292,7 @@ Cada combinação esporte-gênero-tipo gera:
 - **Infomap**: 68 comunidades (+74% fragmentação)
 
 #### Qualidade da Partição
-- **Louvain Modularidade**: 0.7973 ✓ SUPERIOR
+- **Louvain Modularidade**: 0.7973 SUPERIOR
 - **Infomap Modularidade**: 0.7423 (-6.9%)
 
 #### Concordância Estrutural
@@ -310,10 +310,10 @@ Cada combinação esporte-gênero-tipo gera:
 | Métrica | Louvain | Infomap | Diferença |
 |---------|---------|---------|-----------|
 | Entropia Temporal | 0.253 ± 0.449 | 0.183 ± 0.364 | -27.7% |
-| Entropia Geográfica | 1.697 ± 0.894 | 1.656 ± 0.686 | -2.4% ✓ |
-| Gini PageRank | 0.296 ± 0.103 | 0.316 ± 0.125 | +6.7% ✓ |
+| Entropia Geográfica | 1.697 ± 0.894 | 1.656 ± 0.686 | -2.4% |
+| Gini PageRank | 0.296 ± 0.103 | 0.316 ± 0.125 | +6.7% |
 
-✓ = Diferença pequena (< 7%)
+ = Diferença pequena (< 7%)
 
 ### Conclusão da Validação
 

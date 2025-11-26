@@ -38,8 +38,8 @@ python 02e_rivalries.py
 1. Carrega dados olímpicos
 2. Filtra medalhistas dos 3 esportes
 3. **Limpeza de dados:**
-   - Remove 2 duplicatas
-   - Filtra pódios com <2 atletas (garante 0 nós isolados)
+ - Remove 2 duplicatas
+ - Filtra pódios com <2 atletas (garante 0 nós isolados)
 4. Constrói redes direcionadas ponderadas
 5. Calcula métricas (PageRank, centralidade, comunidades)
 6. Exporta resultados em múltiplos formatos
@@ -165,12 +165,12 @@ Basketball M: C0 (USA) vs C1 (RUS) - 89 confrontos
 
 ```
 01_network_generation.py
-    ↓
-    ├── 02a_community_enrichment.py
-    ├── 02b_medal_profile.py
-    ├── 02c_connectivity.py
-    ├── 02d_hierarchy.py
-    └── 02e_rivalries.py
+ ↓
+ 02a_community_enrichment.py
+ 02b_medal_profile.py
+ 02c_connectivity.py
+ 02d_hierarchy.py
+ 02e_rivalries.py
 ```
 
 **Importante:** `01_network_generation.py` deve ser executado primeiro. Os scripts `02*` podem ser executados em qualquer ordem depois.
@@ -195,17 +195,17 @@ Ou em Python `run_all.py`:
 import subprocess
 
 scripts = [
-    '01_network_generation.py',
-    '02a_community_enrichment.py',
-    '02b_medal_profile.py',
-    '02c_connectivity.py',
-    '02d_hierarchy.py',
-    '02e_rivalries.py',
+ '01_network_generation.py',
+ '02a_community_enrichment.py',
+ '02b_medal_profile.py',
+ '02c_connectivity.py',
+ '02d_hierarchy.py',
+ '02e_rivalries.py',
 ]
 
 for script in scripts:
-    print(f"\nExecutando {script}...")
-    subprocess.run(['python', f'src/pipeline/{script}'], check=True)
+ print(f"\nExecutando {script}...")
+ subprocess.run(['python', f'src/pipeline/{script}'], check=True)
 ```
 
 ## Logs e Debug
@@ -216,8 +216,8 @@ Todos os scripts imprimem progresso no console:
 CARREGANDO DADOS
 ================================================================================
 Carregando atletas consolidados de: ...
-  [OK] 4659 atletas carregados
-  [OK] Esportes: ['Swimming' 'Basketball' 'Football']
+ [OK] 4659 atletas carregados
+ [OK] Esportes: ['Swimming' 'Basketball' 'Football']
 ...
 ```
 

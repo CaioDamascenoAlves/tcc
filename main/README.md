@@ -41,51 +41,51 @@ Este projeto utiliza **teoria de redes complexas** para modelar e analisar rela�
 
 ```
 tcc/
-├── main/                          # Diretório principal do projeto
-│   ├── data/                      # Dados brutos
-│   │   └── athlete_events.csv     # Dataset olímpico completo
-│   │
-│   ├── src/                       # Código-fonte
-│   │   ├── core/                  # Módulos reutilizáveis
-│   │   │   ├── config/            # Configurações centralizadas
-│   │   │   ├── data_loader.py     # Carregamento de dados
-│   │   │   └── metrics.py         # Cálculos de métricas
-│   │   │
-│   │   ├── pipeline/              # Scripts de análise
-│   │   │   ├── 01_network_generation.py      # Geração de redes
-│   │   │   ├── 02a_community_enrichment.py   # Análise de comunidades
-│   │   │   └── ...
-│   │   │
-│   │   ├── dashboard/             # Dashboard Streamlit
-│   │   │   ├── app.py             # Aplicação principal
-│   │   │   ├── visualization/     # Gráficos e plots
-│   │   │   └── components/        # Componentes interativos
-│   │   │
-│   │   └── outputs/               # Geração de figuras/tabelas
-│   │       ├── figures.py         # Figuras para monografia
-│   │       └── tables.py          # Tabelas LaTeX
-│   │
-│   ├── results/                   # Resultados das análises
-│   │   ├── networks/              # Redes geradas (CSV, GEXF, JSON)
-│   │   └── additional_analyses/   # Análises adicionais
-│   │
-│   └── analysis/                  # Scripts de validação
-│       ├── compare_community_metrics.py    # Comparação Louvain vs Infomap
-│       ├── validate_calculations.py        # Validação de métricas
-│       └── ...
-│
-├── monografia/                    # Documentação acadêmica (raiz)
-│   ├── main.tex                   # Documento principal
-│   ├── figuras/                   # Figuras geradas
-│   ├── tabelas/                   # Tabelas LaTeX
-│   └── bib/                       # Referências bibliográficas
-│
-├── apresentacao/                  # Slides Beamer (raiz)
-│   ├── main.tex                   # Apresentação principal
-│   └── contents/                  # Conteúdo dos slides
-│
-├── DADOS_OFICIAIS.md              # Fonte única de verdade (raiz)
-└── CLAUDE.md                      # Instruções para Claude Code (raiz)
+ main/ # Diretório principal do projeto
+ data/ # Dados brutos
+ athlete_events.csv # Dataset olímpico completo
+ 
+ src/ # Código-fonte
+ core/ # Módulos reutilizáveis
+ config/ # Configurações centralizadas
+ data_loader.py # Carregamento de dados
+ metrics.py # Cálculos de métricas
+ 
+ pipeline/ # Scripts de análise
+ 01_network_generation.py # Geração de redes
+ 02a_community_enrichment.py # Análise de comunidades
+ ...
+ 
+ dashboard/ # Dashboard Streamlit
+ app.py # Aplicação principal
+ visualization/ # Gráficos e plots
+ components/ # Componentes interativos
+ 
+ outputs/ # Geração de figuras/tabelas
+ figures.py # Figuras para monografia
+ tables.py # Tabelas LaTeX
+ 
+ results/ # Resultados das análises
+ networks/ # Redes geradas (CSV, GEXF, JSON)
+ additional_analyses/ # Análises adicionais
+ 
+ analysis/ # Scripts de validação
+ compare_community_metrics.py # Comparação Louvain vs Infomap
+ validate_calculations.py # Validação de métricas
+ ...
+ 
+ monografia/ # Documentação acadêmica (raiz)
+ main.tex # Documento principal
+ figuras/ # Figuras geradas
+ tabelas/ # Tabelas LaTeX
+ bib/ # Referências bibliográficas
+ 
+ apresentacao/ # Slides Beamer (raiz)
+ main.tex # Apresentação principal
+ contents/ # Conteúdo dos slides
+ 
+ DADOS_OFICIAIS.md # Fonte única de verdade (raiz)
+ CLAUDE.md # Instruções para Claude Code (raiz)
 ```
 
 ## Documentação Detalhada
@@ -94,16 +94,16 @@ Este projeto possui documentação modular e detalhada. Cada componente principa
 
 ### Código-Fonte
 - **[src/](src/README.md)** - Visão geral do código-fonte
-  - **[src/core/](src/core/README.md)** - Módulos reutilizáveis (config, data_loader, metrics)
-  - **[src/pipeline/](src/pipeline/README.md)** - Scripts de análise numerados (01-02e)
-  - **[src/dashboard/](src/dashboard/README.md)** - Dashboard Streamlit interativo
-  - **[src/outputs/](src/outputs/)** - Geração de figuras e tabelas para monografia
+ - **[src/core/](src/core/README.md)** - Módulos reutilizáveis (config, data_loader, metrics)
+ - **[src/pipeline/](src/pipeline/README.md)** - Scripts de análise numerados (01-02e)
+ - **[src/dashboard/](src/dashboard/README.md)** - Dashboard Streamlit interativo
+ - **[src/outputs/](src/outputs/)** - Geração de figuras e tabelas para monografia
 
 ### Dados e Resultados
 - **data/** - Dataset olímpico original (athlete_events.csv)
 - **results/** - Todos os resultados gerados
-  - **results/networks/** - Redes geradas (CSV, GEXF, JSON)
-  - **results/additional_analyses/** - Análises enriquecidas (perfis, hierarquias, rivalidades)
+ - **results/networks/** - Redes geradas (CSV, GEXF, JSON)
+ - **results/additional_analyses/** - Análises enriquecidas (perfis, hierarquias, rivalidades)
 
 ### Documentação Acadêmica
 - **../monografia/** - Monografia LaTeX completa (na raiz do projeto)
@@ -176,29 +176,29 @@ As redes são construídas onde:
 - **Nós** = Atletas medalhistas
 - **Arestas** = Conexões direcionadas de atleta de posição inferior → superior no mesmo pódio
 - **Pesos** = Baseados na distância no pódio:
-  - Ouro ← Prata: peso 3
-  - Ouro ← Bronze: peso 5
-  - Prata ← Bronze: peso 2
+ - Ouro ← Prata: peso 3
+ - Ouro ← Bronze: peso 5
+ - Prata ← Bronze: peso 2
 
 ### Pipeline de Análise
 
 1. **Limpeza de Dados**
-   - Remoção de duplicatas
-   - Filtragem de pódios com <2 atletas (garante 0 nós isolados)
+ - Remoção de duplicatas
+ - Filtragem de pódios com <2 atletas (garante 0 nós isolados)
 
 2. **Construção de Redes**
-   - Grafos direcionados ponderados
+ - Grafos direcionados ponderados
 
 3. **Cálculo de Métricas**
-   - PageRank (importância estrutural)
-   - Centralidade (betweenness, closeness, degree)
-   - Comunidades (algoritmo de Louvain)
+ - PageRank (importância estrutural)
+ - Centralidade (betweenness, closeness, degree)
+ - Comunidades (algoritmo de Louvain)
 
 4. **Análises Enriquecidas**
-   - Perfil de medalhas por comunidade (índice de dominância)
-   - Hierarquia estrutural (níveis: núcleo, intermediária, periférica)
-   - Conectividade inter-comunidade (segregação)
-   - Rivalidades estruturais (top pares)
+ - Perfil de medalhas por comunidade (índice de dominância)
+ - Hierarquia estrutural (níveis: núcleo, intermediária, periférica)
+ - Conectividade inter-comunidade (segregação)
+ - Rivalidades estruturais (top pares)
 
 ## Principais Resultados
 
@@ -230,11 +230,11 @@ Se utilizar este trabalho, cite:
 
 ```bibtex
 @misc{tcc_redes_olimpicas_2025,
-  author = {Autor},
-  title = {Análise de Redes Complexas Aplicada ao Esporte Olímpico},
-  year = {2025},
-  school = {Universidade Federal de Ouro Preto},
-  type = {Trabalho de Conclusão de Curso}
+ author = {Autor},
+ title = {Análise de Redes Complexas Aplicada ao Esporte Olímpico},
+ year = {2025},
+ school = {Universidade Federal de Ouro Preto},
+ type = {Trabalho de Conclusão de Curso}
 }
 ```
 

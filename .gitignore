@@ -140,6 +140,7 @@ CLAUDE.md
 nul
 main/data/*csv
 main/data/athlete_events.csv
+scripts/
 
 # ============================================================================
 # Documentação de Validação Interna (não comitar)
