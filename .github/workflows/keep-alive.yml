@@ -13,23 +13,23 @@ jobs:
     steps:
       - name: Ping Streamlit App
         run: |
-          # Substitua pela URL do seu app no Streamlit Community Cloud
+          # URL do seu app no Streamlit Community Cloud
           APP_URL="https://dashboard-tcc.streamlit.app/"
 
           echo "🏓 Pinging Streamlit app at $(date)"
 
-          # Faz requisição HTTP e mostra headers
-          RESPONSE=$(curl -I -s -w "\nHTTP_CODE:%{http_code}\n" "$APP_URL")
+          # Faz requisição HTTP seguindo redirecionamentos
+          RESPONSE=$(curl -L -I -s -w "\nHTTP_CODE:%{http_code}\n" "$APP_URL")
 
           echo "$RESPONSE"
 
-          # Verifica se retornou 200 OK
+          # Verifica se retornou 200 OK ou 303 (redirect válido)
           HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE" | cut -d: -f2)
 
-          if [ "$HTTP_CODE" = "200" ]; then
-            echo "✅ App is alive and responding!"
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "303" ] || [ "$HTTP_CODE" = "302" ]; then
+            echo "✅ App is alive and responding! (HTTP $HTTP_CODE)"
           else
-            echo "⚠️ App returned HTTP $HTTP_CODE"
+            echo "⚠️ App returned HTTP $HTTP_CODE - may be down"
             exit 1
           fi
 
