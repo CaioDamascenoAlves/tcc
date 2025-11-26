@@ -1,4 +1,9 @@
 {
+  "all_network_summaries.json": {
+    "file_id": "1a0N8v_qJL84zjDRgtgFAGtUcwktgsJ6N",
+    "download_url": "https://drive.google.com/uc?export=download&id=1a0N8v_qJL84zjDRgtgFAGtUcwktgsJ6N",
+    "size_mb": 0.01
+  },
   "community_cdf_analysis.csv": {
     "file_id": "11__hTsOvSBSc0T61_o2PsqFYrss0J8pq",
     "download_url": "https://drive.google.com/uc?export=download&id=11__hTsOvSBSc0T61_o2PsqFYrss0J8pq",
@@ -19,9 +24,19 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1impSeRy6yllt8-lB7_Us8Rqb2QtTm3l9",
     "size_mb": 0.02
   },
+  "community_summary.json": {
+    "file_id": "1AMAUpxhzA1OryRIf3IyRFmkopdd4n89e",
+    "download_url": "https://drive.google.com/uc?export=download&id=1AMAUpxhzA1OryRIf3IyRFmkopdd4n89e",
+    "size_mb": 0.0
+  },
   "community_typology_classification.csv": {
     "file_id": "1djkw1t1ImF98FRAhn6Re8EqDPz6chSxX",
     "download_url": "https://drive.google.com/uc?export=download&id=1djkw1t1ImF98FRAhn6Re8EqDPz6chSxX",
+    "size_mb": 0.01
+  },
+  "community_typology_summary.json": {
+    "file_id": "1ZKpDcopbqp6LD8O2GBYRP2MNcvDf1CeY",
+    "download_url": "https://drive.google.com/uc?export=download&id=1ZKpDcopbqp6LD8O2GBYRP2MNcvDf1CeY",
     "size_mb": 0.01
   },
   "consolidated_edges_data.csv": {
@@ -42,6 +57,11 @@
   "additional_analyses/community_hierarchy.csv": {
     "file_id": "1lKp0SIbauV1wSWnU9W-k19v5rEMimRmI",
     "download_url": "https://drive.google.com/uc?export=download&id=1lKp0SIbauV1wSWnU9W-k19v5rEMimRmI",
+    "size_mb": 0.0
+  },
+  "additional_analyses/consolidated_additional_analyses.json": {
+    "file_id": "1dfWAnxIMvHNYE7MtXRqST_zgRC0WB6Lu",
+    "download_url": "https://drive.google.com/uc?export=download&id=1dfWAnxIMvHNYE7MtXRqST_zgRC0WB6Lu",
     "size_mb": 0.01
   },
   "additional_analyses/inter_community_connectivity.csv": {
@@ -64,6 +84,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1hrHehSbumutVU7NlM6BebXzw_xiIUah0",
     "size_mb": 0.07
   },
+  "basketball/basketball_F_team_network_summary.json": {
+    "file_id": "15MpO21PZdnNWYu43mHCt36FE3W72YdrX",
+    "download_url": "https://drive.google.com/uc?export=download&id=15MpO21PZdnNWYu43mHCt36FE3W72YdrX",
+    "size_mb": 0.0
+  },
   "basketball/basketball_F_team_original_edges.csv": {
     "file_id": "1KSYeQx6oaJ9FbaWSw0BSfpTsunwsSpER",
     "download_url": "https://drive.google.com/uc?export=download&id=1KSYeQx6oaJ9FbaWSw0BSfpTsunwsSpER",
@@ -73,6 +98,11 @@
     "file_id": "1uGmvGCRFPNh_D2Ln1o8ZiTkv27drlqFE",
     "download_url": "https://drive.google.com/uc?export=download&id=1uGmvGCRFPNh_D2Ln1o8ZiTkv27drlqFE",
     "size_mb": 0.13
+  },
+  "basketball/basketball_M_team_network_summary.json": {
+    "file_id": "1h_QvVPf9fNktqwXIH6WUdvyCCWV61QjK",
+    "download_url": "https://drive.google.com/uc?export=download&id=1h_QvVPf9fNktqwXIH6WUdvyCCWV61QjK",
+    "size_mb": 0.0
   },
   "basketball/basketball_M_team_original_edges.csv": {
     "file_id": "1EnI1URKTxzoVJgRYMLWJ8jG_zbFuUo9F",
@@ -114,6 +144,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1CVbBcrwFAWELzOQqhl3d8ezUXPGi22u6",
     "size_mb": 0.06
   },
+  "football/football_F_team_network_summary.json": {
+    "file_id": "1g2HNzVAI4GPUqCzGlRIpsRsVcJPKiWKA",
+    "download_url": "https://drive.google.com/uc?export=download&id=1g2HNzVAI4GPUqCzGlRIpsRsVcJPKiWKA",
+    "size_mb": 0.0
+  },
   "football/football_F_team_original_edges.csv": {
     "file_id": "1ommRpJY77NhgidnDmeLezxEVJP7bDkvQ",
     "download_url": "https://drive.google.com/uc?export=download&id=1ommRpJY77NhgidnDmeLezxEVJP7bDkvQ",
@@ -123,6 +158,11 @@
     "file_id": "1ubWBurCO1nuGPPXTP8wwAyquhw2k4XCl",
     "download_url": "https://drive.google.com/uc?export=download&id=1ubWBurCO1nuGPPXTP8wwAyquhw2k4XCl",
     "size_mb": 0.26
+  },
+  "football/football_M_team_network_summary.json": {
+    "file_id": "1heY3jwwraOR_sKeX1eQZakud0-Z25L4O",
+    "download_url": "https://drive.google.com/uc?export=download&id=1heY3jwwraOR_sKeX1eQZakud0-Z25L4O",
+    "size_mb": 0.0
   },
   "football/football_M_team_original_edges.csv": {
     "file_id": "1x25PgNQKlUmxwc5jfI0O50-maT5tSBrt",
@@ -139,6 +179,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=17m1enr6jeS68U4WAuIB_fGWankkrNS-N",
     "size_mb": 99.54
   },
+  "networks/summaries.json": {
+    "file_id": "1aGvjtJsxs6-TFzNd3NgiyfcGpfeFuZuY",
+    "download_url": "https://drive.google.com/uc?export=download&id=1aGvjtJsxs6-TFzNd3NgiyfcGpfeFuZuY",
+    "size_mb": 0.01
+  },
   "networks/swimming_hybrid.csv": {
     "file_id": "19MYyzz-EPMWs9kBfQsQEl7nRpC6b6OdN",
     "download_url": "https://drive.google.com/uc?export=download&id=19MYyzz-EPMWs9kBfQsQEl7nRpC6b6OdN",
@@ -148,6 +193,11 @@
     "file_id": "1hrHehSbumutVU7NlM6BebXzw_xiIUah0",
     "download_url": "https://drive.google.com/uc?export=download&id=1hrHehSbumutVU7NlM6BebXzw_xiIUah0",
     "size_mb": 0.07
+  },
+  "networks/basketball/basketball_F_team_network_summary.json": {
+    "file_id": "15MpO21PZdnNWYu43mHCt36FE3W72YdrX",
+    "download_url": "https://drive.google.com/uc?export=download&id=15MpO21PZdnNWYu43mHCt36FE3W72YdrX",
+    "size_mb": 0.0
   },
   "networks/basketball/basketball_F_team_original_edges.csv": {
     "file_id": "1KSYeQx6oaJ9FbaWSw0BSfpTsunwsSpER",
@@ -159,6 +209,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1uGmvGCRFPNh_D2Ln1o8ZiTkv27drlqFE",
     "size_mb": 0.13
   },
+  "networks/basketball/basketball_M_team_network_summary.json": {
+    "file_id": "1h_QvVPf9fNktqwXIH6WUdvyCCWV61QjK",
+    "download_url": "https://drive.google.com/uc?export=download&id=1h_QvVPf9fNktqwXIH6WUdvyCCWV61QjK",
+    "size_mb": 0.0
+  },
   "networks/basketball/basketball_M_team_original_edges.csv": {
     "file_id": "1EnI1URKTxzoVJgRYMLWJ8jG_zbFuUo9F",
     "download_url": "https://drive.google.com/uc?export=download&id=1EnI1URKTxzoVJgRYMLWJ8jG_zbFuUo9F",
@@ -168,6 +223,11 @@
     "file_id": "1CVbBcrwFAWELzOQqhl3d8ezUXPGi22u6",
     "download_url": "https://drive.google.com/uc?export=download&id=1CVbBcrwFAWELzOQqhl3d8ezUXPGi22u6",
     "size_mb": 0.06
+  },
+  "networks/football/football_F_team_network_summary.json": {
+    "file_id": "1g2HNzVAI4GPUqCzGlRIpsRsVcJPKiWKA",
+    "download_url": "https://drive.google.com/uc?export=download&id=1g2HNzVAI4GPUqCzGlRIpsRsVcJPKiWKA",
+    "size_mb": 0.0
   },
   "networks/football/football_F_team_original_edges.csv": {
     "file_id": "1ommRpJY77NhgidnDmeLezxEVJP7bDkvQ",
@@ -179,6 +239,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1ubWBurCO1nuGPPXTP8wwAyquhw2k4XCl",
     "size_mb": 0.26
   },
+  "networks/football/football_M_team_network_summary.json": {
+    "file_id": "1heY3jwwraOR_sKeX1eQZakud0-Z25L4O",
+    "download_url": "https://drive.google.com/uc?export=download&id=1heY3jwwraOR_sKeX1eQZakud0-Z25L4O",
+    "size_mb": 0.0
+  },
   "networks/football/football_M_team_original_edges.csv": {
     "file_id": "1x25PgNQKlUmxwc5jfI0O50-maT5tSBrt",
     "download_url": "https://drive.google.com/uc?export=download&id=1x25PgNQKlUmxwc5jfI0O50-maT5tSBrt",
@@ -188,6 +253,11 @@
     "file_id": "15CAmKhw9en4YDFOgTfyc-HHWGy6y-X6m",
     "download_url": "https://drive.google.com/uc?export=download&id=15CAmKhw9en4YDFOgTfyc-HHWGy6y-X6m",
     "size_mb": 0.09
+  },
+  "networks/swimming/swimming_F_individual_network_summary.json": {
+    "file_id": "1BPfUzumzlDp9wk23ZqHy_JMI8_fJr_RS",
+    "download_url": "https://drive.google.com/uc?export=download&id=1BPfUzumzlDp9wk23ZqHy_JMI8_fJr_RS",
+    "size_mb": 0.0
   },
   "networks/swimming/swimming_F_individual_original_edges.csv": {
     "file_id": "1ADrD_M3ru05CLlcWK-Op-JJ4gtC8TeT7",
@@ -199,6 +269,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1lgIBYfVw3GYKHM5oFhEntaCerdPzCTRw",
     "size_mb": 0.12
   },
+  "networks/swimming/swimming_F_team_network_summary.json": {
+    "file_id": "1tuhBrnP1cObDxwT_GUsmkpVxLTVEkle_",
+    "download_url": "https://drive.google.com/uc?export=download&id=1tuhBrnP1cObDxwT_GUsmkpVxLTVEkle_",
+    "size_mb": 0.0
+  },
   "networks/swimming/swimming_F_team_original_edges.csv": {
     "file_id": "1IMIaeEW5Ifxq6dUO3MZ8LgP0jtZlsKuI",
     "download_url": "https://drive.google.com/uc?export=download&id=1IMIaeEW5Ifxq6dUO3MZ8LgP0jtZlsKuI",
@@ -208,6 +283,11 @@
     "file_id": "19Rz98bDuwgvScYv18FL9lBbjZZkuqDDB",
     "download_url": "https://drive.google.com/uc?export=download&id=19Rz98bDuwgvScYv18FL9lBbjZZkuqDDB",
     "size_mb": 0.11
+  },
+  "networks/swimming/swimming_M_individual_network_summary.json": {
+    "file_id": "1etEn6Weq97WhNDgR206q99uLBZ6pLJMM",
+    "download_url": "https://drive.google.com/uc?export=download&id=1etEn6Weq97WhNDgR206q99uLBZ6pLJMM",
+    "size_mb": 0.0
   },
   "networks/swimming/swimming_M_individual_original_edges.csv": {
     "file_id": "1cyK0cz3J_Ws_ypGva2jBTpV05gOq6i0s",
@@ -219,6 +299,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1-MK6U-jcETbl8HJoFtkSIHr4lXC-f2Sf",
     "size_mb": 0.14
   },
+  "networks/swimming/swimming_M_team_network_summary.json": {
+    "file_id": "1vSg9_t1Ugy44_GXe-Frq1q-LKQlPVc5D",
+    "download_url": "https://drive.google.com/uc?export=download&id=1vSg9_t1Ugy44_GXe-Frq1q-LKQlPVc5D",
+    "size_mb": 0.0
+  },
   "networks/swimming/swimming_M_team_original_edges.csv": {
     "file_id": "1pwcebOYC5PxzEi9lUAwpnmJLQtoEclAm",
     "download_url": "https://drive.google.com/uc?export=download&id=1pwcebOYC5PxzEi9lUAwpnmJLQtoEclAm",
@@ -228,6 +313,11 @@
     "file_id": "15CAmKhw9en4YDFOgTfyc-HHWGy6y-X6m",
     "download_url": "https://drive.google.com/uc?export=download&id=15CAmKhw9en4YDFOgTfyc-HHWGy6y-X6m",
     "size_mb": 0.09
+  },
+  "swimming/swimming_F_individual_network_summary.json": {
+    "file_id": "1BPfUzumzlDp9wk23ZqHy_JMI8_fJr_RS",
+    "download_url": "https://drive.google.com/uc?export=download&id=1BPfUzumzlDp9wk23ZqHy_JMI8_fJr_RS",
+    "size_mb": 0.0
   },
   "swimming/swimming_F_individual_original_edges.csv": {
     "file_id": "1ADrD_M3ru05CLlcWK-Op-JJ4gtC8TeT7",
@@ -239,6 +329,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=1lgIBYfVw3GYKHM5oFhEntaCerdPzCTRw",
     "size_mb": 0.12
   },
+  "swimming/swimming_F_team_network_summary.json": {
+    "file_id": "1tuhBrnP1cObDxwT_GUsmkpVxLTVEkle_",
+    "download_url": "https://drive.google.com/uc?export=download&id=1tuhBrnP1cObDxwT_GUsmkpVxLTVEkle_",
+    "size_mb": 0.0
+  },
   "swimming/swimming_F_team_original_edges.csv": {
     "file_id": "1IMIaeEW5Ifxq6dUO3MZ8LgP0jtZlsKuI",
     "download_url": "https://drive.google.com/uc?export=download&id=1IMIaeEW5Ifxq6dUO3MZ8LgP0jtZlsKuI",
@@ -249,6 +344,11 @@
     "download_url": "https://drive.google.com/uc?export=download&id=19Rz98bDuwgvScYv18FL9lBbjZZkuqDDB",
     "size_mb": 0.11
   },
+  "swimming/swimming_M_individual_network_summary.json": {
+    "file_id": "1etEn6Weq97WhNDgR206q99uLBZ6pLJMM",
+    "download_url": "https://drive.google.com/uc?export=download&id=1etEn6Weq97WhNDgR206q99uLBZ6pLJMM",
+    "size_mb": 0.0
+  },
   "swimming/swimming_M_individual_original_edges.csv": {
     "file_id": "1cyK0cz3J_Ws_ypGva2jBTpV05gOq6i0s",
     "download_url": "https://drive.google.com/uc?export=download&id=1cyK0cz3J_Ws_ypGva2jBTpV05gOq6i0s",
@@ -258,6 +358,11 @@
     "file_id": "1-MK6U-jcETbl8HJoFtkSIHr4lXC-f2Sf",
     "download_url": "https://drive.google.com/uc?export=download&id=1-MK6U-jcETbl8HJoFtkSIHr4lXC-f2Sf",
     "size_mb": 0.14
+  },
+  "swimming/swimming_M_team_network_summary.json": {
+    "file_id": "1vSg9_t1Ugy44_GXe-Frq1q-LKQlPVc5D",
+    "download_url": "https://drive.google.com/uc?export=download&id=1vSg9_t1Ugy44_GXe-Frq1q-LKQlPVc5D",
+    "size_mb": 0.0
   },
   "swimming/swimming_M_team_original_edges.csv": {
     "file_id": "1pwcebOYC5PxzEi9lUAwpnmJLQtoEclAm",
