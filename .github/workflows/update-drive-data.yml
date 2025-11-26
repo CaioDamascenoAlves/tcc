@@ -10,6 +10,9 @@ on:
       - 'main/src/pipeline/**'  # Ou quando scripts de análise mudam
   workflow_dispatch:  # Permite executar manualmente
 
+permissions:
+  contents: write  # Permite git push
+
 jobs:
   upload-to-drive:
     runs-on: ubuntu-latest
