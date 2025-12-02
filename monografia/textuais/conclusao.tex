@@ -15,7 +15,7 @@ A análise de 4.659 atletas medalhistas distribuídos em três modalidades olím
 
 \textbf{Comunidades Refletem Múltiplos Fatores:} As 36 comunidades detectadas não correspondem a agrupamentos simples por período temporal ou nacionalidade, mas emergem de combinações complexas de fatores. A caracterização multidimensional revelou que comunidades em natação apresentam diversidade temporal moderada (entropia média 1.60), enquanto esportes coletivos exibem diversidade temporal superior (Basketball: 2.46, Football: 2.53), refletindo que comunidades em esportes coletivos agregam atletas de múltiplas décadas devido à natureza densamente conectada destas redes. Esta heterogeneidade indica que algoritmos de detecção de comunidades capturam estruturas emergentes não redutíveis a características isoladas.
 
-\textbf{Métricas de Rede Revelam Padrões Ocultos:} PageRank identificou hierarquias de importância estrutural distintas de rankings por contagem de medalhas. Michael Phelps emergiu como vértice de maior centralidade (0.027), valor desproporcionalmente alto que reflete não apenas número de vitórias mas qualidade dos competidores enfrentados. A predominância de atletas femininas nas primeiras posições do ranking global (14 de 20) não indica superioridade absoluta, mas efeito estrutural combinado: esportes coletivos femininos apresentam menor número de equipes competitivas historicamente, concentrando PageRank em atletas de poucas equipes dominantes; como todos os membros de uma equipe medalhista recebem conexões similares, múltiplas atletas da mesma equipe apresentam PageRank equivalente e elevado; menor número total de competidoras em competições femininas distribui centralidade entre menos atletas. Esta distinção exemplifica como métricas de rede capturam propriedades estruturais invisíveis em análises convencionais.
+\textbf{Métricas de Rede Revelam Padrões Ocultos:} PageRank identificou hierarquias de importância estrutural distintas de rankings por contagem de medalhas. Michael Phelps emergiu como vértice de maior centralidade (0.027), valor desproporcionalmente alto que reflete não apenas número de vitórias mas qualidade dos competidores enfrentados. A predominância de atletas femininas no ranking consolidado reflete diferenças históricas no tamanho das competições coletivas, ilustrando que PageRank quantifica importância relativa dentro da topologia da rede, não performance absoluta isolada. Esta distinção exemplifica como métricas de rede capturam propriedades estruturais invisíveis em análises convencionais.
 
 \textbf{Atletas-Ponte Conectam Comunidades:} A identificação de atletas com alta betweenness centrality revelou indivíduos estruturalmente críticos que conectam diferentes regiões das redes. Em natação, 10.2\% dos atletas atuam como pontes, proporção superior aos esportes coletivos (5.3-7.1\%). Estes atletas frequentemente apresentam longevidade olímpica ou versatilidade técnica, posicionando-se como conectores entre eras competitivas ou especializações distintas. Sua importância estrutural transcende performance individual, evidenciando papel sistêmico não capturado por métricas tradicionais.
 
@@ -23,7 +23,7 @@ A análise de 4.659 atletas medalhistas distribuídos em três modalidades olím
 
 Este trabalho entrega três contribuições principais para a literatura de análise de redes aplicada ao esporte:
 
-\textbf{Caracterização Multidimensional de Comunidades:} A análise de comunidades desenvolvida integra métricas estruturais (modularidade, segregação intra/inter-comunidade), temporais (entropia de Shannon, span histórico), geográficas (diversidade de países), e de performance (distribuição de medalhas, estatísticas de PageRank). Esta sistematização permite compreender não apenas a existência de agrupamentos estruturais, mas suas características distintivas no contexto competitivo de cada modalidade.
+\textbf{Caracterização Multidimensional de Comunidades:} Desenvolvemos framework de análise que vai além de mera detecção de fronteiras comunitárias, integrando métricas temporais (entropia de Shannon), geográficas (diversidade de NOCs) e de performance (coeficiente de variação de PageRank). Esta abordagem revelou que comunidades em esportes individuais exibem alta segregação temporal e geográfica, enquanto esportes coletivos apresentam maior homogeneidade estrutural.
 
 \textbf{Análise Comparativa Multi-Esporte:} A aplicação da metodologia a três modalidades com diferentes tipos de interdependência competitiva (individual, coletivo, misto) abrangendo 125 anos de história olímpica permite identificação de padrões estruturais sistemáticos relacionados ao formato competitivo. A diferença de modularidade entre Swimming (0.73) e esportes coletivos (~0.003) quantifica empiricamente distinções teóricas, validando aplicabilidade de análise de redes para caracterização de diferentes tipos de competição.
 
@@ -31,13 +31,31 @@ Este trabalho entrega três contribuições principais para a literatura de aná
 
 \section{Limitações do Estudo}
 
-Este trabalho apresenta limitações que devem ser consideradas na interpretação dos resultados e generalização dos achados.
+Este trabalho apresenta limitações que devem ser consideradas na interpretação dos resultados:
 
-\textbf{Amostra Limitada de Modalidades:} A análise concentrou-se em três esportes olímpicos (natação, basquetebol, futebol), representando aproximadamente 5\% das modalidades do programa olímpico atual. Embora a seleção tenha sido estratégica, cobrindo tipos fundamentais de interdependência competitiva (individual, coletivo, misto), a generalização para outras modalidades requer validação empírica. Esportes com características estruturais distintas (combate individual, eventos cronometrados sem confronto direto, modalidades artísticas com avaliação subjetiva) podem produzir propriedades de rede não capturadas nesta análise.
+\textbf{Limitações de Dados:}
 
-\textbf{Cobertura Temporal:} O dataset utilizado abrange competições de Atenas 1896 até Tokyo 2020, totalizando 125 anos de história olímpica. A inclusão de dados de Paris 2024 permitiria análise de tendências mais recentes, especialmente considerando mudanças em profissionalização, globalização da participação e evolução de regras competitivas. No entanto, a cobertura de 125 anos é suficientemente extensiva para capturar padrões estruturais robustos e transformações históricas de longo prazo.
+\textit{Viés de survivorship histórico:} Registros de atletas pré-1960 são fragmentados, potencialmente sub-representando medalhistas de eras anteriores. Dados incompletos sobre altura, peso e idade em períodos iniciais dos jogos limitam análises que correlacionam atributos físicos com posições estruturais.
 
-\textbf{Validação Estatística de Comunidades:} Embora a magnitude das diferenças de modularidade entre modalidades (Swimming 0.73 vs Basketball/Football ~0.003, diferença de 243× a 1216×) suporte robustamente as conclusões qualitativas, validação formal através de null models (comparação com redes aleatórias preservando distribuição de grau) não foi implementada. A literatura estabelece empiricamente que modularidade superior a 0.3 caracteriza estrutura comunitária significativa, threshold excedido por Swimming mas não por esportes coletivos, validando as interpretações apresentadas.
+\textit{Cobertura temporal:} Análise limitada a Tokyo 2020, não incluindo Paris 2024. A inclusão de edições futuras permitiria análise de tendências mais recentes em profissionalização e globalização.
+
+\textit{Escopo de modalidades:} Foco em três esportes (5\% das modalidades olímpicas), impossibilitando generalização para todas as 84 modalidades. Esportes com características distintas (combate individual, eventos cronometrados, modalidades artísticas) podem produzir propriedades estruturais não capturadas.
+
+\textbf{Limitações Metodológicas:}
+
+\textit{Sistema de ponderação exploratório:} Escolha do sistema 5-3-2 carece de fundamentação teórica sólida, sendo validada apenas empiricamente via análise de robustez. Embora validação tenha demonstrado concordância estrutural entre sistemas alternativos, justificativa teórica para pesos específicos permanece aberta.
+
+\textit{Diluição estrutural de PageRank:} Esportes coletivos com múltiplos medalhistas por evento diluem PageRank artificialmente, dificultando comparações diretas com esportes individuais. A formulação recursiva da métrica distribui importância proporcionalmente ao tamanho da rede, favorecendo estruturalmente competições com menor número de participantes.
+
+\textit{Perda de informação direcional:} Algoritmo de Louvain requer simetrização de grafos direcionados, descartando hierarquias de dominância durante detecção de comunidades. Embora validação com Infomap (que preserva direção) tenha demonstrado concordância estrutural de 85\% (NMI), informação direcional potencialmente relevante foi perdida na análise comunitária.
+
+\textit{Validação estatística de comunidades:} Validação formal através de null models (comparação com redes aleatórias preservando distribuição de grau) não foi implementada. Magnitude das diferenças de modularidade (Swimming 0.73 vs Basketball/Football ~0.003, razão de 243×) suporta conclusões qualitativas, mas significância estatística formal não foi estabelecida.
+
+\textbf{Limitações de Escopo:}
+
+\textit{Ausência de dados contextuais:} Análise não incorpora investimento esportivo, políticas de inclusão, PIB dos países ou mudanças regulatórias que impactam estrutura competitiva. Fatores socioeconômicos e políticos que explicam posições estruturais permanecem inexplorados.
+
+\textit{Foco em medalhistas:} Exclusão de atletas não-medalhistas ignora estrutura competitiva completa, capturando apenas topo da hierarquia. Padrões de participação, distribuição geográfica e diversidade em níveis competitivos inferiores não foram analisados.
 
 \section{Trabalhos Futuros}
 
@@ -51,6 +69,6 @@ Os resultados obtidos e limitações identificadas sugerem múltiplas direções
 
 \textbf{Análise de Gênero Sistematizada:} Embora o presente trabalho tenha segregado redes por gênero, análise comparativa sistemática de propriedades estruturais entre competições masculinas e femininas permanece inexplorada. Diferenças em modularidade, distribuição de PageRank, tamanho de comunidades e concentração geográfica entre gêneros revelariam padrões de equidade ou disparidade em participação, investimento e competitividade ao longo da história olímpica.
 
-\textbf{Integração com Dados Contextuais:} A incorporação de metadados adicionais (PIB dos países, investimento em esporte, população, índices de desenvolvimento) através de análise de redes multicamada permitiria investigação de fatores socioeconômicos associados a posições estruturais nas redes competitivas. Esta abordagem responderia questões sobre determinantes de dominância esportiva e eficácia de políticas públicas de desenvolvimento atlético.
+\textbf{Análise de Redes Multicamada com Contexto Socioeconômico:} Construir redes multicamada integrando camada competitiva (atletas conectados por confrontos) com camada socioeconômica (países conectados por similaridade de PIB per capita e investimento esportivo). Hipótese: PageRank médio de comunidades nacionais correlaciona positivamente com investimento per capita em esporte (r > 0.6), mas saturação ocorre acima de threshold (ex: USD 50/habitante/ano), testável via regressão não-linear. Dados da UNESCO e Banco Mundial permitiriam quantificar retorno marginal decrescente de investimento esportivo sobre dominância competitiva.
 
 O presente trabalho estabeleceu fundamentos metodológicos sólidos para aplicação de análise de redes complexas ao contexto olímpico, demonstrando viabilidade e valor analítico da abordagem. As direções futuras propostas expandiriam compreensão de estruturas competitivas esportivas, contribuindo tanto para avanço teórico em ciência de redes quanto para aplicações práticas em gestão esportiva e políticas de desenvolvimento atlético.
