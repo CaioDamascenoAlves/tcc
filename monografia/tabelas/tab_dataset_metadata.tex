@@ -1,18 +1,18 @@
 % Tabela de Metadados do Dataset Olímpico
 \begin{table}[htbp]
 \centering
-\caption{Estrutura de metadados do dataset olímpico histórico}
+\caption{Estrutura de metadados do dataset olímpico histórico (1896-2021)}
 \label{tab:dataset_metadata}
 \footnotesize
 \begin{tabular}{lp{2.5cm}p{8cm}}
 \toprule
 \textbf{Coluna} & \textbf{Tipo} & \textbf{Descrição} \\
 \midrule
-ID & Inteiro & Identificador único do atleta. Permite rastreamento longitudinal de participações em múltiplas edições olímpicas. \\
+ID & Inteiro & Identificador único do atleta. Permite rastreamento longitudinal de participações em múltiplas edições olímpicas (137.745 atletas únicos). \\
 \midrule
 Name & String & Nome completo do atleta conforme registrado nos arquivos olímpicos oficiais. \\
 \midrule
-Sex & Categórico (M/F) & Gênero do atleta: Masculino (M) ou Feminino (F). \\
+Sex & Categórico (M/F) & Categoria competitiva do atleta: Masculino (M) ou Feminino (F). \\
 \midrule
 Age & Inteiro & Idade do atleta no momento da competição. Valores faltantes (NA) presentes para competidores históricos. \\
 \midrule
@@ -22,22 +22,22 @@ Weight & Numérico & Peso do atleta em quilogramas. Valores faltantes (NA) comun
 \midrule
 Team & String & Nome completo da equipe/país representado pelo atleta (ex: "United States", "Brazil"). \\
 \midrule
-NOC & String (3 letras) & Código do Comitê Olímpico Nacional em formato padrão ISO (ex: "USA", "BRA", "CHN"). Campo mais confiável que Team para análises por país. \\
+NOC & String (3 letras) & Código do Comitê Olímpico Nacional em formato padrão ISO (ex: "USA", "BRA", "CHN"). Campo mais confiável que Team para análises por país (231 NOCs). \\
 \midrule
-Games & String & Identificador da edição olímpica no formato "Ano Temporada" (ex: "2016 Summer", "2014 Winter"). \\
+Games & String & Identificador da edição olímpica no formato "Ano Temporada" (ex: "2016 Summer", "2014 Winter", "2020 Summer"). \\
 \midrule
-Year & Inteiro & Ano de realização dos jogos olímpicos (1896 a 2021). \\
+Year & Inteiro & Ano de realização dos jogos olímpicos. Período coberto: 1896 a 2021 (52 edições). \\
 \midrule
-Season & Categórico & Temporada da competição: Verão (Summer) ou Inverno (Winter). \\
+Season & Categórico & Temporada da competição: Verão (Summer) ou Inverno (Winter). Análise restrita a jogos de verão. \\
 \midrule
-City & String & Cidade sede dos jogos olímpicos (ex: "Athens", "Rio de Janeiro", "Beijing"). \\
+City & String & Cidade sede dos jogos olímpicos (ex: "Athens", "Rio de Janeiro", "Beijing", "Tokyo"). \\
 \midrule
-Sport & String & Modalidade esportiva (ex: "Swimming", "Basketball", "Football", "Athletics"). \\
+Sport & String & Modalidade esportiva. Dataset contém 84 modalidades; análise focada em Swimming, Basketball e Football. \\
 \midrule
-Event & String & Evento específico dentro da modalidade (ex: "Swimming Men's 100 metres Freestyle"). \\
+Event & String & Evento específico dentro da modalidade (ex: "Swimming Men's 100 metres Freestyle"). Total de 1.063 eventos distintos no dataset completo. \\
 \midrule
-Medal & Categórico & Tipo de medalha conquistada: Gold, Silver, Bronze, ou NA para participações sem pódio. \\
+Medal & Categórico & Tipo de medalha conquistada: Gold, Silver, Bronze, ou NA para participações sem pódio. Total de 42.173 medalhas (15,4\% dos registros). \\
 \bottomrule
 \end{tabular}
-\fonte{\citeonline{Griffin2018OlympicDataset}}
+\fonte{\citeonline{Griffin2018OlympicDataset} e \citeonline{Piterfm2021TokyoOlympics}}
 \end{table}
