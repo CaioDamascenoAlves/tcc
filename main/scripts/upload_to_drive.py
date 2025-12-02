@@ -105,7 +105,7 @@ def upload_file(service, file_path, folder_id):
             fileId=file_id,
             media_body=media
         ).execute()
-        print(f"  ↻ Atualizado: {file_name} (ID: {file_id})")
+        print(f"  [UPDATE] {file_name} (ID: {file_id})")
     else:
         # Upload novo arquivo
         file = service.files().create(
@@ -114,7 +114,7 @@ def upload_file(service, file_path, folder_id):
             fields='id'
         ).execute()
         file_id = file['id']
-        print(f"   Enviado: {file_name} (ID: {file_id})")
+        print(f"  [NEW] {file_name} (ID: {file_id})")
     
     # Tornar arquivo público (qualquer pessoa com link pode ver)
     service.permissions().create(

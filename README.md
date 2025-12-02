@@ -1,4 +1,4 @@
-# Analise de Redes Complexas Aplicada ao Esporte Olimpico
+# Analise de Redes Complexas para Modelagem de Relacoes Competitivas no Esporte Olimpico
 
 Trabalho de Conclusao de Curso - Sistemas de Informacao
 Universidade Federal de Ouro Preto (UFOP) - 2025

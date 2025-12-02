@@ -16,11 +16,23 @@
     \end{block}
 \end{frame}
 
-\input{contents/04a_cdf_football}
+\begin{frame}{Distribuição Cumulativa dos Pesos: Comparação Masculino vs Feminino}
+    \framesubtitle{Análise Consolidada por Esporte e Gênero}
+    \begin{center}
+        \includegraphics[width=0.95\textwidth]{figures/fig_edge_weight_cdf_comparison_mf.png}
+    \end{center}
 
-\input{contents/04a_cdf_basketball}
-
-\input{contents/04a_cdf_swimming}
+    \vspace{-0.3cm}
+    \begin{block}{Observações Principais}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Distribuição similar} entre gêneros na maioria dos esportes
+            \item \textbf{Maioria dos pesos $\leq$ 5}: concentração em diferenças pequenas de performance
+            \item \textbf{Basketball F}: maior proporção de pesos baixos (39\% $\leq$ 2) vs M (24\%)
+            \item Validação da modelagem: reflete proximidade competitiva esperada
+        \end{itemize}
+    \end{block}
+\end{frame}
 
 \begin{frame}{Resumo da Análise das CDFs e Validação da Modelagem}
     \begin{block}{Validação da Modelagem de Pódio Esportivo}

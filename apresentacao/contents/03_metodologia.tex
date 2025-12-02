@@ -18,13 +18,57 @@
     \end{block}
 \end{frame}
 
-\begin{frame}{Visualização da Rede}
-    \framesubtitle{Diagrama da Modelagem}
-    \begin{figure}
+\begin{frame}{Modelagem de Redes Competitivas}
+    \framesubtitle{Construção de Grafos Direcionados e Ponderados}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Componentes do Grafo}
+                \small
+                \textbf{Nós (Vértices):}
+                \begin{itemize}
+                    \footnotesize
+                    \item Atletas medalhistas
+                    \item Atributos: nome, país, esporte, medalhas
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{Arestas (Conexões):}
+                \begin{itemize}
+                    \footnotesize
+                    \item Direcionadas: perdedor $\rightarrow$ vencedor
+                    \item Conectam atletas do mesmo pódio
+                    \item Acumulam quando compartilham múltiplos pódios
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Sistema de Ponderação}
+                \small
+                \textbf{Pesos das Arestas:}
+                \begin{itemize}
+                    \footnotesize
+                    \item Ouro $\leftarrow$ Prata: peso \textbf{3}
+                    \item Ouro $\leftarrow$ Bronze: peso \textbf{5}
+                    \item Prata $\leftarrow$ Bronze: peso \textbf{2}
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{Justificativa:}
+                \begin{itemize}
+                    \footnotesize
+                    \item Maior diferença $=$ maior peso
+                    \item Reflete hierarquia de performance
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.2cm}
+    \begin{alertblock}{Resultado}
+        \footnotesize
         \centering
-        \includegraphics[width=.8\textwidth]{figures/Diagrama Modelagem de Podium.png}
-        \caption{Diagrama da modelagem}
-    \end{figure}
+        Atletas de sucesso tornam-se \textbf{hubs centrais} recebendo conexões de competidores que derrotaram
+    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Acumulação de Pesos e Segmentação}
@@ -73,7 +117,7 @@
     \begin{alertblock}{Acesso}
         \footnotesize
         \centering
-        Dashboard disponível em: \textbf{dashboard-tcc.rglg.org}
+        Dashboard disponível em: \textbf{dashboard-tcc.streamlit.app}
 
         Exploração completa dos 4.659 atletas e 36 comunidades.
     \end{alertblock}

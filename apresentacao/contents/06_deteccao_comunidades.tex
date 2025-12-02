@@ -167,61 +167,32 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{Perfis de Dominância das Comunidades}
-    \framesubtitle{Elite vs Competitivo vs Participante}
-    \begin{columns}[T]
-        \begin{column}{0.58\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{../monografia/figuras/fig_dominance_distribution.png}
-        \end{column}
-        \begin{column}{0.38\textwidth}
-            \begin{block}{Classificação}
-                \footnotesize
-                Baseada em índice de dominância $D$:
-                \begin{itemize}
-                    \item \textbf{Elite}: $D > 0.7$ (alta concentração de ouro)
-                    \item \textbf{Competitivo}: $0.3 \leq D \leq 0.7$
-                    \item \textbf{Participante}: $D < 0.3$
-                \end{itemize}
-            \end{block}
-
-            \vspace{0.2cm}
-            \begin{alertblock}{Distribuição}
-                \footnotesize
-                \textbf{72\%} das comunidades são competitivas, indicando equilíbrio em performance.
-            \end{alertblock}
-        \end{column}
-    \end{columns}
-\end{frame}
-
 \begin{frame}{Top 10 Rivalidades Inter-Comunidades}
     \framesubtitle{Confrontos Mais Frequentes Entre Comunidades}
+    \begin{center}
+        \includegraphics[width=0.70\textwidth]{../monografia/figuras/fig_top10_rivalries.png}
+    \end{center}
+
+    \vspace{-0.2cm}
     \begin{columns}[T]
-        \begin{column}{0.60\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{../monografia/figuras/fig_top10_rivalries.png}
-        \end{column}
-        \begin{column}{0.36\textwidth}
+        \begin{column}{0.48\textwidth}
             \begin{block}{Métrica}
                 \footnotesize
                 Número de confrontos diretos (arestas) entre pares de comunidades distintas.
             \end{block}
-
-            \vspace{0.2cm}
+        \end{column}
+        \begin{column}{0.48\textwidth}
             \begin{block}{Achados}
                 \footnotesize
-                \begin{itemize}
-                    \item \textbf{Basketball} apresenta as rivalidades mais intensas
-                    \item Comunidades grandes geram mais confrontos
-                    \item Padrão assimétrico: C0$\rightarrow$C1 $\neq$ C1$\rightarrow$C0
-                \end{itemize}
+                \textbf{Basketball}: rivalidades mais intensas. Padrão assimétrico: C0$\rightarrow$C1 $\neq$ C1$\rightarrow$C0
             \end{block}
-
-            \vspace{0.2cm}
-            \begin{alertblock}{Interpretação}
-                \footnotesize
-                Rivalidades refletem sobreposição temporal e geográfica entre comunidades.
-            \end{alertblock}
         \end{column}
     \end{columns}
+
+    \vspace{0.2cm}
+    \begin{alertblock}{Interpretação}
+        \footnotesize
+        \centering
+        Rivalidades refletem sobreposição temporal e geográfica entre comunidades. Comunidades grandes geram mais confrontos.
+    \end{alertblock}
 \end{frame}

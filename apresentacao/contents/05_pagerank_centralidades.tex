@@ -90,32 +90,30 @@
 
 \begin{frame}{Atletas-Ponte: Betweenness Centrality}
     \framesubtitle{Identificação de Conectores Entre Comunidades}
+    \begin{center}
+        \includegraphics[width=0.70\textwidth]{../monografia/figuras/fig_betweenness_violin.png}
+    \end{center}
+
+    \vspace{-0.2cm}
     \begin{columns}[T]
-        \begin{column}{0.58\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{../monografia/figuras/fig_betweenness_violin.png}
-        \end{column}
-        \begin{column}{0.38\textwidth}
+        \begin{column}{0.48\textwidth}
             \begin{block}{Definição}
                 \footnotesize
                 Atletas com alta betweenness conectam diferentes comunidades, atuando como \textbf{pontes estruturais}.
             \end{block}
-
-            \vspace{0.2cm}
+        \end{column}
+        \begin{column}{0.48\textwidth}
             \begin{block}{Distribuição}
                 \footnotesize
-                \begin{itemize}
-                    \item \textbf{Swimming}: 10.2\% atletas-ponte
-                    \item \textbf{Basketball}: 7.1\%
-                    \item \textbf{Football}: 5.3\%
-                \end{itemize}
+                \textbf{Swimming}: 10.2\% \quad \textbf{Basketball}: 7.1\% \quad \textbf{Football}: 5.3\%
             \end{block}
-
-            \vspace{0.2cm}
-            \begin{alertblock}{Interpretação}
-                \footnotesize
-                Natação apresenta maior proporção de atletas-ponte devido a estrutura modular com eventos individuais e revezamentos.
-            \end{alertblock}
         \end{column}
     \end{columns}
+
+    \vspace{0.2cm}
+    \begin{alertblock}{Interpretação}
+        \footnotesize
+        \centering
+        Natação apresenta maior proporção de atletas-ponte devido a estrutura modular com eventos individuais e revezamentos.
+    \end{alertblock}
 \end{frame}
