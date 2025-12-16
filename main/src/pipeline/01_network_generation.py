@@ -38,7 +38,7 @@ class SportsNetworkAnalyzer:
             base_dir: Diretório base para salvar resultados
         """
         self.data_path = data_path
-        self.selected_sports = selected_sports or ['Swimming', 'Basketball', 'Football']
+        self.selected_sports = selected_sports or ['Swimming', 'Basketball', 'Football', 'Athletics', 'Judo', 'Boxing']
         self.base_dir = base_dir
         self.df = None
         self.results = {}
@@ -69,6 +69,21 @@ class SportsNetworkAnalyzer:
                 'type': 'team_only',
                 'individual_events': [],
                 'team_events': []  # Todos os eventos
+            },
+            'Athletics': {
+                'type': 'mixed',
+                'individual_events': [],
+                'team_events': []
+            },
+            'Judo': {
+                'type': 'individual_only',
+                'individual_events': [],  # Todos os eventos
+                'team_events': []
+            },
+            'Boxing': {
+                'type': 'individual_only',
+                'individual_events': [],  # Todos os eventos
+                'team_events': []
             }
         }
         
@@ -132,28 +147,36 @@ class SportsNetworkAnalyzer:
     def _classify_events_dynamically(self):
         """Classifica eventos dinamicamente baseado nos dados reais."""
 
-        def is_team_event(event_name):
-            """Determina se um evento é coletivo ou individual."""
-            return ('Relay' in event_name) or ('Team Swimming' in event_name)
+        def is_team_event(event_name, sport):
+            """Determina se um evento é coletivo ou individual com base no esporte."""
+            if sport == 'Swimming':
+                return ('Relay' in event_name) or ('Team Swimming' in event_name)
+            if sport == 'Athletics':
+                return ('Relay' in event_name) or (', Team' in event_name) # '4 x' pattern is also very common for relays
+            return False
 
         for sport in self.selected_sports:
             sport_data = self.df[self.df['Sport'] == sport]
             eventos_unicos = sport_data['Event'].unique()
+            sport_info = self.sport_types[sport]
+            sport_type = sport_info['type']
 
-            if sport == 'Swimming':
-                # Para natação: separar individual vs team
-                individual_events = [e for e in eventos_unicos if not is_team_event(e)]
-                team_events = [e for e in eventos_unicos if is_team_event(e)]
+            if sport_type == 'mixed':
+                individual_events = [e for e in eventos_unicos if not is_team_event(e, sport)]
+                team_events = [e for e in eventos_unicos if is_team_event(e, sport)]
+                sport_info['individual_events'] = individual_events
+                sport_info['team_events'] = team_events
+                print(f"{sport} (Misto): {len(individual_events)} eventos individuais, {len(team_events)} eventos de equipe")
 
-                self.sport_types['Swimming']['individual_events'] = individual_events
-                self.sport_types['Swimming']['team_events'] = team_events
-
-                print(f"Swimming: {len(individual_events)} eventos individuais, {len(team_events)} eventos coletivos")
-
-            elif sport in ['Basketball', 'Football']:
-                # Para Basketball/Football: tudo é team
-                self.sport_types[sport]['team_events'] = list(eventos_unicos)
-                print(f"{sport}: {len(eventos_unicos)} eventos coletivos")
+            elif sport_type == 'team_only':
+                sport_info['team_events'] = list(eventos_unicos)
+                sport_info['individual_events'] = [] # Clear individual events as it's team_only
+                print(f"{sport} (Coletivo): {len(eventos_unicos)} eventos de equipe")
+            
+            elif sport_type == 'individual_only':
+                sport_info['individual_events'] = list(eventos_unicos)
+                sport_info['team_events'] = [] # Clear team events as it's individual_only
+                print(f"{sport} (Individual): {len(eventos_unicos)} eventos individuais")
     
     def create_athlete_network(self, sport_data: pd.DataFrame, event_filter: List[str] = None) -> nx.DiGraph:
         """
@@ -606,10 +629,10 @@ class SportsNetworkAnalyzer:
                 # Processar baseado no tipo do esporte
                 if sport_type == 'individual_only':
                     # Apenas eventos individuais
-                    networks_to_process = [('individual', sex_data, None)]
+                    networks_to_process = [('individual', sex_data, individual_events)]
                 elif sport_type == 'team_only':
                     # Apenas eventos coletivos
-                    networks_to_process = [('team', sex_data, None)]
+                    networks_to_process = [('team', sex_data, team_events)]
                 elif sport_type == 'mixed':
                     # Criar duas redes: uma para eventos individuais, outra para coletivos
                     individual_data = sex_data[sex_data['Event'].isin(individual_events)] if individual_events else pd.DataFrame()
@@ -811,7 +834,7 @@ if __name__ == "__main__":
     # Configurar análise
     analyzer = SportsNetworkAnalyzer(
         data_path='../../data/athlete_events.csv',
-        selected_sports=['Swimming', 'Basketball', 'Football'],
+        selected_sports=['Swimming', 'Basketball', 'Football', 'Athletics', 'Judo', 'Boxing'],
         base_dir='../../results'
     )
     
