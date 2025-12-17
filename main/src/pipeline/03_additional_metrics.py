@@ -35,7 +35,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Configuração
-RESULTS_DIR = Path(__file__).parent.parent.parent / "results"
+RESULTS_DIR = Path('../../results')
 OUTPUT_DIR = RESULTS_DIR / "additional_analyses"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 

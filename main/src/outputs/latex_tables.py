@@ -148,7 +148,7 @@ def generate_communities_table(communities_df, n=10):
     # Ordenar por tamanho e pegar top N
     top_communities = communities_df.nlargest(n, 'size')[
         ['sport', 'sex', 'community_id', 'size', 'span_years',
-         'temporal_entropy', 'geographic_hhi', 'pagerank_mean', 'dominant_country']
+         'temporal_entropy', 'geographic_entropy', 'pagerank_mean', 'dominant_country']
     ].copy()
 
     # Traduzir esportes
@@ -172,7 +172,7 @@ def generate_communities_table(communities_df, n=10):
 """
 
     for row in top_communities.itertuples(index=False):
-        latex_code += f"{row.sport} & {row.sex} & {row.community_id} & {row.size} & {int(row.span_years)} & {row.temporal_entropy:.2f} & {row.geographic_hhi:.2f} & {row.dominant_country} \\\\\n"
+        latex_code += f"{row.sport} & {row.sex} & {row.community_id} & {row.size} & {int(row.span_years)} & {row.temporal_entropy:.2f} & {row.geographic_entropy:.2f} & {row.dominant_country} \\\\\n"
 
     latex_code += r"""\bottomrule
 \end{tabular}

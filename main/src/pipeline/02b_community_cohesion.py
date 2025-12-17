@@ -35,7 +35,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Paths
-RESULTS_DIR = Path(__file__).parent.parent / "../../results"
+RESULTS_DIR = Path('../../results')
 OUTPUT_DIR = RESULTS_DIR
 
 

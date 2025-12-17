@@ -6,7 +6,7 @@ Constantes do projeto.
 # CONSTANTES DO DOMÍNIO
 # ============================================================================
 
-SPORTS_LIST = ['Swimming', 'Basketball', 'Football']
+SPORTS_LIST = ['Swimming', 'Basketball', 'Football', 'Athletics', 'Judo', 'Boxing']
 SEX_LIST = ['M', 'F']
 MEDAL_TYPES = ['Gold', 'Silver', 'Bronze']
 
@@ -106,5 +106,5 @@ PROJECT_METADATA = {
     'author': 'TCC Project',
     'description': 'Análise de redes complexas aplicada a competições olímpicas',
     'data_period': '1896-2016',
-    'sports_analyzed': ['Swimming', 'Basketball', 'Football'],
+    'sports_analyzed': ['Swimming', 'Basketball', 'Football', 'Athletics', 'Judo', 'Boxing'],
 }

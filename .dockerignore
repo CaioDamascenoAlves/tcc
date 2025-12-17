@@ -1,0 +1,13 @@
+.git
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+results/
+.streamlit/
+main/results/
+Dockerfile
+run_all_pipeline.py
+.DS_Store
+*.log
