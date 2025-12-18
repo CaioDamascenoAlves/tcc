@@ -397,7 +397,7 @@ def generate_communities_table(communities_df, athletes_df, n=10):
 \footnotesize
 \begin{tabular}{lllrrrrrl}
 \toprule
-\textbf{Esporte} & \textbf{Tipo} & \textbf{Gênero} & \textbf{ID} & \textbf{Tamanho} & \textbf{Anos} & \textbf{Entropia} & \textbf{HHI} & \textbf{País Dom.} \\
+\textbf{Esporte} & \textbf{Tipo} & \textbf{Gênero} & \textbf{ID} & \textbf{Tamanho} & \textbf{Anos} & \textbf{Entr. Temp.} & \textbf{Entr. Geo.} & \textbf{País Dom.} \\
 \midrule
 """
 
