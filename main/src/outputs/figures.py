@@ -466,30 +466,43 @@ def fig6_community_counts(medal_df, output_dir):
 def fig7_pagerank_cdf_by_sport(consolidated_df, output_dir):
     """
     Figura 7: CDF de PageRank por Esporte
-    Mostra concentracao de centralidade
+    Mostra concentracao de centralidade para os 6 esportes analisados
     """
-    print("\nGerando Figura 7: CDF de PageRank...")
+    print("\nGerando Figura 7: CDF de PageRank (6 esportes)...")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(12, 7))
 
-    for sport in ['Swimming', 'Basketball', 'Football']:
+    # Definir paleta de cores para os 6 esportes
+    sport_colors = {
+        'Swimming': '#1f77b4',      # Azul
+        'Athletics': '#2ca02c',     # Verde
+        'Basketball': '#ff7f0e',    # Laranja
+        'Football': '#d62728',      # Vermelho
+        'Judo': '#9467bd',          # Roxo
+        'Boxing': '#8c564b'         # Marrom
+    }
+
+    # Ordem de plotagem (do menor para maior médio PageRank)
+    sports_order = ['Football', 'Basketball', 'Athletics', 'Judo', 'Swimming', 'Boxing']
+
+    for sport in sports_order:
         data = consolidated_df[consolidated_df['sport'] == sport]['original_pagerank'].dropna().sort_values()
         if len(data) > 0:
             y = np.arange(1, len(data) + 1) / len(data)
-            ax.plot(data, y, label=sport, linewidth=2, color=COLORS[sport])
+            ax.plot(data, y, label=sport, linewidth=2.5, color=sport_colors[sport], alpha=0.8)
 
-    ax.set_xlabel('PageRank')
-    ax.set_ylabel('Probabilidade Acumulada')
+    ax.set_xlabel('PageRank', fontsize=12)
+    ax.set_ylabel('Probabilidade Acumulada', fontsize=12)
     ax.set_xscale('log')
-    ax.set_title('CDF da Distribuicao de PageRank por Esporte')
-    ax.legend()
+    ax.set_title('CDF da Distribuição de PageRank por Esporte', fontsize=14, weight='bold')
+    ax.legend(loc='lower right', fontsize=11, framealpha=0.95)
     ax.grid(True, alpha=0.3, which='both', linestyle='--')
 
     plt.tight_layout()
-    plt.savefig(output_dir / 'fig_pagerank_cdf.png', dpi=300, bbox_inches='tight')
+    plt.savefig(output_dir / 'fig_pagerank_cdf_by_sport.png', dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"  Salvo: fig_pagerank_cdf.png")
+    print(f"  Salvo: fig_pagerank_cdf_by_sport.png")
 
 
 def fig8_dominance_vs_segregation(medal_df, inter_df, output_dir):
