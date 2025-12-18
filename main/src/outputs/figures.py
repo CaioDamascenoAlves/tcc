@@ -55,14 +55,14 @@ COLORS = {
 
 def setup_output_dir():
     """Cria diretorio de saida para as figuras."""
-    output_dir = Path('../monografia/figuras')
+    output_dir = Path('../../../monografia/figuras')
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
 
 
 def load_data():
     """Carrega todos os arquivos CSV das analises."""
-    base_dir = '../../results'
+    base_dir = '../../../results'
 
     print("Carregando dados...")
 
@@ -544,28 +544,27 @@ def fig8_dominance_vs_segregation(medal_df, inter_df, output_dir):
 
 def fig9_basketball_rivalry_matrix(rivalry_df, output_dir):
     """
-    Figura 9: Matriz de Rivalidades Basketball F
-    Heatmap simetrico mostrando triangulo C0-C1-C2
+    Figura 9: Matriz de Rivalidades Basketball M
+    Heatmap assimetrico mostrando confrontos direcionados C0-C1-C2
     """
-    print("\nGerando Figura 9: Matriz de Rivalidades Basketball F...")
+    print("\nGerando Figura 9: Matriz de Rivalidades Basketball M...")
 
-    # Filtrar Basketball F
-    bball_f = rivalry_df[(rivalry_df['sport'] == 'Basketball') & (rivalry_df['sex'] == 'F')].copy()
+    # Filtrar Basketball M
+    bball_m = rivalry_df[(rivalry_df['sport'] == 'Basketball') & (rivalry_df['sex'] == 'M')].copy()
 
-    if len(bball_f) == 0:
-        print("  AVISO: Nenhuma rivalidade encontrada para Basketball F")
+    if len(bball_m) == 0:
+        print("  AVISO: Nenhuma rivalidade encontrada para Basketball M")
         return
 
     # Obter todas as comunidades unicas
-    all_comms = sorted(set(bball_f['community_1'].unique()) | set(bball_f['community_2'].unique()))
+    all_comms = sorted(set(bball_m['community_1'].unique()) | set(bball_m['community_2'].unique()))
 
-    # Criar matriz de confrontos (simetrica pois num_confronts ja eh soma bidirecional)
+    # Criar matriz de confrontos DIRECIONADOS (A→B)
     matrix = pd.DataFrame(0.0, index=all_comms, columns=all_comms)
 
-    for _, row in bball_f.iterrows():
-        # Distribuir confrontos simetricamente
-        matrix.loc[row['community_1'], row['community_2']] = row['num_confronts'] / 2
-        matrix.loc[row['community_2'], row['community_1']] = row['num_confronts'] / 2
+    for _, row in bball_m.iterrows():
+        # Confrontos direcionados: community_1 → community_2
+        matrix.loc[row['community_1'], row['community_2']] = row['num_confronts']
 
     fig, ax = plt.subplots(figsize=(10, 8))
 
@@ -582,7 +581,7 @@ def fig9_basketball_rivalry_matrix(rivalry_df, output_dir):
 
     ax.set_xlabel('Comunidade B')
     ax.set_ylabel('Comunidade A')
-    ax.set_title('Matriz de Rivalidades Estruturais - Basketball Feminino\n(valores = confrontos direcionados A → B)')
+    ax.set_title('Matriz de Rivalidades Estruturais - Basketball Masculino\n(valores = confrontos direcionados A → B)')
 
     plt.tight_layout()
     plt.savefig(output_dir / 'fig_basketball_rivalry_matrix.png', dpi=300, bbox_inches='tight')

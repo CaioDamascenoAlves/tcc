@@ -19,6 +19,7 @@ ENV/
 # ============================================================================
 main/results/
 !main/results/README.md
+results/
 
 # ============================================================================
 # Dados Brutos (GRANDES - não comitar)
@@ -115,6 +116,9 @@ _archived/
 _archived_docs/
 *.backup
 *.bak
+*_backup*/
+monografia_backup*/
+*_old.tex
 
 # ============================================================================
 # Testes

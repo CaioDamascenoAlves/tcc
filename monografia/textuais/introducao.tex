@@ -11,7 +11,7 @@ A abordagem de redes complexas revela propriedades estruturais complementares n�
 
 Trabalhos recentes têm aplicado redes complexas ao contexto esportivo \citeonline{deSousa2012NetworkBased, Shiue2025ApplyingPageRank}. Contudo, a maioria concentra-se em análise isolada de modalidades específicas, sem explorar diferenças estruturais sistemáticas entre tipos de interdependência competitiva ao longo de períodos históricos extensos.
 
-O presente trabalho preenche esta lacuna aplicando ferramentas de ciência de redes a dados olímpicos históricos (1896-2021), desenvolvendo metodologia que integra modelagem de grafos competitivos, análise de centralidade e detecção de comunidades. Esta abordagem visa revelar padrões estruturais através de métricas avançadas como PageRank e algoritmo de Louvain em três modalidades representativas: natação (eventos individuais e revezamentos), basquetebol e futebol (esportes coletivos).
+O presente trabalho preenche esta lacuna aplicando ferramentas de ciência de redes a dados olímpicos históricos (1896-2021), desenvolvendo metodologia que integra modelagem de grafos competitivos, análise de centralidade e detecção de comunidades. Esta abordagem visa revelar padrões estruturais através de métricas avançadas como PageRank e algoritmo de Louvain em seis modalidades representativas que abrangem três tipos estruturais: esportes mistos (natação e atletismo), esportes coletivos (basquetebol e futebol) e esportes individuais puros (judô e boxe).
 
 Estabelecido o contexto e as lacunas da literatura científica existente, este trabalho busca responder à seguinte questão de pesquisa:
 
@@ -26,7 +26,7 @@ Este trabalho objetiva aplicar análise de redes complexas a dados históricos o
 Os objetivos específicos compreendem:
 
 \begin{itemize}
-    \item Construir redes competitivas direcionadas e ponderadas a partir de dados de medalhistas olímpicos em três modalidades representativas: natação, basquetebol e futebol;
+    \item Construir 16 redes competitivas direcionadas e ponderadas a partir de 9.350 medalhistas olímpicos, segregando por esporte e gênero nas modalidades de natação, atletismo, basquetebol, futebol, judô e boxe;
     \item Aplicar métricas de centralidade (PageRank, degree, betweenness, closeness) para identificar atletas estruturalmente importantes nas redes competitivas;
     \item Detectar e caracterizar comunidades nas redes através do algoritmo de Louvain, analisando suas propriedades temporais, geográficas e de performance;
     \item Implementar dashboard interativo como artefato complementar para exploração e visualização dos resultados;
@@ -39,6 +39,6 @@ Este trabalho apresenta três contribuições principais para a literatura de an
 
 \textbf{Caracterização Multidimensional de Comunidades:} A análise de comunidades desenvolvida integra métricas estruturais de tamanho e modularidade com caracterização temporal através de entropia de Shannon e heterogeneidade de performance através do coeficiente de variação de PageRank. Esta sistematização permite compreender não apenas a existência de agrupamentos estruturais, mas suas características distintivas no contexto competitivo de cada modalidade.
 
-\textbf{Análise Comparativa Multi-Esporte:} A aplicação da metodologia a três modalidades com diferentes tipos de interdependência competitiva (individual, coletivo, misto) abrangendo mais de um século de história olímpica permite identificação de padrões estruturais sistemáticos relacionados ao formato competitivo.
+\textbf{Análise Comparativa Multi-Esporte:} A análise estrutural de competições com diferentes tipos de interdependência (individual, coletivo, misto) ao longo de 125 anos de história olímpica permite identificação de padrões sistemáticos relacionados ao formato competitivo.
 
 \textbf{Dashboard Interativo para Exploração:} A implementação de interface web interativa oferece artefato complementar que demonstra viabilidade de ferramentas acessíveis para exploração de redes complexas por audiências não-técnicas. O dashboard integra análise de centralidades, visualização de comunidades, análise temporal e comparações entre esportes, facilitando identificação de padrões e validação de hipóteses sobre estruturas competitivas.
