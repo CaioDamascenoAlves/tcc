@@ -142,7 +142,7 @@ A dispersão intra-rede de PageRank apresentou heterogeneidade entre modalidades
 
 \section{Análise de Centralidades Complementares}
 
-Embora PageRank capture importância recursiva através de qualidade das conexões, métricas complementares revelam dimensões adicionais de centralidade estrutural: degree centrality quantifica volume absoluto de confrontos, betweenness identifica atletas-ponte entre grupos, e closeness mede proximidade média na topologia global.
+Embora PageRank quantifique importância através de qualidade das conexões, capturando hierarquias recursivas onde vencer oponentes altamente ranqueados amplifica centralidade, esta métrica não esgota a caracterização estrutural de atletas. Métricas complementares revelam dimensões ortogonais: degree centrality quantifica volume absoluto de confrontos independentemente de qualidade, betweenness identifica atletas-ponte que conectam grupos distintos, e closeness mede proximidade média na topologia global, capturando acessibilidade estrutural.
 
 A análise de betweenness centrality identificou atletas que ocupam posições estruturalmente críticas. Em Athletics, atletas como Allyson Felix (USA) apresentam betweenness elevado devido à participação em múltiplos eventos (100m, 200m, 400m, revezamentos), conectando comunidades de diferentes especializações. Em Judo e Boxing, atletas-ponte frequentemente correspondem a competidores que mudaram de categoria de peso, padrão inexistente em outras modalidades. A proporção de atletas-ponte varia sistematicamente: Swimming 10.2\%, Athletics 8.7\%, Judo 6.3\%, Boxing 5.8\%, Basketball 7.1\%, Football 5.3\%, evidenciando correlação negativa entre densidade de rede e necessidade estrutural de pontes.
 
@@ -152,7 +152,7 @@ Closeness centrality apresenta valores nulos para muitos atletas devido à natur
 
 \section{Estrutura de Comunidades e Conectividade Inter-Comunidade}
 
-A análise de conectividade inter-comunidade revelou padrões de segregação variados entre as 16 redes analisadas. Esportes individuais apresentam razões intra/inter superiores (Athletics individual M: 1.52, Boxing M: 1.48), enquanto esportes coletivos apresentam razões próximas ou inferiores a 1.0 (Football F: 0.58, Basketball M: 0.98).
+Complementando a caracterização de centralidade individual, a análise de comunidades revelou como atletas se agrupam em estruturas coesas e como estas estruturas interagem. A conectividade inter-comunidade quantifica grau de segregação versus integração entre agrupamentos, revelando padrões sistemáticos entre as 16 redes analisadas. Esportes individuais apresentam razões intra/inter superiores (Athletics individual M: 1.52, Boxing M: 1.48), enquanto esportes coletivos apresentam razões próximas ou inferiores a 1.0 (Football F: 0.58, Basketball M: 0.98).
 
 \begin{figure}[htbp]
   \centering
@@ -189,11 +189,11 @@ A globalização competitiva manifesta-se através de diversificação geográfi
 
 \section{Validação de Robustez Metodológica}
 
-Para assegurar que os resultados apresentados não dependem de escolhas metodológicas arbitrárias, foram conduzidos testes de sensibilidade empíricos seguindo protocolos estabelecidos na literatura \citeonline{deSousa2012NetworkBased, Shiue2025ApplyingPageRank}. Os testes focaram em sensibilidade ao sistema de ponderação de arestas e robustez à acumulação temporal de pesos.
+Para assegurar que os resultados apresentados não dependem de escolhas metodológicas arbitrárias, foram conduzidos testes de sensibilidade empíricos seguindo protocolos estabelecidos na literatura \citeonline{Motegi2012NetworkBased, Shiue2025ApplyingPageRank}. Os testes focaram em sensibilidade ao sistema de ponderação de arestas e robustez à acumulação temporal de pesos.
 
 \subsection{Teste de Sensibilidade a Decaimento Temporal}
 
-Seguindo a metodologia de Motegi e Masuda \citeonline{deSousa2012NetworkBased}, foram implementados sistemas de decaimento exponencial temporal com cinco taxas distintas ($\lambda \in \{0.025, 0.05, 0.075, 0.10, 0.15\}$). O conjunto de validação consistiu na rede de Swimming Masculino Individual ($n = 511$ atletas, período 1896-2021).
+Seguindo a metodologia de Motegi e Masuda \citeonline{Motegi2012NetworkBased}, foram implementados sistemas de decaimento exponencial temporal com cinco taxas distintas ($\lambda \in \{0.025, 0.05, 0.075, 0.10, 0.15\}$). O conjunto de validação consistiu na rede de Swimming Masculino Individual ($n = 511$ atletas, período 1896-2021).
 
 Os resultados demonstraram alta robustez do sistema baseline (soma simples, $\lambda = 0$). Para todas as taxas de decaimento testadas, as correlações de Kendall tau excederam significativamente o threshold de validação ($\tau > 0.70$): $\tau_{\min} = 0.9744$ (para $\lambda = 0.15$) e $\tau_{\mathrm{avg}} = 0.9862$. Adicionalmente, a análise de sobreposição do top-10 revelou concordância perfeita ($J = 1.0$) para todas as taxas, indicando que os mesmos atletas ocupam posições de destaque independentemente da parametrização temporal.
 
