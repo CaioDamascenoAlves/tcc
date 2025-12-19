@@ -42,6 +42,9 @@ COLORS = {
     'Swimming': '#1f77b4',
     'Basketball': '#ff7f0e',
     'Football': '#2ca02c',
+    'Athletics': '#d62728',
+    'Judo': '#9467bd',
+    'Boxing': '#8c564b',
     'M': '#3498db',
     'F': '#e74c3c',
     'Nucleo': '#e74c3c',
@@ -55,52 +58,56 @@ COLORS = {
 
 def setup_output_dir():
     """Cria diretorio de saida para as figuras."""
-    output_dir = Path('../../../monografia/figuras')
+    script_dir = Path(__file__).parent.resolve()
+    project_root = script_dir.parent.parent.parent
+    output_dir = project_root / 'monografia' / 'figuras'
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
 
 
 def load_data():
     """Carrega todos os arquivos CSV das analises."""
-    base_dir = '../../../results'
+    script_dir = Path(__file__).parent.resolve()
+    project_root = script_dir.parent.parent.parent
+    base_dir = project_root / 'results'
 
     print("Carregando dados...")
 
     # Tentar carregar arquivos de análises adicionais
     # Prioriza arquivos em additional_analyses/, fallback para base_dir
-    additional_dir = f'{base_dir}/additional_analyses'
+    additional_dir = base_dir / 'additional_analyses'
 
     try:
-        medal_df = pd.read_csv(f'{additional_dir}/medal_profile_by_community.csv')
+        medal_df = pd.read_csv(additional_dir / 'medal_profile_by_community.csv')
         print("  [OK] medal_profile carregado de additional_analyses/")
     except:
         try:
-            medal_df = pd.read_csv(f'{base_dir}/community_profiles_enriched.csv')
+            medal_df = pd.read_csv(base_dir / 'community_profiles_enriched.csv')
             print("  [OK] usando community_profiles_enriched.csv como fallback")
         except Exception as e:
             print(f"  [ERRO] Nao foi possivel carregar perfis: {e}")
             raise
 
     try:
-        inter_df = pd.read_csv(f'{additional_dir}/inter_community_connectivity.csv')
+        inter_df = pd.read_csv(additional_dir / 'inter_community_connectivity.csv')
         print("  [OK] inter_community carregado")
     except:
         inter_df = None
 
     try:
-        hierarchy_df = pd.read_csv(f'{additional_dir}/community_hierarchy.csv')
+        hierarchy_df = pd.read_csv(additional_dir / 'community_hierarchy.csv')
         print("  [OK] hierarchy carregado")
     except:
         hierarchy_df = None
 
     try:
-        rivalry_df = pd.read_csv(f'{additional_dir}/top_rivalry_pairs.csv')
+        rivalry_df = pd.read_csv(additional_dir / 'top_rivalry_pairs.csv')
         print("  [OK] rivalry carregado")
     except:
         rivalry_df = None
 
     # Carregar dados consolidados para metricas de atletas
-    consolidated_df = pd.read_csv(f'{base_dir}/consolidated_sports_network_analysis.csv')
+    consolidated_df = pd.read_csv(base_dir / 'consolidated_sports_network_analysis.csv')
 
     # CALCULAR dominance_index se nao existir (formula 3-2-1)
     if 'dominance_index' not in medal_df.columns:
@@ -266,13 +273,16 @@ def fig2_dominance_distribution(medal_df, output_dir):
 def fig3_segregation_heatmap(inter_df, output_dir):
     """
     Figura 3: Heatmap de Segregacao por Esporte/Sexo
-    Matriz 3x2 mostrando razao intra/inter
+    Matriz 6x2 mostrando razao intra/inter para os 6 esportes
     """
     print("\nGerando Figura 3: Heatmap de Segregacao...")
 
     # Calcular segregacao por esporte/sexo
     segregation_data = []
-    for sport in ['Swimming', 'Basketball', 'Football']:
+    # Ordem dos esportes: Coletivos, Mistos, Individuais
+    sports_order = ['Basketball', 'Football', 'Swimming', 'Athletics', 'Judo', 'Boxing']
+
+    for sport in sports_order:
         for sex in ['M', 'F']:
             subset = inter_df[(inter_df['sport'] == sport) & (inter_df['sex'] == sex)]
             if len(subset) > 0:
@@ -289,10 +299,11 @@ def fig3_segregation_heatmap(inter_df, output_dir):
 
     seg_df = pd.DataFrame(segregation_data)
 
-    # Criar matriz pivot
+    # Criar matriz pivot com ordem específica
     pivot = seg_df.pivot(index='sport', columns='sex', values='ratio')
+    pivot = pivot.reindex(sports_order)  # Garantir ordem correta
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(7, 9))
 
     sns.heatmap(
         pivot,

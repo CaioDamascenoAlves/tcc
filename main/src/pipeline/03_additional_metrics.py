@@ -35,7 +35,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Configuração
-RESULTS_DIR = Path('../../results')
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent.parent
+RESULTS_DIR = PROJECT_ROOT / 'results'
 OUTPUT_DIR = RESULTS_DIR / "additional_analyses"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -153,6 +155,12 @@ def analyze_inter_community_connections():
             sport = 'Football'
         elif 'swimming' in filename.lower():
             sport = 'Swimming'
+        elif 'athletics' in filename.lower():
+            sport = 'Athletics'
+        elif 'judo' in filename.lower():
+            sport = 'Judo'
+        elif 'boxing' in filename.lower():
+            sport = 'Boxing'
         else:
             continue
 

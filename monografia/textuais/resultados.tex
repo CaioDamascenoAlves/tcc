@@ -47,19 +47,21 @@ A análise comparativa entre os dois esportes mistos revela padrões estruturais
 
 O perfil multidimensional das oito redes de esportes mistos evidencia diferenciação sistemática entre eventos individuais e coletivos, conforme visualizado na Figura~\ref{fig:radar_mixed}. O radar chart permite comparação simultânea em seis dimensões estruturais, revelando padrões que análises univariadas não capturam. Eventos individuais (Swimming Individual M/F, Athletics Individual M/F) apresentam perfil característico: modularidade elevada (eixo superior), número de comunidades alto (normalizado), e razão intra/inter superior a 1.0, formando polígono expandido nos eixos de segregação estrutural. Em contraste, eventos de revezamento (Team) exibem perfil comprimido: densidade elevada compensa modularidade reduzida, e entropia geográfica superior reflete conectividade entre atletas de múltiplas nacionalidades devido à composição internacional de equipes de revezamento. Athletics individual masculino apresenta a maior área poligonal, caracterizando fragmentação extrema, enquanto Swimming revezamento feminino mostra a menor área, evidenciando coesão estrutural global.
 
-\begin{figure}[htbp]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.95\textwidth]{figuras/fig_radar_mixed_sports.png}
   \caption{Perfis estruturais multidimensionais das 8 redes de esportes mistos (Swimming e Athletics). Cada eixo representa uma métrica normalizada (0-1): modularidade quantifica segregação comunitária, densidade mede conectividade global, N. comunidades reflete fragmentação estrutural, entropia geográfica indica diversificação de países, PageRank CV captura concentração de centralidade, e razão intra/inter quantifica coesão interna versus externa. Eventos individuais (cores sólidas) apresentam polígonos expandidos em eixos de segregação, enquanto revezamentos (cores claras) mostram perfis comprimidos com alta densidade. Athletics individual masculino (verde escuro) exibe a maior fragmentação observada.}
   \label{fig:radar_mixed}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{figuras/fig_dominance_vs_segregation.png}
   \caption{Relação entre dominância competitiva e segregação estrutural nas 6 redes analisadas (Swimming, Basketball, Football, separados por sexo). Football masculino apresenta maior segregação (razão intra/inter ~1.13), seguido por Basketball masculino (~1.01). Football feminino exibe menor segregação (~0.70). A maioria das comunidades concentra-se na faixa de dominância 1.8–2.1 (perfil Competitivo da escala 3-2-1), indicando distribuição equilibrada de medalhas de ouro, prata e bronze.}
   \label{fig:dominance_segregation}
 \end{figure}
+
+\FloatBarrier
 
 \section{Esportes Coletivos: Basketball e Football}
 
@@ -163,14 +165,18 @@ Complementando a caracterização de centralidade individual, a análise de comu
 
 A identificação de rivalidades estruturais através de contagem de confrontos inter-comunitários revelou que as maiores rivalidades concentram-se em Basketball masculino (C1→C0: 32.097 confrontos), seguido por Football masculino (C1→C0: 131.723 confrontos direcionados) e Swimming coletivo. Athletics e esportes de combate apresentam rivalidades de menor intensidade absoluta devido à fragmentação acentuada, mas com assimetrias direcionais pronunciadas indicando hierarquias de dominância entre comunidades.
 
-\begin{figure}[htbp]
+A análise quantitativa da segregação estrutural, apresentada na Figura~\ref{fig:segregation_heatmap}, revela padrões sistemáticos correlacionados com tipologia competitiva. Esportes individuais apresentam razão intra/inter consistentemente superior a 1,0, evidenciando comunidades estruturalmente segregadas com fronteiras bem definidas. Boxing masculino exibe segregação máxima (razão 1,89), seguido por Judo masculino (1,76) e Athletics feminino individual (1,68). Em contraste, esportes coletivos apresentam razão inferior a 0,3, indicando estrutura globalmente integrada sem fronteiras comunitárias significativas: Basketball masculino (0,17) e Football masculino (0,21) exemplificam este padrão. Esportes mistos ocupam posição intermediária, com eventos individuais apresentando razão superior a 1,0 e eventos coletivos (revezamentos) razão próxima a 0,5.
+
+\begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.7\textwidth]{figuras/fig_segregation_heatmap.png}
+  \includegraphics[width=0.75\textwidth]{figuras/fig_segregation_heatmap.png}
   \caption{Índice de segregação estrutural por esporte e sexo. O heatmap apresenta a razão entre conexões intra-comunidade e inter-comunidade. Valores superiores a 1,0 (vermelho) indicam comunidades segregadas, predominantes em esportes individuais. Valores inferiores (verde) indicam alta integração, característicos de esportes coletivos.}
   \label{fig:segregation_heatmap}
 \end{figure}
 
-\begin{figure}[htbp]
+As rivalidades estruturais mais intensas, visualizadas na Figura~\ref{fig:top10_rivalries} e detalhadas na Tabela~\ref{tab:top10_rivalries}, concentram-se em esportes coletivos devido à densidade extrema de confrontos. Basketball masculino domina o ranking com 6 das 10 maiores rivalidades: a rivalidade C1→C0 registra 32.097 confrontos direcionados, magnitude 3 ordens superior às rivalidades típicas em esportes individuais. Football masculino apresenta 3 rivalidades no top-10, todas com mais de 10.000 confrontos. A única rivalidade de esporte misto no top-10 é Swimming masculino coletivo (C9→C2: 4.088 confrontos), refletindo densidade de revezamentos olímpicos. Esportes individuais puros não aparecem no ranking, evidenciando que fragmentação em múltiplas comunidades pequenas dilui intensidade de rivalidades específicas.
+
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{figuras/fig_top10_rivalries.png}
   \caption{Top 10 rivalidades estruturais inter-comunidade considerando as 16 redes analisadas. Basketball masculino domina as posições superiores, refletindo alta densidade de confrontos em redes coletivas densamente conectadas.}
@@ -178,6 +184,8 @@ A identificação de rivalidades estruturais através de contagem de confrontos 
 \end{figure}
 
 \input{./tabelas/tab_top10_rivalries.tex}
+
+\FloatBarrier
 
 \section{Evolução Temporal das Estruturas Competitivas}
 
@@ -215,21 +223,25 @@ A análise comparativa sistemática entre as três tipologias revela padrões es
 
 \textbf{PageRank Médio:} Inversamente proporcional ao tamanho da rede e densidade, esportes coletivos apresentam PageRank médio inferior (0.0010), esportes mistos valores intermediários (0.0016), e esportes individuais valores superiores (0.0019). Esta diferença reflete diluição de importância individual em estruturas coletivas.
 
-A comparação visual multidimensional dos perfis médios das três tipologias, apresentada na Figura~\ref{fig:radar_typology}, sintetiza de forma compacta as diferenças estruturais sistemáticas identificadas ao longo da análise. O radar chart revela que cada tipologia ocupa região distintiva no espaço estrutural de seis dimensões. Esportes individuais (vermelho) apresentam perfil polarizado: modularidade máxima, densidade mínima, e razão intra/inter elevada, formando polígono expandido nos eixos de segregação e comprimido nos eixos de conectividade global. Esportes coletivos (verde) exibem perfil complementar invertido: densidade máxima, modularidade próxima a zero, e número de comunidades mínimo, caracterizando estrutura globalmente coesa sem fronteiras comunitárias bem definidas. Esportes mistos (azul) ocupam posição intermediária em todos os eixos exceto número de comunidades, onde apresentam valores máximos devido à dualidade evento individual/revezamento que duplica a fragmentação estrutural. Esta visualização confirma quantitativamente a hipótese central do estudo: tipologias de interdependência competitiva produzem assinaturas topológicas distintivas e mensuráveis.
+A comparação visual multidimensional dos perfis médios das três tipologias, apresentada na Figura~\ref{fig:radar_typology}, sintetiza de forma compacta as diferenças estruturais sistemáticas identificadas ao longo da análise. O radar chart revela que cada tipologia ocupa região distintiva no espaço estrutural de seis dimensões. Esportes individuais (vermelho) apresentam perfil polarizado: modularidade máxima, densidade mínima, e razão intra/inter elevada, formando polígono expandido nos eixos de segregação e comprimido nos eixos de conectividade global. Esportes coletivos (verde) exibem perfil complementar invertido: densidade máxima, modularidade próxima a zero, e número de comunidades mínimo, caracterizando estrutura globalmente coesa sem fronteiras comunitárias bem definidas. Esportes mistos (azul) ocupam posição intermediária em todos os eixos exceto número de comunidades, onde apresentam valores máximos devido à dualidade evento individual/revezamento que duplica a fragmentação estrutural.
 
-\begin{figure}[htbp]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.95\textwidth]{figuras/fig_radar_typology.png}
   \caption{Perfis estruturais médios das três tipologias de esportes olímpicos. Cada perfil representa média das redes pertencentes à tipologia (Mistos: 8 redes, Coletivos: 4 redes, Individuais: 4 redes). Métricas normalizadas (0-1) permitem comparação direta entre dimensões: modularidade e razão intra/inter quantificam segregação comunitária, densidade e número de comunidades medem fragmentação estrutural, entropia geográfica reflete diversificação global, e PageRank CV captura concentração de centralidade. Esportes individuais (vermelho) apresentam perfil polarizado com modularidade máxima e densidade mínima. Esportes coletivos (verde) exibem perfil complementar invertido com densidade máxima e modularidade próxima a zero. Esportes mistos (azul) ocupam posição intermediária, exceto em número de comunidades onde excedem ambas as outras tipologias devido à dualidade estrutural eventos individuais/revezamentos.}
   \label{fig:radar_typology}
 \end{figure}
 
-\begin{figure}[htbp]
+Esta visualização confirma quantitativamente a hipótese central do estudo: tipologias de interdependência competitiva produzem assinaturas topológicas distintivas e mensuráveis. Complementarmente, a análise da relação entre tamanho e centralidade das comunidades, apresentada na Figura~\ref{fig:size_pagerank}, revela trade-off estrutural entre massa e importância. Esportes individuais apresentam comunidades pequenas (média 24 atletas) com PageRank médio elevado (0.0019), enquanto esportes coletivos exibem padrão invertido: comunidades massivas (média 200+ atletas em Basketball) com PageRank médio diluído (0.0010). Esportes mistos apresentam distribuição bimodal, refletindo coexistência de comunidades pequenas (eventos individuais) e grandes (revezamentos). A estratificação hierárquica (núcleo/intermediária/periférica) baseada em PageRank revela que comunidades de núcleo concentram-se predominantemente em esportes individuais, enquanto comunidades periféricas dominam esportes coletivos, evidenciando que fragmentação estrutural amplifica diferenciação hierárquica.
+
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.85\textwidth]{figuras/fig_size_vs_pagerank.png}
   \caption{Relação entre tamanho e centralidade estrutural das comunidades considerando as três tipologias. Cores indicam nível hierárquico: vermelho (núcleo), amarelo (intermediária), azul (periférica). Esportes individuais apresentam comunidades pequenas com alta centralidade, enquanto esportes coletivos apresentam comunidades massivas com centralidade distribuída.}
   \label{fig:size_pagerank}
 \end{figure}
+
+\FloatBarrier
 
 \section{Síntese Quantitativa dos Resultados}
 
@@ -252,3 +264,5 @@ A Tabela~\ref{tab:network_metrics} evidencia diferenças sistemáticas entre mod
 A Tabela~\ref{tab:top_communities} destaca a heterogeneidade temporal e geográfica (ambas medidas por entropia de Shannon \citeonline{Rajaram2017ShannonEntropy}) das maiores comunidades. Períodos de atividade abrangem múltiplas décadas, evidenciando que comunidades não representam apenas agrupamentos temporais mas refletem combinações complexas de fatores estruturais. A diversidade geográfica variável entre modalidades revela diferentes padrões de globalização competitiva: Football apresenta maior diversidade, enquanto Swimming mantém concentração geográfica mais acentuada.
 
 \input{./tabelas/tab_top_communities.tex}
+
+\FloatBarrier
