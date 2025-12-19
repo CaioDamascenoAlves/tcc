@@ -78,7 +78,23 @@ A detecção de comunidades utilizou algoritmo de Louvain \citeonline{Blondel200
 
 Para cada comunidade detectada, foram calculadas métricas agregadas que permitem caracterização multidimensional: métricas temporais (período de atividade, entropia de Shannon da distribuição por décadas \citeonline{Rajaram2017ShannonEntropy}, era olímpica dominante), métricas geográficas (número de países representados, entropia geográfica), e métricas de performance (distribuição de medalhas, estatísticas de PageRank, identificação de atletas de alta performance e atletas-ponte). Esta caracterização multi-facetada permite análise comparativa entre comunidades, revelando padrões estruturais distintos entre modalidades esportivas e contextos competitivos.
 
-Além das métricas temporais, geográficas e de performance descritas, foram implementadas duas análises complementares para caracterização estrutural das comunidades detectadas, conforme fundamentação apresentada no Capítulo~\ref{cap:revisao}.
+Para caracterizar desigualdade na distribuição de PageRank dentro de cada rede, calculou-se o coeficiente de Gini sobre os valores de PageRank dos atletas \citeonline{Fabbri2022Inequality}. O coeficiente de Gini, originalmente desenvolvido para medir desigualdade econômica, foi adaptado para análise de redes como métrica de concentração de centralidade. Formalmente, para uma rede com $n$ atletas cujos valores de PageRank são ordenados como $x_1 \leq x_2 \leq \cdots \leq x_n$, o coeficiente de Gini é calculado por:
+
+\begin{equation}
+    G = \frac{2 \sum_{i=1}^{n} i \cdot x_i}{n \sum_{i=1}^{n} x_i} - \frac{n+1}{n}
+\end{equation}
+
+\noindent onde $G \in [0,1]$, com $G=0$ indicando distribuição perfeitamente igualitária (todos atletas com mesmo PageRank) e $G=1$ representando máxima concentração (um único atleta concentra todo PageRank). Valores intermediários quantificam grau de heterogeneidade estrutural: quanto maior o Gini, maior a concentração de importância em poucos atletas de elite. Esta métrica permite comparação sistemática entre modalidades quanto à estrutura hierárquica competitiva.
+
+Dado que valores absolutos de PageRank não são diretamente comparáveis entre redes de tamanhos distintos—redes menores naturalmente produzem valores individuais mais elevados devido a menor diluição de importância—implementou-se conversão dos valores em \textbf{percentis intra-rede} para permitir comparações válidas de posição relativa \citeonline{Eriksson2022NetworkMetadata}. Para cada rede, os atletas são ordenados por PageRank crescente, atribuindo-se rank $r_i$ a cada atleta $i$. O percentil é calculado como:
+
+\begin{equation}
+    P_i = \frac{r_i}{n} \times 100
+\end{equation}
+
+\noindent onde $n$ é o tamanho da rede e $P_i \in (0, 100]$. Atletas com percentil próximo a 100 ocupam posições de máxima centralidade em suas redes, independentemente do valor absoluto de PageRank. Esta normalização viabiliza identificação de atletas estruturalmente equivalentes em diferentes modalidades (e.g., percentil 99+ caracteriza o top 1\% de cada esporte), permitindo comparações cross-network metodologicamente válidas sem viés de tamanho amostral.
+
+Além das métricas temporais, geográficas, de performance e de desigualdade descritas, foram implementadas duas análises complementares para caracterização estrutural das comunidades detectadas, conforme fundamentação apresentada no Capítulo~\ref{cap:revisao}.
 
 Para avaliar segregação estrutural, cada aresta da rede é classificada como intra-comunidade (conectando atletas da mesma comunidade) ou inter-comunidade (conectando atletas de comunidades distintas) \citeonline{Fortunato2010CommunityDetection}. A razão entre conexões internas e externas quantifica grau de coesão estrutural \citeonline{Leicht2008CommunityStructure}, onde $E_{\mathrm{intra}}$ e $E_{\mathrm{inter}}$ representam contagens de arestas intra e inter-comunidade, e $\epsilon = 10^{-6}$ evita divisão por zero:
 
