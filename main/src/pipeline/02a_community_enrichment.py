@@ -1,272 +1,295 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Análise Formal e Enriquecida de Comunidades em Redes Olímpicas
+Análise Enriquecida de Comunidades - 188 Comunidades (16 Redes Independentes)
 
-Este script gera análises detalhadas das comunidades detectadas pelo algoritmo de Louvain,
-incluindo métricas de dominância temporal, geográfica, estrutural e de performance.
+ATUALIZAÇÃO: Este script foi reformulado para processar as 16 redes independentes:
+- Swimming/Athletics: separados por event_type (individual/team)
+- Outros esportes: separados apenas por gênero
 
 Saídas:
-- community_profiles_enriched.csv: Métricas agregadas por comunidade
+- community_profiles_enriched.csv: Métricas agregadas por comunidade (188 comunidades)
 - community_members_detailed.csv: Dados detalhados de cada atleta com flag de comunidade
-- community_summary.json: Resumo em JSON para dashboard
 """
 
 import pandas as pd
 import numpy as np
-import json
+import os
 from collections import Counter
-from scipy.stats import entropy
 
 # ==============================================================================
 # FUNÇÕES AUXILIARES
 # ==============================================================================
 
-def calculate_shannon_entropy(counts):
-    """Entropia de Shannon para medir diversidade"""
-    total = sum(counts.values())
-    if total == 0:
-        return 0
-    probs = np.array([count/total for count in counts.values()])
-    return entropy(probs, base=2)
+def calculate_shannon_entropy(series):
+    """Calcula entropia de Shannon para uma série de valores."""
+    counts = series.value_counts(normalize=True)
+    return -np.sum(counts * np.log2(counts + 1e-10))
 
-def identify_era(year):
-    """Classifica períodos olímpicos em eras"""
-    if year < 1920:
-        return "Era Pioneira (1896-1919)"
-    elif year < 1950:
-        return "Entre Guerras (1920-1949)"
-    elif year < 1980:
-        return "Guerra Fria (1950-1979)"
-    elif year < 2000:
-        return "Pós-Guerra Fria (1980-1999)"
+def extract_year_from_games(games_str):
+    """Extrai ano do campo 'games' (ex: '2020 Summer' -> 2020)."""
+    try:
+        return int(str(games_str).split()[0])
+    except:
+        return np.nan
+
+def process_network(df, sport, sex, event_type=None):
+    """Processa uma rede individual e retorna métricas de suas comunidades."""
+
+    # Filtrar rede
+    if event_type:
+        net_df = df[(df['sport'] == sport) & (df['sex'] == sex) & (df['event_type'] == event_type)]
+        network_label = f"{sport}_{sex}_{event_type}"
     else:
-        return "Era Moderna (2000+)"
+        net_df = df[(df['sport'] == sport) & (df['sex'] == sex)]
+        network_label = f"{sport}_{sex}"
 
-# ==============================================================================
-# CARREGAR DADOS
-# ==============================================================================
+    if len(net_df) == 0:
+        return [], []
 
-print("=" * 80)
-print("ANÁLISE ENRIQUECIDA DE COMUNIDADES - REDES OLÍMPICAS")
-print("=" * 80)
+    # Extrair anos
+    net_df = net_df.copy()
+    net_df['year'] = net_df['games'].apply(extract_year_from_games)
 
-df = pd.read_csv('../../results/consolidated_sports_network_analysis.csv')
+    communities = []
+    detailed_members = []
 
-# Preparação dos dados
-df['year'] = df['games'].str.extract(r'(\d{4})').astype(float)
-df['decade'] = (df['year'] // 10 * 10).astype('Int64')
-df['era'] = df['year'].apply(identify_era)
+    for comm_id in sorted(net_df['original_community'].unique()):
+        comm_df = net_df[net_df['original_community'] == comm_id]
 
-print(f"\nDados carregados: {len(df)} atletas")
-print(f"Período: {df['year'].min():.0f} - {df['year'].max():.0f}")
+        # ======================================================================
+        # MÉTRICAS AGREGADAS DA COMUNIDADE
+        # ======================================================================
 
-# ==============================================================================
-# ANÁLISE POR COMUNIDADE
-# ==============================================================================
+        # Tamanho
+        size = len(comm_df)
 
-all_communities = []
-detailed_members = []
+        # Anos
+        years = comm_df['year'].dropna()
+        if len(years) > 0:
+            year_start = int(years.min())
+            year_end = int(years.max())
+            span_years = year_end - year_start
+        else:
+            year_start = year_end = span_years = np.nan
 
-for sport in df['sport'].unique():
-    for sex in df['sex'].unique():
-        sport_sex_data = df[(df['sport'] == sport) & (df['sex'] == sex)]
+        # Entropia temporal (por década)
+        if len(years) > 0:
+            decades = (years // 10) * 10
+            temporal_entropy = calculate_shannon_entropy(decades)
+        else:
+            temporal_entropy = np.nan
 
-        if len(sport_sex_data) == 0:
-            continue
+        # Era dominante (por década)
+        if len(years) > 0:
+            decade_counts = Counter((years // 10) * 10)
+            dominant_era = decade_counts.most_common(1)[0][0]
+            era_concentration = decade_counts.most_common(1)[0][1] / len(years)
+        else:
+            dominant_era = np.nan
+            era_concentration = np.nan
 
-        print(f"\nProcessando {sport} - {sex}...")
+        # Entropia geográfica
+        nocs = comm_df['noc'].dropna()
+        if len(nocs) > 0:
+            geographic_entropy = calculate_shannon_entropy(nocs)
+            num_countries = nocs.nunique()
 
-        communities = sport_sex_data.groupby('original_community')
+            noc_counts = nocs.value_counts()
+            dominant_country = noc_counts.index[0]
+            country_dominance = noc_counts.iloc[0] / len(nocs)
+            top_countries = ','.join(noc_counts.head(3).index.tolist())
+        else:
+            geographic_entropy = num_countries = np.nan
+            dominant_country = 'N/A'
+            country_dominance = np.nan
+            top_countries = ''
 
-        for comm_id, comm_data in communities:
-            size = len(comm_data)
+        # Medalhas
+        medals = comm_df['medal'].value_counts()
+        gold_count = medals.get('Gold', 0)
+        silver_count = medals.get('Silver', 0)
+        bronze_count = medals.get('Bronze', 0)
+        total_medals = len(comm_df)
 
-            # =====================================================
-            # ANÁLISE TEMPORAL
-            # =====================================================
-            year_range = (comm_data['year'].min(), comm_data['year'].max())
-            span_years = year_range[1] - year_range[0]
+        # PageRank
+        pr_values = comm_df['original_pagerank'].dropna()
+        if len(pr_values) > 0:
+            pagerank_mean = pr_values.mean()
+            pagerank_median = pr_values.median()
+            pagerank_std = pr_values.std()
+            pagerank_max = pr_values.max()
+            pagerank_min = pr_values.min()
+            pagerank_cv = pr_values.std() / pr_values.mean() if pr_values.mean() > 0 else np.nan
 
-            decade_counts = comm_data['decade'].value_counts().to_dict()
-            temporal_entropy = calculate_shannon_entropy(decade_counts)
+            # Top 3 atletas por PageRank
+            top_pr = comm_df.nlargest(3, 'original_pagerank')[['name', 'original_pagerank']]
+            top1_name = top_pr.iloc[0]['name'] if len(top_pr) > 0 else ''
+            top1_pagerank = top_pr.iloc[0]['original_pagerank'] if len(top_pr) > 0 else np.nan
+            top2_name = top_pr.iloc[1]['name'] if len(top_pr) > 1 else ''
+            top2_pagerank = top_pr.iloc[1]['original_pagerank'] if len(top_pr) > 1 else np.nan
+            top3_name = top_pr.iloc[2]['name'] if len(top_pr) > 2 else ''
+            top3_pagerank = top_pr.iloc[2]['original_pagerank'] if len(top_pr) > 2 else np.nan
+        else:
+            pagerank_mean = pagerank_median = pagerank_std = np.nan
+            pagerank_max = pagerank_min = pagerank_cv = np.nan
+            top1_name = top2_name = top3_name = ''
+            top1_pagerank = top2_pagerank = top3_pagerank = np.nan
 
-            era_counts = comm_data['era'].value_counts()
-            dominant_era = era_counts.idxmax()
-            era_concentration = era_counts.max() / len(comm_data)
+        # Betweenness
+        bw_values = comm_df['original_betweenness_centrality'].dropna()
+        if len(bw_values) > 0:
+            betweenness_mean = bw_values.mean()
+            betweenness_max = bw_values.max()
+            num_bridge_athletes = len(bw_values[bw_values > 0])
+        else:
+            betweenness_mean = betweenness_max = np.nan
+            num_bridge_athletes = 0
 
-            # =====================================================
-            # ANÁLISE GEOGRÁFICA
-            # =====================================================
-            country_counts = comm_data['noc'].value_counts().to_dict()
-            num_countries = len(country_counts)
-            geographic_entropy = calculate_shannon_entropy(country_counts)
+        communities.append({
+            'sport': sport,
+            'sex': sex,
+            'event_type': event_type if event_type else 'N/A',
+            'network_label': network_label,
+            'community_id': comm_id,
+            'size': size,
+            'year_start': year_start,
+            'year_end': year_end,
+            'span_years': span_years,
+            'temporal_entropy': temporal_entropy,
+            'dominant_era': dominant_era,
+            'era_concentration': era_concentration,
+            'num_countries': num_countries,
+            'geographic_entropy': geographic_entropy,
+            'dominant_country': dominant_country,
+            'country_dominance': country_dominance,
+            'top_countries': top_countries,
+            'gold_count': gold_count,
+            'silver_count': silver_count,
+            'bronze_count': bronze_count,
+            'total_medals': total_medals,
+            'pagerank_mean': pagerank_mean,
+            'pagerank_median': pagerank_median,
+            'pagerank_std': pagerank_std,
+            'pagerank_max': pagerank_max,
+            'pagerank_min': pagerank_min,
+            'pagerank_cv': pagerank_cv,
+            'betweenness_mean': betweenness_mean,
+            'betweenness_max': betweenness_max,
+            'num_bridge_athletes': num_bridge_athletes,
+            'top1_name': top1_name,
+            'top1_pagerank': top1_pagerank,
+            'top2_name': top2_name,
+            'top2_pagerank': top2_pagerank,
+            'top3_name': top3_name,
+            'top3_pagerank': top3_pagerank
+        })
 
-            dominant_country = comm_data['noc'].value_counts().idxmax()
-            country_dominance = comm_data['noc'].value_counts().max() / len(comm_data)
-
-            # Top 3 países
-            top_countries = comm_data['noc'].value_counts().head(3)
-            top_countries_str = '; '.join([f"{noc}({count})" for noc, count in top_countries.items()])
-
-            # =====================================================
-            # PERFIL DE PERFORMANCE
-            # =====================================================
-            medal_dist = comm_data['medal'].value_counts().to_dict()
-
-            pr_stats = {
-                'mean': comm_data['original_pagerank'].mean(),
-                'median': comm_data['original_pagerank'].median(),
-                'std': comm_data['original_pagerank'].std(),
-                'max': comm_data['original_pagerank'].max(),
-                'min': comm_data['original_pagerank'].min(),
-                'cv': comm_data['original_pagerank'].std() / comm_data['original_pagerank'].mean() if comm_data['original_pagerank'].mean() > 0 else 0
-            }
-
-            # Top 3 superstars
-            top3 = comm_data.nlargest(3, 'original_pagerank')[['name', 'noc', 'year', 'original_pagerank']]
-
-            # =====================================================
-            # CENTRALIDADES
-            # =====================================================
-            betweenness_stats = {
-                'mean': comm_data['original_betweenness_centrality'].mean(),
-                'max': comm_data['original_betweenness_centrality'].max()
-            }
-
-            # Atletas ponte (alto betweenness - top 10%)
-            bridge_threshold = comm_data['original_betweenness_centrality'].quantile(0.9)
-            bridge_athletes = comm_data[comm_data['original_betweenness_centrality'] > bridge_threshold]
-
-            # =====================================================
-            # ARMAZENAR PERFIL DA COMUNIDADE
-            # =====================================================
-            community_profile = {
+        # ======================================================================
+        # MEMBROS DETALHADOS (para community_members_detailed.csv)
+        # ======================================================================
+        for _, athlete in comm_df.iterrows():
+            detailed_members.append({
+                'athlete_id': athlete['athlete_id'],
                 'sport': sport,
                 'sex': sex,
-                'community_id': int(comm_id),
-                'size': size,
+                'event_type': event_type if event_type else 'N/A',
+                'network_label': network_label,
+                'community_id': comm_id,
+                'name': athlete['name'],
+                'noc': athlete['noc'],
+                'year': athlete.get('year', np.nan),
+                'pagerank': athlete['original_pagerank'],
+                'betweenness': athlete['original_betweenness_centrality'],
+                'is_bridge': athlete['original_betweenness_centrality'] > 0 if pd.notna(athlete['original_betweenness_centrality']) else False
+            })
 
-                # Temporal
-                'year_start': year_range[0],
-                'year_end': year_range[1],
-                'span_years': span_years,
-                'temporal_entropy': temporal_entropy,
-                'dominant_era': dominant_era,
-                'era_concentration': era_concentration,
-
-                # Geográfica
-                'num_countries': num_countries,
-                'geographic_entropy': geographic_entropy,
-                'dominant_country': dominant_country,
-                'country_dominance': country_dominance,
-                'top_countries': top_countries_str,
-
-                # Performance
-                'gold_count': medal_dist.get('Gold', 0),
-                'silver_count': medal_dist.get('Silver', 0),
-                'bronze_count': medal_dist.get('Bronze', 0),
-                'total_medals': sum(medal_dist.values()),
-                'pagerank_mean': pr_stats['mean'],
-                'pagerank_median': pr_stats['median'],
-                'pagerank_std': pr_stats['std'],
-                'pagerank_max': pr_stats['max'],
-                'pagerank_min': pr_stats['min'],
-                'pagerank_cv': pr_stats['cv'],
-
-                # Centralidades
-                'betweenness_mean': betweenness_stats['mean'],
-                'betweenness_max': betweenness_stats['max'],
-                'num_bridge_athletes': len(bridge_athletes),
-
-                # Top athletes
-                'top1_name': top3.iloc[0]['name'] if len(top3) > 0 else None,
-                'top1_pagerank': top3.iloc[0]['original_pagerank'] if len(top3) > 0 else None,
-                'top2_name': top3.iloc[1]['name'] if len(top3) > 1 else None,
-                'top2_pagerank': top3.iloc[1]['original_pagerank'] if len(top3) > 1 else None,
-                'top3_name': top3.iloc[2]['name'] if len(top3) > 2 else None,
-                'top3_pagerank': top3.iloc[2]['original_pagerank'] if len(top3) > 2 else None,
-            }
-
-            all_communities.append(community_profile)
-
-            # =====================================================
-            # ARMAZENAR MEMBROS DETALHADOS
-            # =====================================================
-            for idx, athlete in comm_data.iterrows():
-                is_bridge = athlete['original_betweenness_centrality'] > bridge_threshold
-                is_top_pagerank = athlete['original_pagerank'] >= comm_data['original_pagerank'].quantile(0.9)
-
-                member_detail = {
-                    'athlete_id': athlete['athlete_id'],
-                    'name': athlete['name'],
-                    'sport': sport,
-                    'sex': sex,
-                    'community_id': int(comm_id),
-                    'community_size': size,
-                    'noc': athlete['noc'],
-                    'year': athlete['year'],
-                    'decade': athlete['decade'],
-                    'era': athlete['era'],
-                    'medal': athlete['medal'],
-                    'pagerank': athlete['original_pagerank'],
-                    'betweenness': athlete['original_betweenness_centrality'],
-                    'is_bridge_athlete': is_bridge,
-                    'is_top_performer': is_top_pagerank,
-                    'dominant_country': dominant_country,
-                    'dominant_era': dominant_era,
-                }
-
-                detailed_members.append(member_detail)
+    return communities, detailed_members
 
 # ==============================================================================
-# EXPORTAR RESULTADOS
+# MAIN
 # ==============================================================================
 
-# 1. Perfis de comunidades (agregado)
-results_df = pd.DataFrame(all_communities)
-results_df.to_csv('../../results/community_profiles_enriched.csv', index=False)
-print(f"\n[OK] Perfis de comunidades salvos: community_profiles_enriched.csv")
+def main():
+    """Processa todas as 16 redes e gera CSVs consolidados."""
 
-# 2. Membros detalhados (todos os atletas com features de comunidade)
-members_df = pd.DataFrame(detailed_members)
-members_df.to_csv('../../results/community_members_detailed.csv', index=False)
-print(f"[OK] Membros detalhados salvos: community_members_detailed.csv")
+    print("=" * 80)
+    print("ANÁLISE ENRIQUECIDA DE COMUNIDADES - 188 COMUNIDADES (16 REDES)")
+    print("=" * 80)
 
-# 3. Resumo JSON para dashboard
-summary = {
-    'total_communities': len(all_communities),
-    'total_athletes': len(members_df),
-    'sports': list(df['sport'].unique()),
-    'communities_by_sport': results_df.groupby('sport').size().to_dict(),
-    'largest_communities': results_df.nlargest(5, 'size')[['sport', 'sex', 'community_id', 'size', 'dominant_country']].to_dict('records'),
-    'most_diverse_temporal': results_df.nlargest(5, 'temporal_entropy')[['sport', 'sex', 'community_id', 'temporal_entropy']].to_dict('records'),
-    'most_diverse_geographic': results_df.nlargest(5, 'geographic_entropy')[['sport', 'sex', 'community_id', 'geographic_entropy', 'num_countries']].to_dict('records'),
-}
+    # Determinar paths dinamicamente
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.join(script_dir, "..", "..", "..")
+    results_dir = os.path.join(project_root, "results")
 
-with open('../../results/community_summary.json', 'w') as f:
-    json.dump(summary, f, indent=2)
-print(f"[OK] Resumo JSON salvo: community_summary.json")
+    # Carregar dados
+    athletes_file = os.path.join(results_dir, 'consolidated_sports_network_analysis.csv')
+    print(f"\nCarregando dados de: {athletes_file}")
+    df = pd.read_csv(athletes_file)
+    print(f"✓ Carregados {len(df)} atletas")
 
-# ==============================================================================
-# ESTATÍSTICAS GERAIS
-# ==============================================================================
+    all_communities = []
+    all_detailed_members = []
 
-print("\n" + "=" * 80)
-print("ESTATÍSTICAS GERAIS")
-print("=" * 80)
+    # Processar esportes mistos (Swimming, Athletics)
+    for sport in ['Swimming', 'Athletics']:
+        for event_type in ['individual', 'team']:
+            for sex in ['M', 'F']:
+                print(f"\nProcessando: {sport} {event_type} {sex}")
+                communities, members = process_network(df, sport, sex, event_type)
+                all_communities.extend(communities)
+                all_detailed_members.extend(members)
+                print(f"  → {len(communities)} comunidades, {len(members)} atletas")
 
-print(f"\n[OK] Total de comunidades analisadas: {len(all_communities)}")
-print(f"[OK] Total de atletas processados: {len(members_df)}")
+    # Processar esportes puros (Basketball, Football, Judo, Boxing)
+    for sport in ['Basketball', 'Football', 'Judo', 'Boxing']:
+        for sex in ['M', 'F']:
+            print(f"\nProcessando: {sport} {sex}")
+            communities, members = process_network(df, sport, sex)
+            all_communities.extend(communities)
+            all_detailed_members.extend(members)
+            print(f"  → {len(communities)} comunidades, {len(members)} atletas")
 
-print("\nPor Esporte:")
-for sport in results_df['sport'].unique():
-    sport_comms = results_df[results_df['sport'] == sport]
-    print(f"\n  {sport}:")
-    print(f"    • Comunidades: {len(sport_comms)}")
-    print(f"    • Tamanho médio: {sport_comms['size'].mean():.1f} atletas")
-    print(f"    • Entropia temporal média: {sport_comms['temporal_entropy'].mean():.2f}")
-    print(f"    • Entropia geográfica média: {sport_comms['geographic_entropy'].mean():.2f}")
-    print(f"    • PageRank CV médio: {sport_comms['pagerank_cv'].mean():.2f}")
+    # ===========================================================================
+    # EXPORTAR RESULTADOS
+    # ===========================================================================
 
-print("\n" + "=" * 80)
-print("ANÁLISE CONCLUÍDA")
-print("=" * 80 + "\n")
+    print("\n" + "=" * 80)
+    print("EXPORTANDO RESULTADOS")
+    print("=" * 80)
+
+    # 1. Perfis de comunidades (agregado)
+    communities_df = pd.DataFrame(all_communities)
+    output_communities = os.path.join(results_dir, 'community_profiles_enriched.csv')
+    communities_df.to_csv(output_communities, index=False)
+    print(f"\n[OK] Perfis de comunidades salvos: {output_communities}")
+    print(f"    Total: {len(communities_df)} comunidades")
+
+    # Breakdown por esporte
+    print("\n    Breakdown por esporte:")
+    for sport in communities_df['sport'].unique():
+        sport_count = len(communities_df[communities_df['sport'] == sport])
+        print(f"      {sport:15}: {sport_count:3} comunidades")
+
+    # 2. Membros detalhados (todos os atletas com features de comunidade)
+    members_df = pd.DataFrame(all_detailed_members)
+    output_members = os.path.join(results_dir, 'community_members_detailed.csv')
+    members_df.to_csv(output_members, index=False)
+    print(f"\n[OK] Membros detalhados salvos: {output_members}")
+    print(f"    Total: {len(members_df)} atletas")
+
+    # Mostrar top 10 maiores comunidades
+    print("\n" + "=" * 80)
+    print("TOP 10 MAIORES COMUNIDADES:")
+    print("=" * 80)
+    top10 = communities_df.nlargest(10, 'size')
+    print(top10[['sport', 'event_type', 'sex', 'community_id', 'size',
+                 'span_years', 'temporal_entropy', 'geographic_entropy',
+                 'dominant_country']].to_string(index=False))
+
+    print("\n" + "=" * 80)
+    print("CONCLUÍDO COM SUCESSO!")
+    print("=" * 80)
+
+if __name__ == '__main__':
+    main()
