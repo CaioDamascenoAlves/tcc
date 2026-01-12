@@ -68,15 +68,15 @@ class DataLoader:
         Returns:
             DataFrame com todas as colunas de métricas de rede
         """
-        return self._load_csv('networks/consolidated_athletes.csv', 'consolidated_athletes')
+        return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_athletes')
 
     def load_consolidated_edges(self) -> pd.DataFrame:
         """Carrega arestas consolidadas de todos os esportes."""
-        return self._load_csv('networks/consolidated_edges.csv', 'consolidated_edges')
+        return self._load_csv('consolidated_edges_data.csv', 'consolidated_edges')
 
     def load_swimming_hybrid(self) -> pd.DataFrame:
         """Carrega dados do grafo híbrido de natação."""
-        return self._load_csv('networks/swimming_hybrid.csv', 'swimming_hybrid')
+        return self._load_csv('swimming_hybrid_network.csv', 'swimming_hybrid')
 
     def load_community_profiles(self) -> pd.DataFrame:
         """Carrega perfis enriquecidos de comunidades."""

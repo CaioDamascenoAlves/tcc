@@ -982,7 +982,7 @@ def render_network_tab(data):
 
     st.subheader("1. Selecione a Rede")
 
-    # Definir as 8 redes disponíveis
+    # Definir as 16 redes disponíveis
     networks = [
         {"id": "swimming_M_individual", "label": "Natação Masculina - Individual", "sport": "Swimming", "sex": "M", "event_type": "individual"},
         {"id": "swimming_M_team", "label": "Natação Masculina - Equipe (Revezamentos)", "sport": "Swimming", "sex": "M", "event_type": "team"},
@@ -992,6 +992,14 @@ def render_network_tab(data):
         {"id": "football_F_team", "label": "Futebol Feminino", "sport": "Football", "sex": "F", "event_type": "team"},
         {"id": "basketball_M_team", "label": "Basquetebol Masculino", "sport": "Basketball", "sex": "M", "event_type": "team"},
         {"id": "basketball_F_team", "label": "Basquetebol Feminino", "sport": "Basketball", "sex": "F", "event_type": "team"},
+        {"id": "athletics_M_individual", "label": "Atletismo Masculino - Individual", "sport": "Athletics", "sex": "M", "event_type": "individual"},
+        {"id": "athletics_M_team", "label": "Atletismo Masculino - Equipe (Revezamentos)", "sport": "Athletics", "sex": "M", "event_type": "team"},
+        {"id": "athletics_F_individual", "label": "Atletismo Feminino - Individual", "sport": "Athletics", "sex": "F", "event_type": "individual"},
+        {"id": "athletics_F_team", "label": "Atletismo Feminino - Equipe (Revezamentos)", "sport": "Athletics", "sex": "F", "event_type": "team"},
+        {"id": "judo_M_individual", "label": "Judô Masculino", "sport": "Judo", "sex": "M", "event_type": "individual"},
+        {"id": "judo_F_individual", "label": "Judô Feminino", "sport": "Judo", "sex": "F", "event_type": "individual"},
+        {"id": "boxing_M_individual", "label": "Boxe Masculino", "sport": "Boxing", "sex": "M", "event_type": "individual"},
+        {"id": "boxing_F_individual", "label": "Boxe Feminino", "sport": "Boxing", "sex": "F", "event_type": "individual"},
     ]
 
     network_labels = [net["label"] for net in networks]
