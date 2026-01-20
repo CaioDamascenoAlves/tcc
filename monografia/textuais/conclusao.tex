@@ -33,29 +33,11 @@ Este trabalho entrega três contribuições principais para a literatura de aná
 
 Este trabalho apresenta limitações que devem ser consideradas na interpretação dos resultados:
 
-\textbf{Limitações de Dados:}
+\textbf{Limitações de Dados:} Registros de atletas pré-1960 são fragmentados, potencialmente sub-representando medalhistas de eras anteriores. Dados incompletos sobre altura, peso e idade limitam análises bioantropométricas. A cobertura temporal até Tokyo 2020 não inclui Paris 2024. O foco em seis esportes (~7,1\% das modalidades olímpicas) impossibilita generalização para todas as 84 modalidades existentes.
 
-\textit{Viés de survivorship histórico:} Registros de atletas pré-1960 são fragmentados, potencialmente sub-representando medalhistas de eras anteriores. Dados incompletos sobre altura, peso e idade em períodos iniciais dos jogos limitam análises que correlacionam atributos físicos com posições estruturais.
+\textbf{Limitações Metodológicas:} O sistema de ponderação 5-3-2 carece de fundamentação teórica sólida, sendo validado apenas empiricamente. PageRank apresenta diluição estrutural em esportes coletivos devido ao tamanho das redes. O algoritmo de Louvain requer simetrização, descartando informação direcional, embora validação com Infomap tenha demonstrado concordância de 85\% (NMI). Validação estatística formal através de null models não foi implementada, embora diferenças de modularidade (razão de 243×) suportem conclusões qualitativas.
 
-\textit{Cobertura temporal:} Análise limitada a Tokyo 2020, não incluindo Paris 2024. A inclusão de edições futuras permitiria análise de tendências mais recentes em profissionalização e globalização.
-
-\textit{Escopo de modalidades:} Foco em seis esportes (~7,1\% das modalidades olímpicas), impossibilitando generalização para todas as 84 modalidades. Esportes com características distintas (eventos cronometrados puros, modalidades artísticas) podem produzir propriedades estruturais não capturadas.
-
-\textbf{Limitações Metodológicas:}
-
-\textit{Sistema de ponderação exploratório:} Escolha do sistema 5-3-2 carece de fundamentação teórica sólida, sendo validada apenas empiricamente via análise de robustez. Embora validação tenha demonstrado concordância estrutural entre sistemas alternativos, justificativa teórica para pesos específicos permanece aberta.
-
-\textit{Diluição estrutural de PageRank:} Esportes coletivos com múltiplos medalhistas por evento diluem PageRank artificialmente, dificultando comparações diretas com esportes individuais. A formulação recursiva da métrica distribui importância proporcionalmente ao tamanho da rede, favorecendo estruturalmente competições com menor número de participantes.
-
-\textit{Perda de informação direcional:} Algoritmo de Louvain requer simetrização de grafos direcionados, descartando hierarquias de dominância durante detecção de comunidades. Embora validação com Infomap (que preserva direção) tenha demonstrado concordância estrutural de 85\% (NMI), informação direcional potencialmente relevante foi perdida na análise comunitária.
-
-\textit{Validação estatística de comunidades:} Validação formal através de null models (comparação com redes aleatórias preservando distribuição de grau) não foi implementada. Magnitude das diferenças de modularidade (Swimming 0.73 vs Basketball/Football ~0.003, razão de 243×) suporta conclusões qualitativas, mas significância estatística formal não foi estabelecida.
-
-\textbf{Limitações de Escopo:}
-
-\textit{Ausência de dados contextuais:} Análise não incorpora investimento esportivo, políticas de inclusão, PIB dos países ou mudanças regulatórias que impactam estrutura competitiva. Fatores socioeconômicos e políticos que explicam posições estruturais permanecem inexplorados.
-
-\textit{Foco em medalhistas:} Exclusão de atletas não-medalhistas ignora estrutura competitiva completa, capturando apenas topo da hierarquia. Padrões de participação, distribuição geográfica e diversidade em níveis competitivos inferiores não foram analisados.
+\textbf{Limitações de Escopo:} A análise não incorpora dados contextuais (investimento esportivo, PIB, políticas públicas) que impactam estruturas competitivas. O foco exclusivo em medalhistas ignora a estrutura competitiva completa, capturando apenas o topo da hierarquia.
 
 \section{Trabalhos Futuros}
 
