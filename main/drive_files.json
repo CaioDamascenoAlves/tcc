@@ -323,5 +323,30 @@
     "file_id": "1i79OpBzCjv73hBZAHNSwWXIBgq-pQXq-",
     "download_url": "https://drive.google.com/uc?export=download&id=1i79OpBzCjv73hBZAHNSwWXIBgq-pQXq-",
     "size_mb": 117.04
+  },
+  "additional_analyses/top_rivalry_pairs_individual.csv": {
+    "file_id": "1vGmbgzUPmny-4c1H_Ds5z3qFTdgZb_ZX",
+    "download_url": "https://drive.google.com/uc?export=download&id=1vGmbgzUPmny-4c1H_Ds5z3qFTdgZb_ZX",
+    "size_mb": 0.0
+  },
+  "additional_analyses/top_rivalry_pairs_team.csv": {
+    "file_id": "1g6KQ61yxVsR7zyUNKRTVw7gbINZWC3Zf",
+    "download_url": "https://drive.google.com/uc?export=download&id=1g6KQ61yxVsR7zyUNKRTVw7gbINZWC3Zf",
+    "size_mb": 0.0
+  },
+  "additional_analyses/top_rivalry_pairs_all.csv": {
+    "file_id": "17DiUNNCnH_moo14aSE6DvkYJ57B3zxAV",
+    "download_url": "https://drive.google.com/uc?export=download&id=17DiUNNCnH_moo14aSE6DvkYJ57B3zxAV",
+    "size_mb": 0.0
+  },
+  "all_network_summaries.json": {
+    "file_id": "1a0N8v_qJL84zjDRgtgFAGtUcwktgsJ6N",
+    "download_url": "https://drive.google.com/uc?export=download&id=1a0N8v_qJL84zjDRgtgFAGtUcwktgsJ6N",
+    "size_mb": 0.01
+  },
+  "athlete_medal_counts.csv": {
+    "file_id": "1CrkOEQF8vonm30rrFnjSZ5v6xQkT1Zqg",
+    "download_url": "https://drive.google.com/uc?export=download&id=1CrkOEQF8vonm30rrFnjSZ5v6xQkT1Zqg",
+    "size_mb": 0.4
   }
 }
