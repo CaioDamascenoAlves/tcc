@@ -167,7 +167,15 @@ def analyze_inter_community_connections():
         # Identificar sexo
         sex = 'M' if '_M_' in filename else 'F'
 
-        print(f"\nProcessando: {sport} {sex}")
+        # Identificar tipo de evento (individual/team)
+        if '_individual_' in filename.lower():
+            event_type = 'individual'
+        elif '_team_' in filename.lower():
+            event_type = 'team'
+        else:
+            event_type = 'all'  # Se não especificado, é consolidado
+
+        print(f"\nProcessando: {sport} {sex} ({event_type})")
 
         # Carregar edges
         try:
@@ -213,6 +221,7 @@ def analyze_inter_community_connections():
         inter_community_data.append({
             'sport': sport,
             'sex': sex,
+            'event_type': event_type,
             'total_edges': total_edges,
             'intra_edges': num_intra,
             'inter_edges': num_inter,
@@ -236,6 +245,7 @@ def analyze_inter_community_connections():
                 rivalry_pairs.append({
                     'sport': sport,
                     'sex': sex,
+                    'event_type': event_type,
                     'community_1': int(row['source_comm']),
                     'community_2': int(row['target_comm']),
                     'num_confronts': int(row['num_confronts'])
@@ -245,15 +255,32 @@ def analyze_inter_community_connections():
     df_inter = pd.DataFrame(inter_community_data)
     df_rivalry = pd.DataFrame(rivalry_pairs)
 
+    # Salvar arquivo consolidado (todos os tipos)
     output_inter = OUTPUT_DIR / "inter_community_connectivity.csv"
-    output_rivalry = OUTPUT_DIR / "top_rivalry_pairs.csv"
+    output_rivalry_all = OUTPUT_DIR / "top_rivalry_pairs_all.csv"
 
     df_inter.to_csv(output_inter, index=False)
-    df_rivalry.to_csv(output_rivalry, index=False)
+    df_rivalry.to_csv(output_rivalry_all, index=False)
 
     print(f"\nArquivos gerados:")
     print(f"  - {output_inter.name}")
-    print(f"  - {output_rivalry.name}")
+    print(f"  - {output_rivalry_all.name}")
+
+    # Salvar arquivos separados por tipo de evento
+    for event_type in ['individual', 'team']:
+        df_rivalry_filtered = df_rivalry[df_rivalry['event_type'] == event_type]
+        if len(df_rivalry_filtered) > 0:
+            output_rivalry_type = OUTPUT_DIR / f"top_rivalry_pairs_{event_type}.csv"
+            df_rivalry_filtered.to_csv(output_rivalry_type, index=False)
+            print(f"  - {output_rivalry_type.name} ({len(df_rivalry_filtered)} rivalidades)")
+
+    # Manter arquivo legado sem event_type para compatibilidade (usa 'all')
+    df_rivalry_legacy = df_rivalry[df_rivalry['event_type'] == 'all'].copy()
+    if len(df_rivalry_legacy) > 0:
+        df_rivalry_legacy = df_rivalry_legacy.drop('event_type', axis=1)
+        output_rivalry_legacy = OUTPUT_DIR / "top_rivalry_pairs.csv"
+        df_rivalry_legacy.to_csv(output_rivalry_legacy, index=False)
+        print(f"  - {output_rivalry_legacy.name} (legado - consolidado)")
 
     print(f"\nRESUMO GERAL:")
     print(df_inter[['sport', 'sex', 'intra_ratio', 'inter_ratio', 'segregation_score']])

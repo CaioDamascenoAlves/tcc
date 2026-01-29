@@ -21,6 +21,7 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                      spring_length: int = 150,
                      spring_constant: float = 0.04,
                      color_by: str = 'Comunidade',
+                     show_arrows: bool = False,
                      key: str = None):
     """
     Renderiza uma rede interativa usando vis-network.
@@ -132,7 +133,8 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
         'gravitationalConstant': gravitational_constant,
         'springLength': spring_length,
         'springConstant': spring_constant,
-        'colorBy': color_by
+        'colorBy': color_by,
+        'showArrows': show_arrows
     }
     config_json = json.dumps(config)
     

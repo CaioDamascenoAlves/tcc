@@ -199,6 +199,17 @@
  <p class="control-info">Arestas com maior peso ficam mais grossas</p>
  </div>
 
+ <!-- Mostrar Setas de Direção -->
+ <div class="control-group">
+ <div class="control-toggle" onclick="toggleArrows()">
+ <span class="toggle-label">Mostrar Direção (Setas)</span>
+ <div class="toggle-switch" id="arrows-toggle">
+ <div class="toggle-switch-knob"></div>
+ </div>
+ </div>
+ <p class="control-info">Mostra a direção das competições (quem venceu quem)</p>
+ </div>
+
  <div class="control-divider"></div>
 
  <!-- Mostrar Labels -->

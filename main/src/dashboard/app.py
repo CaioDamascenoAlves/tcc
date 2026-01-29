@@ -1178,14 +1178,14 @@ def render_network_tab(data):
         # Contar medalhas e anos do atleta (usando dados disponíveis na rede)
         athlete_id_val = row['athlete_id']
 
-        # Usar dados da linha atual (dados da rede já contêm informações agregadas)
+        # Usar contagens agregadas de medalhas (se disponíveis) ou fallback para medalha única
         medal = row.get('medal', 'Bronze')
         medal_counts = {
-            'Gold': row.get('gold_medals', 1 if medal == 'Gold' else 0),
-            'Silver': row.get('silver_medals', 1 if medal == 'Silver' else 0),
-            'Bronze': row.get('bronze_medals', 1 if medal == 'Bronze' else 0)
+            'Gold': int(row.get('gold_medals', 1 if medal == 'Gold' else 0)),
+            'Silver': int(row.get('silver_medals', 1 if medal == 'Silver' else 0)),
+            'Bronze': int(row.get('bronze_medals', 1 if medal == 'Bronze' else 0))
         }
-        total_medals = sum(medal_counts.values())
+        total_medals = int(row.get('total_medals', sum(medal_counts.values())))
         
         # Anos de participação (se disponível)
         if 'year' in row:

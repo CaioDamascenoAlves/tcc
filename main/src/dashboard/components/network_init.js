@@ -187,6 +187,13 @@ function initNetwork(nodesData, linksData, colorPalette, config, keyName) {
                 smooth: {
                     enabled: true,
                     type: 'continuous'
+                },
+                arrows: {
+                    to: {
+                        enabled: config.showArrows !== undefined ? config.showArrows : false,
+                        scaleFactor: 0.5,
+                        type: 'arrow'
+                    }
                 }
             },
             physics: {

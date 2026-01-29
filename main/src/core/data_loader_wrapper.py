@@ -94,13 +94,26 @@ class DataLoader:
         """Carrega perfil de medalhas por comunidade."""
         return self._load_csv('additional_analyses/medal_profile_by_community.csv', 'medal_profile')
 
-    def load_rivalry_pairs(self) -> pd.DataFrame:
-        """Carrega pares de rivalidade top."""
-        return self._load_csv('additional_analyses/top_rivalry_pairs.csv', 'rivalry_pairs')
-    
-    def load_top_rivalries(self) -> pd.DataFrame:
+    def load_rivalry_pairs(self, event_type: str = 'all') -> pd.DataFrame:
+        """
+        Carrega pares de rivalidade top.
+
+        Args:
+            event_type: 'individual', 'team', ou 'all' (padrão)
+        """
+        filename = f'additional_analyses/top_rivalry_pairs_{event_type}.csv'
+        cache_key = f'rivalry_pairs_{event_type}'
+
+        # Tentar carregar arquivo específico, fallback para all
+        try:
+            return self._load_csv(filename, cache_key)
+        except:
+            # Fallback para arquivo consolidado
+            return self._load_csv('additional_analyses/top_rivalry_pairs_all.csv', 'rivalry_pairs_all')
+
+    def load_top_rivalries(self, event_type: str = 'all') -> pd.DataFrame:
         """Alias para load_rivalry_pairs (compatibilidade)."""
-        return self.load_rivalry_pairs()
+        return self.load_rivalry_pairs(event_type)
 
     def load_community_hierarchy(self) -> pd.DataFrame:
         """Carrega dados de hierarquia entre comunidades."""

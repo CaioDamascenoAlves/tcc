@@ -194,9 +194,30 @@ class SportsNetworkAnalyzer:
         if event_filter is not None:
             sport_data = sport_data[sport_data['Event'].isin(event_filter)]
         G = nx.DiGraph()
-        
-        # Adicionar nós (atletas)
-        for _, row in sport_data.iterrows():
+
+        # CORREÇÃO: Agregar dados por atleta ANTES de adicionar nós
+        # Cada atleta tem múltiplas linhas (uma por evento/medalha)
+        athlete_aggregated = sport_data.groupby('ID').agg({
+            'Name': 'first',  # Nome é sempre o mesmo
+            'Sex': 'first',
+            'Age': lambda x: x.dropna().iloc[-1] if len(x.dropna()) > 0 else 0,  # Última idade conhecida
+            'Height': lambda x: x.dropna().iloc[-1] if len(x.dropna()) > 0 else 0,
+            'Weight': lambda x: x.dropna().iloc[-1] if len(x.dropna()) > 0 else 0,
+            'Team': 'first',  # Pode variar, usar primeiro
+            'NOC': 'first',
+            'Games': 'last',  # Última olimpíada que participou
+            'City': 'last',
+            'Medal': lambda x: {  # Contar medalhas por tipo
+                'Gold': (x == 'Gold').sum(),
+                'Silver': (x == 'Silver').sum(),
+                'Bronze': (x == 'Bronze').sum(),
+                'last_medal': x.iloc[-1]  # Última medalha ganha (para compatibilidade)
+            }
+        }).reset_index()
+
+        # Adicionar nós (atletas) com dados agregados
+        for _, row in athlete_aggregated.iterrows():
+            medal_counts = row['Medal']
             athlete_info = {
                 "name": row['Name'],
                 "sex": row['Sex'],
@@ -207,7 +228,11 @@ class SportsNetworkAnalyzer:
                 "noc": row['NOC'],
                 "games": row['Games'],
                 "city": row['City'],
-                "medal": row['Medal']
+                "medal": medal_counts['last_medal'],  # Última medalha (compatibilidade)
+                "gold_medals": medal_counts['Gold'],
+                "silver_medals": medal_counts['Silver'],
+                "bronze_medals": medal_counts['Bronze'],
+                "total_medals": medal_counts['Gold'] + medal_counts['Silver'] + medal_counts['Bronze']
             }
             G.add_node(row['ID'], **athlete_info)
         
@@ -532,7 +557,12 @@ class SportsNetworkAnalyzer:
                 'noc': node_attrs.get('noc', ''),
                 'medal': node_attrs.get('medal', ''),
                 'games': node_attrs.get('games', ''),
-                'city': node_attrs.get('city', '')
+                'city': node_attrs.get('city', ''),
+                # Contagem de medalhas agregadas
+                'gold_medals': node_attrs.get('gold_medals', 0),
+                'silver_medals': node_attrs.get('silver_medals', 0),
+                'bronze_medals': node_attrs.get('bronze_medals', 0),
+                'total_medals': node_attrs.get('total_medals', 0)
             })
             
             # Métricas da rede original

@@ -11,6 +11,7 @@ let controlPanelState = {
     nodeSizeMax: 50,
     nodeSizeMetric: 'pagerank',
     showLabels: true,
+    showArrows: false,
     physicsEnabled: false,
     gravity: -800,
     springLength: 150,
@@ -396,6 +397,31 @@ function toggleLabels() {
     nodesDataset.update(nodesToUpdate);
 }
 
+// Toggle setas de direção
+function toggleArrows() {
+    controlPanelState.showArrows = !controlPanelState.showArrows;
+
+    const toggle = document.getElementById('arrows-toggle');
+    toggle.classList.toggle('active');
+
+    if (!networkInstance) return;
+
+    // Atualizar configuração das edges
+    networkInstance.setOptions({
+        edges: {
+            arrows: {
+                to: {
+                    enabled: controlPanelState.showArrows,
+                    scaleFactor: 0.5,
+                    type: 'arrow'
+                }
+            }
+        }
+    });
+
+    console.log('Arrows toggled:', controlPanelState.showArrows);
+}
+
 // Toggle física do painel
 function togglePhysicsFromPanel() {
     // Delegar ao physics_manager (sincroniza com toolbar)
@@ -616,6 +642,7 @@ window.initControlPanel = function(config) {
     if (config.nodeScaleMin !== undefined) controlPanelState.nodeSizeMin = config.nodeScaleMin;
     if (config.nodeScaleMax !== undefined) controlPanelState.nodeSizeMax = config.nodeScaleMax;
     if (config.showLabels !== undefined) controlPanelState.showLabels = config.showLabels;
+    if (config.showArrows !== undefined) controlPanelState.showArrows = config.showArrows;
     if (config.physicsEnabled !== undefined) controlPanelState.physicsEnabled = config.physicsEnabled;
     if (config.gravitationalConstant !== undefined) controlPanelState.gravity = config.gravitationalConstant;
     if (config.springLength !== undefined) controlPanelState.springLength = config.springLength;
@@ -661,6 +688,9 @@ window.initControlPanel = function(config) {
     // Toggle switches
     if (controlPanelState.showLabels) {
         document.getElementById('labels-toggle').classList.add('active');
+    }
+    if (controlPanelState.showArrows) {
+        document.getElementById('arrows-toggle').classList.add('active');
     }
 
     // Registrar callback para mudanças de física
