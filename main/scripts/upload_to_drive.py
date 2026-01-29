@@ -235,6 +235,15 @@ def main():
 
             file_id = upload_file_with_retry(service, file_path, folder_id, existing_id)
 
+            # Tornar arquivo público (CRÍTICO para download funcionar)
+            try:
+                service.permissions().create(
+                    fileId=file_id,
+                    body={'type': 'anyone', 'role': 'reader'}
+                ).execute()
+            except:
+                pass  # Ignora se já for público
+
             # Salvar no mapeamento
             drive_mapping[relative_path] = {
                 'file_id': file_id,
