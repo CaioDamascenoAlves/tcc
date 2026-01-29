@@ -820,21 +820,42 @@ def render_rivalries_tab(data):
         st.markdown("""
         **Rivalidades estruturais** são identificadas pelo número de arestas (confrontos) entre pares de comunidades.
         Quanto maior o número de confrontos, mais intensa a rivalidade estrutural entre os grupos.
+
+        **Tipos de Rede:**
+        - **Individual:** Rivalidades em eventos individuais (ex: natação 100m livre)
+        - **Team:** Rivalidades em eventos de equipe (ex: revezamento 4x100m)
+        - **All:** Todas as rivalidades combinadas (individual + team)
         """)
+
+    # Filtro de tipo de rede
+    render_subsection("Filtros")
+    event_type = st.radio(
+        "Tipo de Rede",
+        options=["all", "individual", "team"],
+        format_func=lambda x: {"all": "Todas (Individual + Team)", "individual": "Individual", "team": "Team"}[x],
+        horizontal=True,
+        help="Filtra rivalidades por tipo de evento"
+    )
+
+    # Carregar dados de rivalries específicos para o tipo de rede
+    loader = DataLoader()
+    rivalries_filtered = loader.load_rivalry_pairs(event_type=event_type)
+
+    st.markdown("---")
 
     # Métricas
     render_subsection("Indicadores")
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Rivalidades Identificadas", f"{len(data['rivalries']):,}")
+        st.metric("Rivalidades Identificadas", f"{len(rivalries_filtered):,}")
 
     with col2:
-        max_confronts = data['rivalries']['num_confronts'].max()
+        max_confronts = rivalries_filtered['num_confronts'].max()
         st.metric("Máximo de Confrontos", f"{max_confronts:,}")
 
     with col3:
-        avg_confronts = data['rivalries']['num_confronts'].mean()
+        avg_confronts = rivalries_filtered['num_confronts'].mean()
         st.metric("Média de Confrontos", f"{avg_confronts:.1f}")
 
     st.markdown("---")
@@ -844,7 +865,7 @@ def render_rivalries_tab(data):
     top_n = st.slider("Número de rivalidades a exibir", min_value=5, max_value=30, value=10, step=5)
 
     # Visualização
-    fig = barplot_top_rivalries(data['rivalries'], top_n=top_n, interactive=True)
+    fig = barplot_top_rivalries(rivalries_filtered, top_n=top_n, interactive=True)
     st.plotly_chart(fig, use_container_width=True, key="rivalries_bar_top_n")
 
     st.markdown("---")
@@ -859,7 +880,7 @@ def render_rivalries_tab(data):
     # Tabela completa
     render_subsection("Tabela Completa de Rivalidades")
     st.dataframe(
-        data['rivalries'].sort_values('num_confronts', ascending=False),
+        rivalries_filtered.sort_values('num_confronts', ascending=False),
         use_container_width=True
     )
 
