@@ -236,10 +236,10 @@ class SportsNetworkAnalyzer:
             }
             G.add_node(row['ID'], **athlete_info)
         
-        # Adicionar arestas ponderadas entre medalhistas do mesmo evento
-        # CRÍTICO: Agrupar por Year + Event para evitar misturar olimpíadas diferentes
-        # Bug anterior: agrupava só por Event, criando auto-loops (atleta competindo contra si mesmo)
-        for (year, event), event_group in sport_data.groupby(['Year', 'Event']):
+        # Adicionar arestas ponderadas entre medalhistas do mesmo evento (rede histórica acumulada)
+        # Agrupa por Event apenas para capturar rivalidades ao longo de todas as olimpíadas
+        # Auto-loops são prevenidos dentro de _add_competition_edges
+        for event, event_group in sport_data.groupby('Event'):
             self._add_competition_edges(G, event_group)
 
         # CRÍTICO: Remover nós isolados (sem conexões diretas)
@@ -284,6 +284,10 @@ class SportsNetworkAnalyzer:
         # Criar arestas direcionadas: do perdedor para o ganhador
         for i, (loser_id, loser_medal) in enumerate(medalists):
             for winner_id, winner_medal in medalists[:i]:
+                # CRÍTICO: Prevenir auto-loops (mesmo atleta em anos diferentes)
+                if loser_id == winner_id:
+                    continue
+
                 if loser_medal != winner_medal:
                     weight = weight_map.get((winner_medal, loser_medal), 1)
 
