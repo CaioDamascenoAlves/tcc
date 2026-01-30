@@ -236,10 +236,12 @@ class SportsNetworkAnalyzer:
             }
             G.add_node(row['ID'], **athlete_info)
         
-        # Adicionar arestas ponderadas entre medalhistas do mesmo evento (rede histórica acumulada)
-        # Agrupa por Event apenas para capturar rivalidades ao longo de todas as olimpíadas
-        # Auto-loops são prevenidos dentro de _add_competition_edges
-        for event, event_group in sport_data.groupby('Event'):
+        # Adicionar arestas ponderadas entre medalhistas do mesmo evento
+        # CRÍTICO: Agrupar por Year + Event para evitar misturar olimpíadas diferentes
+        # Cada pódio é único: só atletas que REALMENTE competiram juntos naquele ano
+        # Previne auto-loops (atleta competindo contra si mesmo em anos diferentes)
+        # Previne arestas fantasmas (atletas de anos diferentes que nunca se enfrentaram)
+        for (year, event), event_group in sport_data.groupby(['Year', 'Event']):
             self._add_competition_edges(G, event_group)
 
         # CRÍTICO: Remover nós isolados (sem conexões diretas)
