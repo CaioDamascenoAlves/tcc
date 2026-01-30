@@ -1,0 +1,143 @@
+
+Carregando resultados ANTIGOS (agrupamento só por Event)...
+Carregando resultados NOVOS (agrupamento por Year+Event)...
+
+================================================================================
+COMPARAÇÃO DE ESTATÍSTICAS BÁSICAS
+================================================================================
+
+Métrica                                  ANTES                DEPOIS               DIFERENÇA      
+-----------------------------------------------------------------------------------------------
+Total de atletas únicos                  8,685                8,685                +0 (+0.0%)
+Total de registros                       9,350                9,350                +0 (+0.0%)
+
+================================================================================
+COMPARAÇÃO DE MÉTRICAS DE REDE POR ESPORTE/SEXO
+================================================================================
+
+Rede                           Métrica              ANTES           DEPOIS          DIFERENÇA      
+-----------------------------------------------------------------------------------------------
+Athletics_F_individual         Nós                  671             671             +0 (+0.0%)
+                               Arestas              9,396           861             -8,535 (-90.8%)
+                               Densidade            0.020900        0.001915        -0.018985
+
+Athletics_F_team               Nós                  389             389             +0 (+0.0%)
+                               Arestas              26,582          2,230           -24,352 (-91.6%)
+                               Densidade            0.176119        0.014775        -0.161344
+
+Athletics_M_individual         Nós                  1,488           1,488           +0 (+0.0%)
+                               Arestas              38,563          1,911           -36,652 (-95.0%)
+                               Densidade            0.017428        0.000864        -0.016565
+
+Athletics_M_team               Nós                  732             732             +0 (+0.0%)
+                               Arestas              58,220          3,702           -54,518 (-93.6%)
+                               Densidade            0.108804        0.006918        -0.101885
+
+Basketball_F_team              Nós                  323             323             +0 (+0.0%)
+                               Arestas              41,121          4,793           -36,328 (-88.3%)
+                               Densidade            0.395371        0.046084        -0.349288
+
+Basketball_M_team              Nós                  592             592             +0 (+0.0%)
+                               Arestas              133,271         8,515           -124,756 (-93.6%)
+                               Densidade            0.380914        0.024337        -0.356576
+
+Boxing_F_individual            Nós                  41              41              +0 (+0.0%)
+                               Arestas              71              54              -17 (-23.9%)
+                               Densidade            0.043293        0.032927        -0.010366
+
+Boxing_M_individual            Nós                  871             871             +0 (+0.0%)
+                               Arestas              22,117          1,138           -20,979 (-94.9%)
+                               Densidade            0.029187        0.001502        -0.027685
+
+Football_F_team                Nós                  293             293             +0 (+0.0%)
+                               Arestas              31,537          6,285           -25,252 (-80.1%)
+                               Densidade            0.368612        0.073461        -0.295152
+
+Football_M_team                Nós                  1,275           1,275           +0 (+0.0%)
+                               Arestas              556,937         21,620          -535,317 (-96.1%)
+                               Densidade            0.342868        0.013310        -0.329558
+
+Judo_F_individual              Nós                  178             178             +0 (+0.0%)
+                               Arestas              1,334           276             -1,058 (-79.3%)
+                               Densidade            0.042341        0.008760        -0.033581
+
+Judo_M_individual              Nós                  321             321             +0 (+0.0%)
+                               Arestas              4,321           468             -3,853 (-89.2%)
+                               Densidade            0.042066        0.004556        -0.037510
+
+Swimming_F_individual          Nós                  411             411             +0 (+0.0%)
+                               Arestas              8,940           635             -8,305 (-92.9%)
+                               Densidade            0.053053        0.003768        -0.049285
+
+Swimming_F_team                Nós                  573             573             +0 (+0.0%)
+                               Arestas              56,025          4,328           -51,697 (-92.3%)
+                               Densidade            0.170935        0.013205        -0.157730
+
+Swimming_M_individual          Nós                  511             511             +0 (+0.0%)
+                               Arestas              10,654          736             -9,918 (-93.1%)
+                               Densidade            0.040881        0.002824        -0.038057
+
+Swimming_M_team                Nós                  681             681             +0 (+0.0%)
+                               Arestas              69,151          5,055           -64,096 (-92.7%)
+                               Densidade            0.149328        0.010916        -0.138412
+
+
+================================================================================
+TOP 15 ATLETAS POR PAGERANK - COMPARAÇÃO
+================================================================================
+
+### ANTES (agrupamento só por Event) ###
+                       Nome  Esporte Sexo  PageRank  Medalhas
+     Claressa Maria Shields   Boxing    F  0.082290         2
+      Nicola Virginia Adams   Boxing    F  0.070791         2
+            Estelle Mossely   Boxing    F  0.048047         1
+    Kathleen "Katie" Taylor   Boxing    F  0.048047         1
+               PRICE Lauren   Boxing    F  0.048047         1
+KRASTEVA Stoyka Zhelyazkova   Boxing    F  0.048047         1
+     HARRINGTON Kellie Anne   Boxing    F  0.048047         1
+                  IRIE Sena   Boxing    F  0.048047         1
+          SURMENELI Busenaz   Boxing    F  0.048047         1
+    Michael Fred Phelps, II Swimming    M  0.023055        16
+           LEDECKY Kathleen Swimming    F  0.022276         3
+             TITMUS Ariarne Swimming    F  0.022002         3
+          Ryoko Tamura-Tani     Judo    F  0.020937         5
+           Sarah Ourahmoune   Boxing    F  0.020241         1
+            Nouchka Fontijn   Boxing    F  0.020205         1
+
+### DEPOIS (agrupamento por Year+Event) ###
+                                      Nome  Esporte Sexo  PageRank  Medalhas
+                    Claressa Maria Shields   Boxing    F  0.082180         2
+                     Nicola Virginia Adams   Boxing    F  0.070458         2
+                           Estelle Mossely   Boxing    F  0.047983         1
+                   Kathleen "Katie" Taylor   Boxing    F  0.047983         1
+                              PRICE Lauren   Boxing    F  0.047983         1
+               KRASTEVA Stoyka Zhelyazkova   Boxing    F  0.047983         1
+                    HARRINGTON Kellie Anne   Boxing    F  0.047983         1
+                                 IRIE Sena   Boxing    F  0.047983         1
+                         SURMENELI Busenaz   Boxing    F  0.047983         1
+                       Idalys Ortz Bocourt     Judo    F  0.036842         3
+                                  Tong Wen     Judo    F  0.035290         2
+                      Dawn Lorraine Fraser Swimming    F  0.031470         4
+Pieter Cornelis Martijn van den Hoogenband Swimming    M  0.028887         5
+           Lorraine Joyce Crapp (-Thurlow) Swimming    F  0.028437         2
+                            Ayumi Tanimoto     Judo    F  0.028182         2
+
+🔼 ENTRARAM no top 15: Pieter Cornelis Martijn van den Hoogenband, Idalys Ortz Bocourt, Dawn Lorraine Fraser, Tong Wen, Ayumi Tanimoto, Lorraine Joyce Crapp (-Thurlow)
+🔽 SAÍRAM do top 15: LEDECKY Kathleen, Ryoko Tamura-Tani, Nouchka Fontijn, Sarah Ourahmoune, Michael Fred Phelps, II, TITMUS Ariarne
+
+================================================================================
+DISTRIBUIÇÃO DE GRAUS (IN-DEGREE E OUT-DEGREE)
+================================================================================
+
+Métrica                                  ANTES                DEPOIS              
+--------------------------------------------------------------------------------
+In-Degree médio                          114.25               6.70                
+In-Degree máximo                         876                  98                  
+In-Degree mediano                        28.0                 2.0                 
+Out-Degree médio                         114.25               6.70                
+Out-Degree máximo                        830                  73                  
+Out-Degree mediano                       27.0                 2.0                 
+
+================================================================================
+ANÁLISE CONCLUÍDA
+================================================================================
