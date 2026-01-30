@@ -36,8 +36,9 @@
                 \begin{itemize}
                     \footnotesize
                     \item Direcionadas: perdedor $\rightarrow$ vencedor
-                    \item Conectam atletas do mesmo pódio
-                    \item Acumulam quando compartilham múltiplos pódios
+                    \item \textcolor{red}{\textbf{Conectam atletas do mesmo pódio na mesma olimpíada}}
+                    \item Agrupamento: (Ano, Evento, Sexo)
+                    \item Previnem arestas fantasmas entre atletas que nunca competiram juntos
                 \end{itemize}
             \end{block}
         \end{column}
@@ -64,19 +65,59 @@
     \end{columns}
 
     \vspace{0.2cm}
-    \begin{alertblock}{Resultado}
+    \begin{alertblock}{Modelagem de Rivalidades Diretas}
         \footnotesize
         \centering
-        Atletas de sucesso tornam-se \textbf{hubs centrais} recebendo conexões de competidores que derrotaram
+        Cada pódio é único: apenas atletas que \textbf{realmente competiram juntos} são conectados
     \end{alertblock}
 \end{frame}
 
-\begin{frame}{Acumulação de Pesos e Segmentação}
-    \framesubtitle{Refinamento da Modelagem}
-    \begin{block}{Acúmulo e Segmentação}
+\begin{frame}{Tratamento de Casos Especiais}
+    \framesubtitle{Atletismo, Judo e Boxe}
+    \begin{block}{Desafio: Modalidades Heterogêneas}
         \begin{itemize}
-            \item \textbf{Acumulação de Pesos:} Pesos das arestas aumentam quando atletas compartilham pódios em múltiplos eventos.
-            \item \textbf{Segmentação:} Grafos são divididos por esporte e sexo para análises específicas.
+            \item \textbf{Atletismo:} Velocista 100m $\neq$ Saltador em vara
+            \item \textbf{Judo/Boxe:} Categoria 60kg $\neq$ Categoria 100kg
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+    \begin{block}{Solução Natural}
+        \small
+        O agrupamento \textbf{(Ano, Evento, Sexo)} já resolve automaticamente:
+        \begin{itemize}
+            \footnotesize
+            \item Cada evento olímpico é específico: \textit{"Athletics Men's 100m"}, \textit{"Judo Men's -73kg"}
+            \item Atletas de modalidades/categorias diferentes \textbf{nunca} competem no mesmo pódio
+            \item Redes naturalmente separadas por especialidade
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.2cm}
+    \begin{alertblock}{Vantagem}
+        \footnotesize
+        \centering
+        Modelagem preserva \textbf{rivalidades reais} sem necessidade de tratamento especial
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Segmentação de Redes}
+    \framesubtitle{Refinamento Analítico}
+    \begin{block}{Esportes Mistos (Swimming, Athletics)}
+        \begin{itemize}
+            \small
+            \item \textbf{Rede Individual:} Provas individuais (100m livre, salto em distância)
+            \item \textbf{Rede Coletiva:} Revezamentos (4x100m, 4x400m)
+            \item Análise separada permite identificar padrões distintos
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+    \begin{block}{Esportes Exclusivos}
+        \begin{itemize}
+            \small
+            \item \textbf{Individual Only:} Judo, Boxing -- apenas competições individuais
+            \item \textbf{Team Only:} Basketball, Football -- apenas competições coletivas
         \end{itemize}
     \end{block}
 \end{frame}

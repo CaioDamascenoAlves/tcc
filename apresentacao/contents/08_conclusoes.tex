@@ -56,21 +56,29 @@
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{Limitações}
+\begin{frame}{Limitações e Escolhas Metodológicas}
     \framesubtitle{Considerações para Interpretação}
     \begin{itemize}
-        \item \textbf{Amostra Limitada de Modalidades}
+        \item \textbf{Modelagem de Rivalidades Diretas}
         \begin{itemize}
             \footnotesize
-            \item Análise focada em 3 esportes (5\% do programa olímpico)
-            \item Generalização requer validação em outras modalidades
+            \item Agrupamento (Ano, Evento) captura \textbf{competições reais} no mesmo pódio
+            \item Comparação cross-geracional (ex: Phelps vs Spitz) requer modelagem alternativa
+            \item Trade-off: precisão histórica vs. riqueza relacional
+        \end{itemize}
+
+        \item \textbf{Amostra de Esportes}
+        \begin{itemize}
+            \footnotesize
+            \item Análise expandida para 6 esportes (Swimming, Basketball, Football, Athletics, Judo, Boxing)
+            \item Cobertura de tipos estruturais: individual, coletivo e misto
         \end{itemize}
 
         \item \textbf{Dados até 2021}
         \begin{itemize}
             \footnotesize
             \item Dataset exclui Paris 2024
-            \item 125 anos de cobertura, mas tendências recentes limitadas
+            \item 125 anos de cobertura olímpica
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -106,6 +114,36 @@
             \item Padrões de equidade e disparidade ao longo da história
         \end{itemize}
     \end{enumerate}
+\end{frame}
+
+\begin{frame}{Possibilidades de Modelagem Alternativa}
+    \framesubtitle{Explorando Múltiplas Perspectivas}
+    \begin{block}{Redes Bipartidas (Atletas $\leftrightarrow$ Eventos)}
+        \footnotesize
+        \begin{itemize}
+            \item Atletas conectados a eventos onde conquistaram medalhas
+            \item Projeção em atletas: rivalidade indireta (competiram nos mesmos eventos)
+            \item Métrica de versatilidade: atletas que dominam múltiplos eventos
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.2cm}
+    \begin{block}{Redes Multiplex (Múltiplas Camadas)}
+        \footnotesize
+        \begin{itemize}
+            \item Camada 1: Competição direta (Year+Event) -- rivalidades reais
+            \item Camada 2: Domínio histórico (Event apenas) -- comparação cross-geracional
+            \item Camada 3: Mesma nacionalidade -- estrutura de times olímpicos
+            \item Análise inter-camadas: múltiplas dimensões de rivalidade
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.2cm}
+    \begin{alertblock}{Métricas Alternativas}
+        \footnotesize
+        \centering
+        Hub \& Authority (HITS), Dominance Score, Temporal PageRank
+    \end{alertblock}
 \end{frame}
 
 \begin{frame}{Mensagem Final}
