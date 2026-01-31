@@ -18,6 +18,7 @@ ENV/
 # Resultados de Análise (GRANDES - não comitar)
 # ============================================================================
 main/results/
+main/results_*/
 !main/results/README.md
 results/
 
