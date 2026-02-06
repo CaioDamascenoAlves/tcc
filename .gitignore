@@ -156,3 +156,6 @@ RESULTADOS_SENSIBILIDADE_TEMPORAL.md
 RESUMO_TRABALHO_VALIDACAO.md
 FUNDAMENTACAO_VALIDACAO.md
 main/manim/
+main/results_old/
+*.csv
+!monografia/**/*.csv

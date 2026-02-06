@@ -9,11 +9,11 @@ Desde a primeira olimpíada moderna em Atenas 1896, mais de 137 mil atletas comp
 
 A análise de redes complexas revela propriedades estruturais complementares não capturadas por métricas tradicionais. Enquanto estatísticas convencionais avaliam atletas isoladamente através de tempo, pontos ou recordes, a análise de redes captura hierarquias de influência, padrões de dominância competitiva e agrupamentos estruturais \cite{Wasche2017EmergingParadigm, LopezFelip2018ClusterPhase}.
 
-Esta metodologia permite compreender o ecossistema competitivo através de interações entre atletas de diferentes modalidades e países ao longo do tempo, considerando competições esportivas como sistemas dinâmicos complexos \cite{Davids2013}
+Esta metodologia permite compreender o ecossistema competitivo através de interações entre atletas de diferentes modalidades e países ao longo do tempo, considerando competições esportivas como sistemas dinâmicos complexos \cite{Davids2013}.
 
 Trabalhos recentes têm aplicado redes complexas ao contexto esportivo \cite{Motegi2012NetworkBased, Shiue2025ApplyingPageRank}. Contudo, a maioria concentra-se em uma análise isolada de modalidades específicas, sem explorar diferenças estruturais sistemáticas entre tipos de interdependência competitiva ao longo de períodos históricos extensos.
 
-O presente trabalho preenche esta lacuna aplicando ferramentas de ciência de redes a dados olímpicos históricos (1896-2021), desenvolvendo uma metodologia que integra a modelagem de grafos competitivos, a análise de centralidade e a detecção de comunidades. Esta abordagem visa revelar padrões estruturais através de métricas avançadas como \textit{PageRank} e algoritmo de \textit{Louvain} em seis modalidades representativas que abrangem três tipos estruturais: esportes mistos (natação e atletismo), esportes coletivos (basquetebol e futebol) e esportes individuais puros (judô e boxe).
+O presente trabalho preenche esta lacuna aplicando ferramentas de ciência de redes a dados olímpicos históricos (1896-2021), desenvolvendo uma metodologia que integra a modelagem de grafos competitivos por evento específico (\textit{per-event}), a análise de centralidade e a detecção de comunidades. Esta abordagem gerou 178 redes competitivas direcionadas e ponderadas construídas pela chave composta (Ano, Evento\_Normalizado), das quais 12 casos de estudo representativos foram selecionados através de amostragem por critério \cite{Palinkas2015Purposeful} com pontuação multi-dimensional denominada \textit{Iconic Score}{}. A análise abrange seis modalidades olímpicas que representam dois tipos estruturais de interdependência competitiva: esportes coletivos (Futebol e Basquete), esportes individuais de performance (Natação e Atletismo) e esportes individuais de combate (Judô e Boxe). Os 12 eventos específicos analisados são: Futebol Masculino, Futebol Feminino, Basquete Masculino, Basquete Feminino, Natação 100m Nado Livre Masculino, Natação 100m Nado Livre Feminino, Atletismo 100m Masculino, Atletismo 100m Feminino, Judô Meio-Médio (-73kg) Masculino, Judô Meio-Médio (-70kg) Feminino, Boxe Peso Médio Masculino, e Boxe Peso Médio Feminino.
 
 Estabelecido o contexto e as lacunas da literatura científica existente, este trabalho busca responder à seguinte questão de pesquisa:
 
@@ -21,34 +21,34 @@ Estabelecido o contexto e as lacunas da literatura científica existente, este t
 
 Este trabalho investiga a seguinte questão:
 
-\textit{Como a estrutura de redes competitivas olímpicas difere entre esportes com diferentes tipos de interdependência competitiva (individual, coletivo, misto)?}
+\textit{Como a estrutura de redes competitivas olímpicas difere entre esportes com diferentes tipos de interdependência competitiva (individual de performance, individual de combate, e coletivo)?}
 
 Especificamente, busca-se identificar que padrões de dominância e agrupamento estrutural emergem ao longo de mais de um século de competições olímpicas.
 
 \section{Objetivos}
 
-Este trabalho objetiva aplicar a análise de redes complexas a dados históricos olímpicos (1896-2021) para identificar e quantificar diferenças estruturais entre modalidades com tipos distintos de interdependência competitiva (individual, coletivo, misto) através de métricas de centralidade, detecção de comunidades e caracterização multidimensional de agrupamentos estruturais.
+Este trabalho objetiva aplicar a análise de redes complexas a dados históricos olímpicos (1896-2021) para identificar e quantificar diferenças estruturais entre modalidades com tipos distintos de interdependência competitiva (individual de performance, individual de combate, e coletivo) através de métricas de centralidade, detecção de comunidades e caracterização multidimensional de agrupamentos estruturais.
 
 Os objetivos específicos compreendem:
 
 \begin{itemize}
-    \item Construir 16 redes competitivas direcionadas e ponderadas a partir de 9.350 medalhistas olímpicos, segregando por esporte e gênero nas modalidades de natação, atletismo, basquetebol, futebol, judô e boxe;
-    \item Aplicar métricas de centralidade (\textit{PageRank}, \textit{degree}, \textit{betweenness}, \textit{closeness}) para identificar atletas estruturalmente importantes nas redes competitivas;
-    \item Detectar e caracterizar comunidades nas redes através do algoritmo de \textit{Louvain}, analisando suas propriedades temporais, geográficas e de performance;
+    \item Construir 178 redes competitivas direcionadas e ponderadas aplicando modelagem \textit{per-event} através da chave composta (Ano, Evento\_Normalizado), gerando grafos independentes para cada evento olímpico específico realizado em cada edição dos jogos. Dos 178 grafos gerados, selecionar 12 casos de estudo representativos via critério \textit{Iconic Score}{}, abrangendo 2.978 atletas medalhistas nas modalidades de Natação, Atletismo, Basquete, Futebol, Judô e Boxe;
+    \item Aplicar métricas de centralidade (\textit{PageRank}{}, \textit{degree}, \textit{betweenness}{}, \textit{closeness}{}) para identificar atletas estruturalmente importantes nas redes competitivas;
+    \item Detectar e caracterizar comunidades nas redes através do algoritmo de \textit{Louvain}{}, analisando suas propriedades temporais, geográficas e de performance;
     \item Implementar \textit{dashboard} interativo como artefato complementar para exploração e visualização dos resultados;
-    \item Analisar comparativamente as propriedades estruturais das redes entre esportes individuais, coletivos e mistos.
+    \item Analisar comparativamente as propriedades estruturais das redes entre esportes coletivos, individuais de performance e individuais de combate.
 \end{itemize}
 
 \section{Contribuições}
 
 Este trabalho apresenta três contribuições principais para a literatura de análise de redes aplicada ao esporte:
 
-\textbf{Caracterização Multidimensional de Comunidades:} A análise de comunidades desenvolvida integra métricas estruturais de tamanho e modularidade com a caracterização temporal através de entropia de Shannon e heterogeneidade de performance através do coeficiente de variação de \textit{PageRank}. Esta sistematização permite compreender não apenas a existência de agrupamentos estruturais, mas suas características distintivas no contexto competitivo de cada modalidade.
+\textbf{Caracterização Multidimensional de Comunidades:} A análise de comunidades desenvolvida integra métricas estruturais de tamanho e modularidade com a caracterização temporal através de entropia de Shannon e heterogeneidade de performance através do coeficiente de variação de \textit{PageRank}{}. Esta sistematização permite compreender não apenas a existência de agrupamentos estruturais, mas suas características distintivas no contexto competitivo de cada modalidade.
 
-\textbf{Análise Comparativa Multi-Esporte:} A análise estrutural de competições com diferentes tipos de interdependência (individual, coletivo, misto) ao longo de 125 anos de história olímpica permite a identificação de padrões sistemáticos relacionados ao formato competitivo.
+\textbf{Análise Comparativa Multi-Esporte:} A análise estrutural de competições com diferentes tipos de interdependência (individual de performance, individual de combate, e coletivo) ao longo de 125 anos de história olímpica permite a identificação de padrões sistemáticos relacionados ao formato competitivo.
 
 \textbf{\textit{Dashboard} Interativo para Exploração:} A implementação de uma interface web interativa oferece um artefato complementar que demonstra a viabilidade de ferramentas acessíveis para exploração de redes complexas por audiências não-técnicas. O \textit{dashboard} integra a análise de centralidades, a visualização de comunidades, a análise temporal e comparações entre esportes, facilitando a identificação de padrões e a validação de hipóteses sobre estruturas competitivas.
 
 \section{Organização do Trabalho}
 
-Este trabalho está organizado em cinco capítulos. O Capítulo 2 apresenta a revisão bibliográfica, abordando os fundamentos teóricos de redes complexas, a modelagem de redes competitivas esportivas, as métricas de centralidade e os algoritmos de detecção de comunidades, além de trabalhos relacionados que aplicaram a análise de redes ao contexto esportivo. O Capítulo 3 descreve a metodologia adotada, detalhando o processo de coleta e preparação dos dados olímpicos, a construção das redes competitivas, os critérios de ponderação de arestas, e os procedimentos de análise através de métricas de centralidade e detecção de comunidades. O Capítulo 4 apresenta os resultados obtidos, incluindo a caracterização estrutural das redes, os rankings de atletas por \textit{PageRank}, a análise de comunidades detectadas e as comparações entre modalidades esportivas. O Capítulo 5 conclui o trabalho, sintetizando as principais contribuições, limitações e direções para pesquisas futuras.
+Este trabalho está organizado em cinco capítulos. O Capítulo 2 apresenta a revisão bibliográfica, abordando os fundamentos teóricos de redes complexas, a modelagem de redes competitivas esportivas, as métricas de centralidade e os algoritmos de detecção de comunidades, além de trabalhos relacionados que aplicaram a análise de redes ao contexto esportivo. O Capítulo 3 descreve a metodologia adotada, detalhando o processo de coleta e preparação dos dados olímpicos, a construção das redes competitivas, os critérios de ponderação de arestas, e os procedimentos de análise através de métricas de centralidade e detecção de comunidades. O Capítulo 4 apresenta os resultados obtidos, incluindo a caracterização estrutural das redes, os rankings de atletas por \textit{PageRank}{}, a análise de comunidades detectadas e as comparações entre modalidades esportivas. O Capítulo 5 conclui o trabalho, sintetizando as principais contribuições, limitações e direções para pesquisas futuras.
