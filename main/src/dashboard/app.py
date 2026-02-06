@@ -160,6 +160,41 @@ def render_sidebar(data):
         help="Masculino (M) ou Feminino (F)"
     )
 
+    # Filtro: Eventos Específicos (NOVO - per-event modeling)
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Eventos Específicos")
+
+    # Obter metadata das redes se disponível
+    if 'metadata' in data and data['metadata'] is not None and not data['metadata'].empty:
+        metadata = data['metadata']
+
+        # Filtrar metadata baseado nos filtros anteriores
+        available_networks = metadata[
+            (metadata['sport'].isin(selected_sports)) &
+            (metadata['gender'].isin(selected_sex))
+        ]
+
+        # Lista de eventos disponíveis
+        event_options = sorted(available_networks['event_name'].unique())
+
+        selected_events = st.sidebar.multiselect(
+            "Eventos",
+            options=event_options,
+            default=event_options,  # Todos por padrão
+            help="Selecione eventos específicos para análise. Cada evento é uma rede independente."
+        )
+
+        # Info: quantas redes selecionadas
+        n_selected_networks = len(available_networks[
+            available_networks['event_name'].isin(selected_events)
+        ])
+
+        st.sidebar.info(f"📊 {n_selected_networks} redes selecionadas de {len(metadata)} disponíveis")
+    else:
+        # Fallback: metadata não carregada (erro de configuração)
+        selected_events = []
+        st.sidebar.error("⚠️ Metadata não carregada. Verifique DataLoader.")
+
     # Filtro: Período Temporal
     st.sidebar.markdown("---")
     st.sidebar.subheader("Filtro Temporal")
@@ -242,6 +277,7 @@ def render_sidebar(data):
     return {
         'sports': selected_sports,
         'sex': selected_sex,
+        'events': selected_events,  # NOVO
         'year_range': selected_year_range,
     }
 
@@ -304,10 +340,28 @@ def filter_data(data, filters):
         if 'year' not in df.columns and 'games' in df.columns:
             df['year'] = df['games'].apply(extract_year_from_games)
 
+        # Aplicar filtros
         if filters['sports']:
             df = df[df['sport'].isin(filters['sports'])]
+
+        # Filtro por sexo/gênero (compatibilidade com ambos os nomes de coluna)
         if filters['sex']:
-            df = df[df['sex'].isin(filters['sex'])]
+            if 'sex' in df.columns:
+                df = df[df['sex'].isin(filters['sex'])]
+            elif 'gender' in df.columns:
+                df = df[df['gender'].isin(filters['sex'])]
+
+        # NOVO: Filtro por eventos específicos (per-event modeling)
+        if filters.get('events') and 'metadata' in data and not data['metadata'].empty and 'network_id' in df.columns:
+            # Obter network_ids correspondentes aos eventos selecionados
+            metadata = data['metadata']
+            valid_network_ids = metadata[
+                metadata['event_name'].isin(filters['events'])
+            ]['network_id'].unique()
+
+            df = df[df['network_id'].isin(valid_network_ids)]
+            print(f"DEBUG: Filtro de eventos aplicado - {len(valid_network_ids)} redes, {len(df)} atletas")
+
         if filters['year_range'] and 'year' in df.columns:
             df = df[(df['year'] >= filters['year_range'][0]) & (df['year'] <= filters['year_range'][1])]
 
@@ -810,36 +864,29 @@ def render_bridges_tab(data):
 # TAB 4: RIVALIDADES
 # ============================================================================
 
-def render_rivalries_tab(data):
+def render_rivalries_tab(filtered_data):
     """Tab: Rivalidades Estruturais."""
     st.header("Rivalidades Estruturais")
     st.caption("Pares de comunidades com padrões intensos de confrontos competitivos diretos")
+
+    # Info sobre seleção atual
+    if 'metadata' in filtered_data and not filtered_data['metadata'].empty:
+        n_redes = filtered_data['metadata']['network_id'].nunique()
+        n_atletas = len(filtered_data['athletes'])
+        st.info(f"📊 Analisando **{n_atletas:,} atletas** de **{n_redes} redes** selecionadas")
+
     st.markdown("---")
 
-    with st.expander("Sobre Rivalidades Estruturais"):
+    with st.expander("ℹ️ Sobre Rivalidades Estruturais"):
         st.markdown("""
         **Rivalidades estruturais** são identificadas pelo número de arestas (confrontos) entre pares de comunidades.
         Quanto maior o número de confrontos, mais intensa a rivalidade estrutural entre os grupos.
 
-        **Tipos de Rede:**
-        - **Individual:** Rivalidades em eventos individuais (ex: natação 100m livre)
-        - **Team:** Rivalidades em eventos de equipe (ex: revezamento 4x100m)
-        - **All:** Todas as rivalidades combinadas (individual + team)
+        **Nota:** As rivalidades mostradas respeitam os filtros globais selecionados na sidebar.
         """)
 
-    # Filtro de tipo de rede
-    render_subsection("Filtros")
-    event_type = st.radio(
-        "Tipo de Rede",
-        options=["all", "individual", "team"],
-        format_func=lambda x: {"all": "Todas (Individual + Team)", "individual": "Individual", "team": "Team"}[x],
-        horizontal=True,
-        help="Filtra rivalidades por tipo de evento"
-    )
-
-    # Carregar dados de rivalries específicos para o tipo de rede
-    loader = DataLoader()
-    rivalries_filtered = loader.load_rivalry_pairs(event_type=event_type)
+    # Usar dados já filtrados (não carregar novamente!)
+    rivalries_filtered = filtered_data.get('rivalries', pd.DataFrame())
 
     st.markdown("---")
 
@@ -870,10 +917,20 @@ def render_rivalries_tab(data):
 
     st.markdown("---")
 
-    # Heatmap de segregação
+    # Heatmap de segregação (usar dados filtrados)
     render_section_title("Mapa de Segregação", "Heatmap mostrando a segregação entre comunidades")
-    fig = heatmap_segregation(data['connectivity'], interactive=True)
-    st.plotly_chart(fig, use_container_width=True, key="rivalries_segregation_heatmap")
+
+    # Avisar se múltiplos esportes selecionados
+    if 'athletes' in filtered_data and filtered_data['athletes']['sport'].nunique() > 1:
+        st.warning("⚠️ **Atenção:** Múltiplos esportes selecionados. "
+                   "Segregação é mais significativa dentro de cada esporte.")
+
+    connectivity_filtered = filtered_data.get('connectivity', pd.DataFrame())
+    if not connectivity_filtered.empty:
+        fig = heatmap_segregation(connectivity_filtered, interactive=True)
+        st.plotly_chart(fig, use_container_width=True, key="rivalries_segregation_heatmap")
+    else:
+        st.info("Sem dados de conectividade para os filtros selecionados")
 
     st.markdown("---")
 

@@ -61,14 +61,47 @@ class DataLoader:
         print(f"  OK {cache_key}: {len(df)} registros carregados")
         return df
 
+    def load_network_metadata(self) -> pd.DataFrame:
+        """
+        Carrega metadata de todas as redes processadas (per-event).
+
+        Returns:
+            DataFrame com: network_id, sport, gender, event_name,
+                          n_athletes, n_edges, density, n_communities, modularity, etc.
+        """
+        try:
+            # Carregar metadata da mineração completa (149 redes)
+            # Caminho relativo a main/results/
+            df = self.auto_loader.load_csv('../results_all_mining/network_metadata.csv')
+            self._cached_data['network_metadata'] = df
+            print(f"  OK network_metadata: {len(df)} redes carregadas")
+            return df
+        except Exception as e:
+            # Fallback: retornar DataFrame vazio se não existir
+            print(f"  ⚠️  network_metadata.csv não encontrado: {e}")
+            return pd.DataFrame()
+
     def load_consolidated_athletes(self) -> pd.DataFrame:
         """
         Carrega dados consolidados de atletas com todas as métricas.
 
+        Prioriza carregar dados completos (149 redes per-event),
+        faz fallback para dados antigos (12 casos) se necessário.
+
         Returns:
             DataFrame com todas as colunas de métricas de rede
         """
-        return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_athletes')
+        try:
+            # Carregar dados completos (149 redes per-event)
+            # Caminho relativo a main/results/
+            df = self.auto_loader.load_csv('../results_all_mining/consolidated_all_networks.csv')
+            self._cached_data['consolidated_athletes'] = df
+            print(f"  OK consolidated_athletes: {len(df)} registros, {df['network_id'].nunique()} redes")
+            return df
+        except Exception as e:
+            # Fallback: carregar dados antigos (12 casos)
+            print(f"  ⚠️  Usando fallback (dados antigos): {e}")
+            return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_athletes')
 
     def load_consolidated_edges(self) -> pd.DataFrame:
         """Carrega arestas consolidadas de todos os esportes."""
@@ -162,9 +195,10 @@ class DataLoader:
             Dict com todos os DataFrames principais
         """
         print("\nCarregando dados...")
-        
+
         data = {
             'athletes': self.load_consolidated_athletes(),
+            'metadata': self.load_network_metadata(),  # ← NOVO: metadata das 149 redes
             'edges': self.load_consolidated_edges(),
             'communities': self.load_community_profiles(),
             'community_members': self.load_community_members(),
@@ -175,6 +209,6 @@ class DataLoader:
             'connectivity': self.load_inter_community_connectivity(),
             'analysis': self.load_consolidated_analysis(),
         }
-        
+
         print(f"Dados carregados com sucesso!\n")
         return data
