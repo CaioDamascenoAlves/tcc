@@ -1101,8 +1101,9 @@ def render_rankings_tab(data):
         with st.expander(f"🏅 {sport.title()}", expanded=True):
             sport_data = data['athletes'][data['athletes']['sport'] == sport].copy()
 
-            # Verifica gêneros disponíveis
-            available_genders = sport_data['gender'].unique()
+            # Verifica gêneros disponíveis (usar 'sex' ou 'gender' para compatibilidade)
+            sex_col = 'sex' if 'sex' in sport_data.columns else 'gender'
+            available_genders = sport_data[sex_col].unique()
 
             # Criar colunas side-by-side apenas se houver ambos os gêneros
             if 'M' in available_genders and 'F' in available_genders:
@@ -1110,7 +1111,7 @@ def render_rankings_tab(data):
 
                 with col_m:
                     st.markdown("**Masculino**")
-                    m_data = sport_data[sport_data['gender'] == 'M']
+                    m_data = sport_data[sport_data[sex_col] == 'M']
                     if not m_data.empty:
                         fig_m = table_top_athletes(
                             m_data,
@@ -1124,7 +1125,7 @@ def render_rankings_tab(data):
 
                 with col_f:
                     st.markdown("**Feminino**")
-                    f_data = sport_data[sport_data['gender'] == 'F']
+                    f_data = sport_data[sport_data[sex_col] == 'F']
                     if not f_data.empty:
                         fig_f = table_top_athletes(
                             f_data,
@@ -1139,7 +1140,7 @@ def render_rankings_tab(data):
             # Se houver apenas um gênero, mostra em largura completa
             elif 'M' in available_genders:
                 st.markdown("**Masculino**")
-                m_data = sport_data[sport_data['gender'] == 'M']
+                m_data = sport_data[sport_data[sex_col] == 'M']
                 fig_m = table_top_athletes(
                     m_data,
                     metric_column=selected_metric,
@@ -1150,7 +1151,7 @@ def render_rankings_tab(data):
 
             elif 'F' in available_genders:
                 st.markdown("**Feminino**")
-                f_data = sport_data[sport_data['gender'] == 'F']
+                f_data = sport_data[sport_data[sex_col] == 'F']
                 fig_f = table_top_athletes(
                     f_data,
                     metric_column=selected_metric,
