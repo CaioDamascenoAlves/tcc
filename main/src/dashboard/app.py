@@ -296,7 +296,10 @@ def render_filter_summary(filtered_data):
     # Calcular estatísticas
     n_athletes = len(df)
     n_sports = df['sport'].nunique()
-    n_genders = df['gender'].nunique()
+
+    # Usar 'sex' ou 'gender' (compatibilidade)
+    sex_col = 'sex' if 'sex' in df.columns else 'gender'
+    n_genders = df[sex_col].nunique() if sex_col in df.columns else 0
 
     # Contar redes selecionadas
     n_networks = df['network_id'].nunique() if 'network_id' in df.columns else 0
