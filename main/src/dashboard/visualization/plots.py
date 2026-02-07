@@ -537,8 +537,59 @@ def barplot_top_rivalries(
     Returns:
         Figura Plotly ou Matplotlib
     """
+    # Validar DataFrame não vazio
+    if df.empty or len(df) == 0:
+        # Retornar figura vazia com mensagem
+        if interactive:
+            fig = go.Figure()
+            fig.add_annotation(
+                text="Nenhuma rivalidade encontrada com os filtros atuais",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                showarrow=False,
+                font=dict(size=14)
+            )
+            fig.update_layout(
+                xaxis=dict(visible=False),
+                yaxis=dict(visible=False),
+                height=400
+            )
+            return fig
+        else:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.text(0.5, 0.5, "Nenhuma rivalidade encontrada",
+                   ha='center', va='center', transform=ax.transAxes)
+            ax.axis('off')
+            return fig
+
     # Top N por número de confrontos
     top_df = df.nlargest(top_n, 'num_confronts').copy()
+
+    # Validar se ainda há dados após nlargest
+    if top_df.empty or len(top_df) == 0:
+        if interactive:
+            fig = go.Figure()
+            fig.add_annotation(
+                text="Nenhuma rivalidade encontrada com os filtros atuais",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                showarrow=False,
+                font=dict(size=14)
+            )
+            fig.update_layout(
+                xaxis=dict(visible=False),
+                yaxis=dict(visible=False),
+                height=400
+            )
+            return fig
+        else:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.text(0.5, 0.5, "Nenhuma rivalidade encontrada",
+                   ha='center', va='center', transform=ax.transAxes)
+            ax.axis('off')
+            return fig
 
     # Criar label para rivalidade
     top_df['rivalry_label'] = top_df.apply(
