@@ -95,6 +95,21 @@ class DataLoader:
             # Carregar dados completos (149 redes per-event)
             # Caminho relativo a main/results/
             df = self.auto_loader.load_csv('../results_all_mining/consolidated_all_networks.csv')
+
+            # Renomear colunas para compatibilidade com dashboard
+            # (dashboard espera prefixo 'original_' e sufixos '_centrality')
+            column_mapping = {
+                'pagerank': 'original_pagerank',
+                'betweenness': 'original_betweenness_centrality',
+                'degree': 'original_degree_centrality',
+                'athlete_name': 'name',
+                'gender': 'sex'
+            }
+
+            # Aplicar renomeação apenas para colunas que existem
+            rename_dict = {old: new for old, new in column_mapping.items() if old in df.columns}
+            df = df.rename(columns=rename_dict)
+
             self._cached_data['consolidated_athletes'] = df
             print(f"  OK consolidated_athletes: {len(df)} registros, {df['network_id'].nunique()} redes")
             return df
