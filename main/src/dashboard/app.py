@@ -1414,6 +1414,12 @@ def render_network_tab(filtered_data):
     df_filtered['temp_id'] = df_filtered.index
     selected_ids = set(df_filtered['temp_id'].astype(str))
 
+    # Também criar set de nomes para filtrar edges
+    selected_names = set(df_filtered['name'].unique())
+
+    # Criar mapeamento name → temp_id para construir links
+    name_to_id = dict(zip(df_filtered['name'], df_filtered['temp_id'].astype(str)))
+
     # Preparar nós com informações completas para tooltip
     nodes = []
     for _, row in df_filtered.iterrows():
@@ -1516,10 +1522,10 @@ def render_network_tab(filtered_data):
 
     links = []
 
-    # Filtrar arestas
+    # Filtrar arestas (usar source_name e target_name)
     df_edges_filtered = df_edges[
-        df_edges['source_id'].astype(str).isin(selected_ids) &
-        df_edges['target_id'].astype(str).isin(selected_ids)
+        df_edges['source_name'].isin(selected_names) &
+        df_edges['target_name'].isin(selected_names)
     ]
 
     # Aplicar filtro de peso
@@ -1547,11 +1553,17 @@ def render_network_tab(filtered_data):
         df_edges_filtered = df_edges_filtered.nlargest(max_edges, 'weight')
 
     for _, edge in df_edges_filtered.iterrows():
-        links.append({
-            'source': str(edge['source_id']),
-            'target': str(edge['target_id']),
-            'value': float(edge.get('weight', 1.0))
-        })
+        # Mapear source_name e target_name para temp_ids
+        source_id = name_to_id.get(edge['source_name'])
+        target_id = name_to_id.get(edge['target_name'])
+
+        # Só adicionar se ambos os nós existem
+        if source_id is not None and target_id is not None:
+            links.append({
+                'source': source_id,
+                'target': target_id,
+                'value': float(edge.get('weight', 1.0))
+            })
 
     # ========================================================================
     # REMOVER NÓS ISOLADOS (sem conexões diretas)
@@ -1671,7 +1683,7 @@ def render_network_tab(filtered_data):
     # Renderizar visualização em largura total
 
     # Verificar novamente McLOUGHLIN antes de passar
-    mcl_before_render = any('McLOUGHLIN' in n.get('label', '').upper() for n in nodes)
+    mcl_before_render = any('McLOUGHLIN' in str(n.get('label', '')).upper() for n in nodes)
 
     render_cosmograph(
         nodes=nodes,
