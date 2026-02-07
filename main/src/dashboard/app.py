@@ -1808,7 +1808,9 @@ def render_temporal_tab(data):
         df = data['athletes'].copy()
 
         # Preparar dicionário de agregação com colunas disponíveis
-        agg_dict = {'athlete_id': 'count'}
+        # Usar 'name' para contar atletas (ou 'noc' como fallback)
+        count_col = 'name' if 'name' in df.columns else ('noc' if 'noc' in df.columns else df.columns[0])
+        agg_dict = {count_col: 'count'}
 
         if 'original_pagerank' in df.columns:
             agg_dict['original_pagerank'] = 'mean'
@@ -1821,7 +1823,7 @@ def render_temporal_tab(data):
 
         # Renomear colunas
         column_mapping = {
-            'athlete_id': 'num_athletes',
+            count_col: 'num_athletes',
             'original_pagerank': 'avg_pagerank',
             'original_betweenness_centrality': 'avg_betweenness',
             'original_total_degree': 'avg_degree'
