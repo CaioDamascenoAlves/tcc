@@ -282,6 +282,62 @@ def render_sidebar(data):
     }
 
 
+def render_filter_summary(filtered_data):
+    """Renderiza resumo dos dados filtrados na sidebar."""
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("📊 Dados Selecionados")
+
+    if 'athletes' not in filtered_data or filtered_data['athletes'].empty:
+        st.sidebar.warning("Nenhum dado selecionado")
+        return
+
+    df = filtered_data['athletes']
+
+    # Calcular estatísticas
+    n_athletes = len(df)
+    n_sports = df['sport'].nunique()
+    n_genders = df['gender'].nunique()
+
+    # Contar redes selecionadas
+    n_networks = df['network_id'].nunique() if 'network_id' in df.columns else 0
+
+    # Exibir métricas em colunas
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        st.metric("Atletas", f"{n_athletes:,}")
+        st.metric("Esportes", n_sports)
+    with col2:
+        st.metric("Redes", n_networks)
+        st.metric("Sexos", n_genders)
+
+    # Lista de esportes selecionados
+    sports_list = sorted(df['sport'].unique())
+    if len(sports_list) <= 6:
+        sports_str = ", ".join([s.title() for s in sports_list])
+        st.sidebar.caption(f"🏅 {sports_str}")
+    else:
+        st.sidebar.caption(f"🏅 {len(sports_list)} esportes selecionados")
+
+
+def show_data_context(data):
+    """Exibe contexto dos dados filtrados no topo do tab."""
+    if 'athletes' not in data or data['athletes'].empty:
+        return
+
+    df = data['athletes']
+    n_athletes = len(df)
+    n_networks = df['network_id'].nunique() if 'network_id' in df.columns else 0
+    n_sports = df['sport'].nunique()
+
+    # Construir mensagem contextual
+    if n_networks > 0:
+        msg = f"📊 **{n_athletes:,} atletas** de **{n_networks} redes** ({n_sports} esporte{'s' if n_sports > 1 else ''})"
+    else:
+        msg = f"📊 **{n_athletes:,} atletas** ({n_sports} esporte{'s' if n_sports > 1 else ''})"
+
+    st.info(msg)
+
+
 # ============================================================================
 # FUNÇÕES AUXILIARES
 # ============================================================================
@@ -424,6 +480,7 @@ def render_overview_tab(data):
     """Tab: Visão Geral."""
     st.header("Visão Geral")
     st.caption("Estatísticas gerais e distribuições fundamentais das redes olímpicas")
+    show_data_context(data)
     st.markdown("---")
 
     with st.expander("Sobre esta Análise"):
@@ -468,10 +525,14 @@ def render_overview_tab(data):
 
     with col4:
         avg_pr = data['athletes']['original_pagerank'].mean()
+        n_sports = data['athletes']['sport'].nunique()
+        help_text = "PageRank médio dos atletas"
+        if n_sports > 1:
+            help_text += f" ({n_sports} esportes - agregado, use com cautela)"
         st.metric(
             "PageRank Médio",
             f"{avg_pr:.6f}",
-            help="PageRank médio dos atletas"
+            help=help_text
         )
 
     st.markdown("---")
@@ -483,21 +544,15 @@ def render_overview_tab(data):
     st.markdown("---")
 
     # Visualizações principais
-    render_section_title("Distribuições Estatísticas", "Análise da distribuição de importância e intermediação na rede")
+    render_section_title("Distribuições Estatísticas", "Análise da distribuição de intermediação na rede")
 
-    col1, col2 = st.columns(2)
+    # Nota: CDF de PageRank global foi REMOVIDO (comparação cross-esporte enviesada)
+    # Mantemos apenas Betweenness por esporte (comparação válida)
 
-    with col1:
-        with st.container():
-            render_subsection("PageRank - Função de Distribuição Acumulada", "CDF mostrando a distribuição de importância dos atletas na rede")
-            fig = cdf_pagerank(data['athletes'], interactive=True)
-            st.plotly_chart(fig, use_container_width=True, key="overview_cdf_pagerank")
-
-    with col2:
-        with st.container():
-            render_subsection("Betweenness Centrality por Esporte", "Distribuição dos atletas-ponte (intermediadores) em cada esporte")
-            fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
-            st.plotly_chart(fig, use_container_width=True, key="overview_violin_betweenness")
+    with st.container():
+        render_subsection("Betweenness Centrality por Esporte", "Distribuição dos atletas-ponte (intermediadores) em cada esporte")
+        fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
+        st.plotly_chart(fig, use_container_width=True, key="overview_violin_betweenness")
 
 
 # ============================================================================
@@ -508,6 +563,7 @@ def render_communities_tab(data):
     """Tab: Análise de Comunidades."""
     st.header("Análise de Comunidades")
     st.caption("Estrutura, hierarquia e características das comunidades detectadas pelo algoritmo de Louvain")
+    show_data_context(data)
     st.markdown("---")
 
     with st.expander("Sobre Detecção de Comunidades"):
@@ -538,6 +594,12 @@ def render_communities_tab(data):
         Comunidades de **Núcleo** têm alta centralidade, **Periféricas** têm baixa.
         """)
 
+        # Aviso sobre comparabilidade
+        if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
+            st.warning("⚠️ **Atenção:** PageRank é específico a cada rede. "
+                       "Comunidades de esportes diferentes não são diretamente comparáveis. "
+                       "Use os filtros da sidebar para analisar esportes separadamente.")
+
         fig = scatter_size_vs_pagerank(data['hierarchy'], interactive=True)
         st.plotly_chart(fig, use_container_width=True, key="communities_hierarchy_scatter")
 
@@ -561,6 +623,11 @@ def render_communities_tab(data):
         if 'hierarchy' not in data or data['hierarchy'] is None or len(data['hierarchy']) == 0:
             st.warning("Dados de hierarquia não disponíveis. Execute a análise completa para gerar esses dados.")
             return
+
+        # Aviso se múltiplos esportes selecionados
+        if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
+            st.info("💡 Múltiplos esportes selecionados. Hierarquia baseada em PageRank é mais significativa "
+                    "dentro de cada esporte. Use os filtros para analisar esportes separadamente.")
 
         hierarchy_df = data['hierarchy'].copy()
 
@@ -676,6 +743,11 @@ def render_communities_tab(data):
         **Alta segregação**: Comunidades isoladas | **Baixa segregação**: Bem conectadas.
         """)
 
+        # Avisar se múltiplos esportes selecionados
+        if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
+            st.warning("⚠️ **Atenção:** Múltiplos esportes selecionados. "
+                       "Segregação é mais significativa dentro de cada esporte.")
+
         fig = heatmap_segregation(data['connectivity'], interactive=True)
         st.plotly_chart(fig, use_container_width=True, key="communities_segregation_heatmap")
 
@@ -782,6 +854,7 @@ def render_bridges_tab(data):
     """Tab: Atletas-Ponte."""
     st.header("Atletas-Ponte")
     st.caption("Atletas que ocupam posições estruturais críticas, conectando diferentes comunidades ou eras competitivas")
+    show_data_context(data)
     st.markdown("---")
 
     with st.expander("Sobre Atletas-Ponte"):
@@ -950,6 +1023,7 @@ def render_rankings_tab(data):
     """Tab: Rankings de Atletas."""
     st.header("Rankings de Atletas")
     st.caption("Rankings customizáveis baseados em diferentes métricas de centralidade de rede")
+    show_data_context(data)
     st.markdown("---")
 
     with st.expander("Sobre as Métricas de Centralidade"):
@@ -1003,29 +1077,100 @@ def render_rankings_tab(data):
 
     st.markdown("---")
 
-    # Tabela
-    render_section_title(f"Top {top_n} Atletas", f"Ranking baseado em {selected_metric_name}")
-    fig = table_top_athletes(
-        data['athletes'],
-        metric_column=selected_metric,
-        top_n=top_n,
-        interactive=True
-    )
-    st.plotly_chart(fig, use_container_width=True, key="rankings_table_top_n")
+    # Rankings por esporte (evita comparação cross-sport)
+    st.markdown(f"### Top {top_n} por Esporte")
+    st.info(f"📊 **{selected_metric_name}** é calculado independentemente para cada rede. "
+            "Rankings são apresentados por esporte para evitar comparações enviesadas entre modalidades.")
+
+    # Verifica se há dados filtrados
+    if 'athletes' not in data or data['athletes'].empty:
+        st.warning("⚠️ Nenhum dado disponível com os filtros atuais.")
+        return
+
+    # Itera sobre esportes disponíveis
+    available_sports = sorted(data['athletes']['sport'].unique())
+
+    if len(available_sports) == 0:
+        st.warning("⚠️ Nenhum esporte disponível nos dados filtrados.")
+        return
+
+    for sport in available_sports:
+        with st.expander(f"🏅 {sport.title()}", expanded=True):
+            sport_data = data['athletes'][data['athletes']['sport'] == sport].copy()
+
+            # Verifica gêneros disponíveis
+            available_genders = sport_data['gender'].unique()
+
+            # Criar colunas side-by-side apenas se houver ambos os gêneros
+            if 'M' in available_genders and 'F' in available_genders:
+                col_m, col_f = st.columns(2)
+
+                with col_m:
+                    st.markdown("**Masculino**")
+                    m_data = sport_data[sport_data['gender'] == 'M']
+                    if not m_data.empty:
+                        fig_m = table_top_athletes(
+                            m_data,
+                            metric_column=selected_metric,
+                            top_n=top_n,
+                            interactive=True
+                        )
+                        st.plotly_chart(fig_m, use_container_width=True, key=f"ranking_{sport}_M")
+                    else:
+                        st.info("Sem dados masculinos")
+
+                with col_f:
+                    st.markdown("**Feminino**")
+                    f_data = sport_data[sport_data['gender'] == 'F']
+                    if not f_data.empty:
+                        fig_f = table_top_athletes(
+                            f_data,
+                            metric_column=selected_metric,
+                            top_n=top_n,
+                            interactive=True
+                        )
+                        st.plotly_chart(fig_f, use_container_width=True, key=f"ranking_{sport}_F")
+                    else:
+                        st.info("Sem dados femininos")
+
+            # Se houver apenas um gênero, mostra em largura completa
+            elif 'M' in available_genders:
+                st.markdown("**Masculino**")
+                m_data = sport_data[sport_data['gender'] == 'M']
+                fig_m = table_top_athletes(
+                    m_data,
+                    metric_column=selected_metric,
+                    top_n=top_n,
+                    interactive=True
+                )
+                st.plotly_chart(fig_m, use_container_width=True, key=f"ranking_{sport}_M")
+
+            elif 'F' in available_genders:
+                st.markdown("**Feminino**")
+                f_data = sport_data[sport_data['gender'] == 'F']
+                fig_f = table_top_athletes(
+                    f_data,
+                    metric_column=selected_metric,
+                    top_n=top_n,
+                    interactive=True
+                )
+                st.plotly_chart(fig_f, use_container_width=True, key=f"ranking_{sport}_F")
+
+            else:
+                st.warning(f"⚠️ Nenhum dado disponível para {sport.title()}")
 
     st.markdown("---")
 
     # Distribuição
     render_section_title(f"Distribuição de {selected_metric_name}", "Análise estatística da métrica selecionada")
 
-    col1, col2 = st.columns(2)
+    # Aviso para PageRank com múltiplos esportes
+    if selected_metric == 'original_pagerank' and 'athletes' in data and data['athletes']['sport'].nunique() > 1:
+        st.warning("⚠️ **Atenção:** PageRank é específico a cada rede e não deve ser comparado entre esportes diferentes. "
+                   "Use os filtros da sidebar para selecionar um único esporte para análise precisa.")
 
-    with col1:
-        fig = cdf_pagerank(data['athletes'], interactive=True) if selected_metric == 'original_pagerank' else None
-        if fig:
-            st.plotly_chart(fig, use_container_width=True, key="rankings_cdf_distribution")
-
-    with col2:
+    # Boxplot por esporte (apenas se não for PageRank com múltiplos esportes)
+    if not (selected_metric == 'original_pagerank' and data['athletes']['sport'].nunique() > 1):
         fig = boxplot_metric_by_category(
             data['athletes'],
             metric_column=selected_metric,
@@ -1034,108 +1179,129 @@ def render_rankings_tab(data):
             title=f'{selected_metric_name} por Esporte'
         )
         st.plotly_chart(fig, use_container_width=True, key="rankings_boxplot_by_sport")
+    else:
+        st.info("💡 Selecione um único esporte nos filtros da sidebar para visualizar a distribuição de PageRank.")
 
 
 # ============================================================================
 # TAB 6: REDE INTERATIVA
 # ============================================================================
 
-def render_network_tab(data):
+def render_network_tab(filtered_data):
     """
-    Tab: Visualização Interativa da Rede (Versão Melhorada).
+    Tab: Visualização Interativa da Rede (Refatorada para usar filtros).
 
     Args:
-        data: Dicionário com dados carregados (compatibilidade, não usado diretamente)
+        filtered_data: Dados já filtrados pela sidebar
     """
     from dashboard.components import render_cosmograph
     import json
 
     st.header("Redes Interativas")
     st.caption("Explore as redes competitivas olímpicas de forma interativa")
+
+    # Info sobre seleção atual
+    if 'metadata' in filtered_data and not filtered_data['metadata'].empty:
+        n_redes = filtered_data['metadata']['network_id'].nunique()
+        n_atletas = len(filtered_data['athletes'])
+        st.info(f"📊 **{n_atletas:,} atletas** de **{n_redes} redes** disponíveis após filtros")
+
     st.markdown("---")
 
     # ========================================================================
-    # SELETOR DE REDE ESPECÍFICA
+    # VERIFICAR SE HÁ METADATA E REDES DISPONÍVEIS
+    # ========================================================================
+
+    if 'metadata' not in filtered_data or filtered_data['metadata'].empty:
+        st.warning("⚠️ Metadata não disponível. Certifique-se de que a mineração completa foi executada.")
+        st.info("Execute: `python main/src/analysis/12_mine_all_networks.py`")
+        return
+
+    metadata = filtered_data['metadata']
+
+    if len(metadata) == 0:
+        st.warning("⚠️ Nenhuma rede disponível com os filtros selecionados. Ajuste os filtros na sidebar.")
+        return
+
+    # ========================================================================
+    # GERAR LISTA DINÂMICA DE REDES (baseada nos filtros)
     # ========================================================================
 
     st.subheader("1. Selecione a Rede")
 
-    # Definir as 16 redes disponíveis
-    networks = [
-        {"id": "swimming_M_individual", "label": "Natação Masculina - Individual", "sport": "Swimming", "sex": "M", "event_type": "individual"},
-        {"id": "swimming_M_team", "label": "Natação Masculina - Equipe (Revezamentos)", "sport": "Swimming", "sex": "M", "event_type": "team"},
-        {"id": "swimming_F_individual", "label": "Natação Feminina - Individual", "sport": "Swimming", "sex": "F", "event_type": "individual"},
-        {"id": "swimming_F_team", "label": "Natação Feminina - Equipe (Revezamentos)", "sport": "Swimming", "sex": "F", "event_type": "team"},
-        {"id": "football_M_team", "label": "Futebol Masculino", "sport": "Football", "sex": "M", "event_type": "team"},
-        {"id": "football_F_team", "label": "Futebol Feminino", "sport": "Football", "sex": "F", "event_type": "team"},
-        {"id": "basketball_M_team", "label": "Basquetebol Masculino", "sport": "Basketball", "sex": "M", "event_type": "team"},
-        {"id": "basketball_F_team", "label": "Basquetebol Feminino", "sport": "Basketball", "sex": "F", "event_type": "team"},
-        {"id": "athletics_M_individual", "label": "Atletismo Masculino - Individual", "sport": "Athletics", "sex": "M", "event_type": "individual"},
-        {"id": "athletics_M_team", "label": "Atletismo Masculino - Equipe (Revezamentos)", "sport": "Athletics", "sex": "M", "event_type": "team"},
-        {"id": "athletics_F_individual", "label": "Atletismo Feminino - Individual", "sport": "Athletics", "sex": "F", "event_type": "individual"},
-        {"id": "athletics_F_team", "label": "Atletismo Feminino - Equipe (Revezamentos)", "sport": "Athletics", "sex": "F", "event_type": "team"},
-        {"id": "judo_M_individual", "label": "Judô Masculino", "sport": "Judo", "sex": "M", "event_type": "individual"},
-        {"id": "judo_F_individual", "label": "Judô Feminino", "sport": "Judo", "sex": "F", "event_type": "individual"},
-        {"id": "boxing_M_individual", "label": "Boxe Masculino", "sport": "Boxing", "sex": "M", "event_type": "individual"},
-        {"id": "boxing_F_individual", "label": "Boxe Feminino", "sport": "Boxing", "sex": "F", "event_type": "individual"},
-    ]
+    # Criar opções de rede a partir da metadata filtrada
+    network_options = []
+    for _, row in metadata.iterrows():
+        label = f"{row['sport'].title()} {row['gender']} - {row['event_name']}"
+        network_options.append({
+            'network_id': row['network_id'],
+            'label': label,
+            'sport': row['sport'],
+            'gender': row['gender'],
+            'event_name': row['event_name'],
+            'n_athletes': row['n_athletes'],
+            'n_edges': row['n_edges']
+        })
 
-    network_labels = [net["label"] for net in networks]
+    # Ordenar por esporte, depois por gênero, depois por evento
+    network_options = sorted(network_options, key=lambda x: (x['sport'], x['gender'], x['event_name']))
+
+    if not network_options:
+        st.warning("Nenhuma rede disponível após filtros")
+        return
+
+    network_labels = [net["label"] for net in network_options]
     selected_network_label = st.selectbox(
         "Escolha uma rede para visualizar:",
         network_labels,
-        help="Cada rede representa um conjunto específico de atletas e competições"
+        help="Redes disponíveis com base nos filtros selecionados na sidebar"
     )
 
     # Encontrar a rede selecionada
-    selected_network = next(net for net in networks if net["label"] == selected_network_label)
+    selected_network = next(net for net in network_options if net["label"] == selected_network_label)
 
     # ========================================================================
-    # CARREGAR DADOS DA REDE SELECIONADA
+    # CARREGAR DADOS DA REDE SELECIONADA (usa filtered_data)
     # ========================================================================
 
-    sport_lower = selected_network["sport"].lower()
-    sex = selected_network["sex"]
-    event_type = selected_network["event_type"]
+    network_id = selected_network['network_id']
 
-    # Usar DataLoader para carregar (funciona com Drive e local)
-    try:
-        loader = DataLoader()
-        network_data = loader.load_sport_network(sport_lower, sex, event_type)
-        df_athletes = network_data['metrics']
-        df_edges = network_data['edges']
-    except Exception as e:
-        st.error(f"Erro ao carregar dados da rede: {e}")
+    # Filtrar atletas da rede selecionada
+    df_athletes = filtered_data['athletes'][
+        filtered_data['athletes']['network_id'] == network_id
+    ].copy()
+
+    if df_athletes.empty:
+        st.error(f"⚠️ Nenhum atleta encontrado para a rede selecionada (network_id={network_id})")
         return
 
-    # Estatísticas básicas da rede (calculadas dos dados carregados)
+    # Tentar carregar arestas (edges) se disponível
+    # Nota: edges podem não estar filtrados por network_id, então vamos filtrar localmente
+    if 'edges' in filtered_data and not filtered_data['edges'].empty:
+        # Assumindo que edges tem network_id ou podemos filtrar por source/target que estão em df_athletes
+        df_edges = filtered_data['edges']
+        # Filtrar edges cujos source e target estão em df_athletes
+        athlete_names = set(df_athletes['athlete_name'].unique())
+        df_edges = df_edges[
+            (df_edges['source'].isin(athlete_names)) &
+            (df_edges['target'].isin(athlete_names))
+        ].copy()
+    else:
+        # Sem dados de edges, criar DataFrame vazio
+        df_edges = pd.DataFrame()
+        st.warning("⚠️ Dados de arestas (edges) não disponíveis para esta rede")
+
+    # Estatísticas básicas da rede
     num_nodes_total = len(df_athletes)
-    num_edges_total = len(df_edges)
+    num_edges_total = len(df_edges) if not df_edges.empty else 0
 
-    # Carregar summaries para obter modularidade e número correto de comunidades
-    summaries_path = PATHS.get('all_summaries', PATHS.get('results_dir').parent / 'all_network_summaries.json')
-    modularity = None  # Usar None ao invés de 0.0 para diferenciar "não carregado" de "zero"
-    num_communities_from_summary = 0
+    # Obter modularidade e número de comunidades da metadata
+    network_row = metadata[metadata['network_id'] == network_id].iloc[0]
+    modularity = network_row.get('modularity', None)
+    num_communities_from_metadata = network_row.get('n_communities', 0)
 
-    if summaries_path and summaries_path.exists():
-        try:
-            with open(summaries_path, 'r', encoding='utf-8') as f:
-                summaries = json.load(f)
-
-            # Buscar a rede específica no JSON (é uma lista, não dict)
-            for network_summary in summaries:
-                if (network_summary.get('sport') == selected_network["sport"] and
-                    network_summary.get('sex') == selected_network["sex"] and
-                    network_summary.get('event_type') == selected_network["event_type"]):
-                    if 'original_community' in network_summary:
-                        modularity = network_summary['original_community'].get('modularity', None)
-                        num_communities_from_summary = network_summary['original_community'].get('num_communities', 0)
-                    break
-        except Exception as e:
-            st.warning(f"Aviso ao carregar summaries: {e}")
-
-    # Usar número de comunidades do summary, fallback para contagem no dataframe
-    num_communities = num_communities_from_summary if num_communities_from_summary > 0 else (
+    # Usar número de comunidades da metadata, fallback para contagem no dataframe
+    num_communities = num_communities_from_metadata if num_communities_from_metadata > 0 else (
         df_athletes['original_community'].nunique() if 'original_community' in df_athletes.columns else 0
     )
 
@@ -1534,6 +1700,7 @@ def render_temporal_tab(data):
 
     st.header("Evolução Temporal")
     st.caption("125 anos de história olímpica: da Belle Époque à Era Profissional Moderna (1896-2021)")
+    show_data_context(data)
     st.markdown("---")
 
     # Timeline Visual Interativa com Plotly
@@ -1770,6 +1937,11 @@ def render_temporal_tab(data):
         if 'avg_pagerank' in df_by_year.columns:
             with st.container():
                 render_subsection("Evolução do PageRank Médio", "Mudanças na centralidade média dos atletas ao longo do tempo")
+
+                # Aviso se múltiplos esportes selecionados
+                if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
+                    st.warning("⚠️ **Atenção:** Múltiplos esportes selecionados. PageRank é específico a cada rede. "
+                               "Para análise temporal precisa, selecione um único esporte nos filtros.")
 
                 fig = go.Figure()
 
@@ -2259,6 +2431,9 @@ def main():
 
     # Aplicar filtros
     filtered_data = filter_data(data, filters)
+
+    # Exibir resumo dos dados filtrados na sidebar
+    render_filter_summary(filtered_data)
 
     # Verificar se há dados após filtro
     if len(filtered_data['athletes']) == 0:

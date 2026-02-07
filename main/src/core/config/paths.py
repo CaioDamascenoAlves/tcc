@@ -26,6 +26,12 @@ PATHS = {
     'network_summaries': MAIN_ROOT / 'results' / 'networks' / 'summaries.json',
     'all_summaries': MAIN_ROOT / 'results' / 'all_network_summaries.json',
 
+    # Resultados da mineração completa (TODAS as redes - per-event)
+    'results_all_mining_dir': MAIN_ROOT / 'results_all_mining',
+    'consolidated_all_networks': MAIN_ROOT / 'results_all_mining' / 'consolidated_all_networks.csv',
+    'network_metadata': MAIN_ROOT / 'results_all_mining' / 'network_metadata.csv',
+    'communities_all_networks': MAIN_ROOT / 'results_all_mining' / 'communities_all_networks.csv',
+
     # Análises adicionais
     'additional_analyses_dir': MAIN_ROOT / 'results' / 'additional_analyses',
     'medal_profile': MAIN_ROOT / 'results' / 'additional_analyses' / 'medal_profile_by_community.csv',
