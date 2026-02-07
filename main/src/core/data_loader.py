@@ -37,28 +37,85 @@ class DataLoader:
         """
         Carrega dados consolidados de atletas com todas as métricas.
 
+        Prioriza carregar dados completos (todas as redes),
+        mas faz fallback para os 12 casos originais se necessário.
+
         Returns:
             DataFrame com colunas:
-            - athlete_id, sport, sex, name, noc, ...
-            - original_pagerank, original_betweenness_centrality, ...
-            - original_community, ...
+            - network_id, sport, gender, event_name
+            - athlete_name, noc, year
+            - pagerank, betweenness, degree, community
+            - gold, silver, bronze, total_medals
         """
         cache_key = 'consolidated_athletes'
 
         if cache_key in self._cached_data:
             return self._cached_data[cache_key]
 
-        path = PATHS['consolidated_athletes']
+        # Tentar carregar dados completos (TODAS as redes)
+        path_all = PATHS.get('consolidated_all_networks')
 
-        if not path.exists():
-            raise FileNotFoundError(f"Arquivo não encontrado: {path}")
+        if path_all and path_all.exists():
+            print(f"Carregando atletas de TODAS as redes: {path_all}")
+            df = pd.read_csv(path_all)
+            n_networks = df['network_id'].nunique()
+            print(f"  [OK] {len(df)} atletas de {n_networks} redes carregados")
+            print(f"  [OK] Esportes: {sorted(df['sport'].unique())}")
+            print(f"  [OK] Gêneros: {sorted(df['gender'].unique())}")
 
-        print(f"Carregando atletas consolidados de: {path}")
+            self._cached_data[cache_key] = df
+            return df
+
+        # Fallback: carregar dados antigos (12 casos)
+        path_old = PATHS['consolidated_athletes']
+
+        if path_old.exists():
+            print(f"⚠️  Usando dados antigos (12 casos): {path_old}")
+            df = pd.read_csv(path_old)
+            print(f"  [OK] {len(df)} atletas carregados")
+
+            self._cached_data[cache_key] = df
+            return df
+
+        raise FileNotFoundError(
+            "Nenhum arquivo de atletas encontrado. Execute a mineração primeiro:\n"
+            "  python main/src/analysis/12_mine_all_networks.py"
+        )
+
+    def load_network_metadata(self) -> pd.DataFrame:
+        """
+        Carrega metadata de todas as redes processadas.
+
+        Returns:
+            DataFrame com colunas:
+            - network_id, sport, gender, event_name, filename
+            - n_athletes, n_edges, density
+            - n_communities, modularity
+            - min_year, max_year, total_medals
+        """
+        cache_key = 'network_metadata'
+
+        if cache_key in self._cached_data:
+            return self._cached_data[cache_key]
+
+        path = PATHS.get('network_metadata')
+
+        if not path or not path.exists():
+            print("⚠️  Metadata de redes não disponível")
+            # Retornar DataFrame vazio com colunas esperadas
+            return pd.DataFrame(columns=[
+                'network_id', 'sport', 'gender', 'event_name', 'filename',
+                'n_athletes', 'n_edges', 'density',
+                'n_communities', 'modularity',
+                'min_year', 'max_year', 'total_medals'
+            ])
+
+        print(f"Carregando metadata de redes: {path}")
         df = pd.read_csv(path)
 
-        print(f"  [OK] {len(df)} atletas carregados")
-        print(f"  [OK] Esportes: {df['sport'].unique()}")
-        print(f"  [OK] Sexos: {df['sex'].unique()}")
+        print(f"  [OK] {len(df)} redes carregadas")
+        print(f"  [OK] Total de atletas: {df['n_athletes'].sum()}")
+        print(f"  [OK] Total de comunidades: {df['n_communities'].sum()}")
 
         self._cached_data[cache_key] = df
         return df
@@ -224,6 +281,7 @@ class DataLoader:
 
         data = {
             'athletes': self.load_consolidated_athletes(),
+            'metadata': self.load_network_metadata(),
             'medal_profile': self.load_medal_profile(),
             'hierarchy': self.load_community_hierarchy(),
             'connectivity': self.load_inter_connectivity(),
