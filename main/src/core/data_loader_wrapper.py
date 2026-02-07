@@ -102,6 +102,7 @@ class DataLoader:
                 'pagerank': 'original_pagerank',
                 'betweenness': 'original_betweenness_centrality',
                 'degree': 'original_degree_centrality',
+                'community': 'original_community',
                 'athlete_name': 'name',
                 'gender': 'sex'
             }
