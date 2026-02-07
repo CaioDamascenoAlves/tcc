@@ -472,6 +472,32 @@ def filter_data(data, filters):
             df = df[df['sex'].isin(filters['sex'])]
         filtered['rivalries'] = df
 
+        # Metadata (IMPORTANTE: necessário para tab Network)
+        if 'metadata' in data:
+            df = data['metadata'].copy()
+            if filters['sports']:
+                df = df[df['sport'].isin(filters['sports'])]
+            if filters['sex']:
+                # Metadata usa 'gender', não 'sex'
+                df = df[df['gender'].isin(filters['sex'])]
+            if filters.get('events'):
+                df = df[df['event_name'].isin(filters['events'])]
+            filtered['metadata'] = df
+        else:
+            filtered['metadata'] = pd.DataFrame()
+
+        # Edges (passar sem filtrar - será filtrado por network_id quando necessário)
+        filtered['edges'] = data.get('edges', pd.DataFrame())
+
+        # Analysis consolidated
+        filtered['analysis'] = data.get('analysis', pd.DataFrame())
+
+        # Community members
+        filtered['community_members'] = data.get('community_members', pd.DataFrame())
+
+        # Typology
+        filtered['typology'] = data.get('community_typology', pd.DataFrame())
+
     return filtered
 
 
@@ -1285,10 +1311,12 @@ def render_network_tab(filtered_data):
         # Assumindo que edges tem network_id ou podemos filtrar por source/target que estão em df_athletes
         df_edges = filtered_data['edges']
         # Filtrar edges cujos source e target estão em df_athletes
-        athlete_names = set(df_athletes['athlete_name'].unique())
+        # Usar 'name' (coluna renomeada de 'athlete_name')
+        athlete_names = set(df_athletes['name'].unique())
+        # Edges usa 'source_name' e 'target_name'
         df_edges = df_edges[
-            (df_edges['source'].isin(athlete_names)) &
-            (df_edges['target'].isin(athlete_names))
+            (df_edges['source_name'].isin(athlete_names)) &
+            (df_edges['target_name'].isin(athlete_names))
         ].copy()
     else:
         # Sem dados de edges, criar DataFrame vazio
@@ -1376,17 +1404,20 @@ def render_network_tab(filtered_data):
     if len(df_filtered) > show_top_n:
         df_filtered = df_filtered.nlargest(show_top_n, 'original_pagerank')
 
-    # Remover duplicatas
+    # Remover duplicatas (usar name+noc para garantir unicidade)
     antes_drop = len(df_filtered)
-    df_filtered = df_filtered.drop_duplicates(subset=['athlete_id'], keep='first')
+    df_filtered = df_filtered.drop_duplicates(subset=['name', 'noc'], keep='first')
     depois_drop = len(df_filtered)
 
-    selected_ids = set(df_filtered['athlete_id'].astype(str))
+    # Criar IDs únicos baseados no index
+    df_filtered = df_filtered.reset_index(drop=True)
+    df_filtered['temp_id'] = df_filtered.index
+    selected_ids = set(df_filtered['temp_id'].astype(str))
 
     # Preparar nós com informações completas para tooltip
     nodes = []
     for _, row in df_filtered.iterrows():
-        node_id = str(row['athlete_id'])
+        node_id = str(row['temp_id'])
 
         # Tamanho do nó
         if node_size_by == "PageRank":
@@ -1424,7 +1455,7 @@ def render_network_tab(filtered_data):
         is_bridge = betweenness_val > betweenness_threshold
 
         # Contar medalhas e anos do atleta (usando dados disponíveis na rede)
-        athlete_id_val = row['athlete_id']
+        athlete_name = row.get('name', 'N/A')
 
         # Usar contagens agregadas de medalhas (se disponíveis) ou fallback para medalha única
         medal = row.get('medal', 'Bronze')
@@ -1469,7 +1500,7 @@ def render_network_tab(filtered_data):
 
         nodes.append({
             'id': node_id,
-            'label': row.get('name', f"Atleta {row['athlete_id']}"),
+            'label': row.get('name', f"Atleta {node_id}"),
             'size': size,
             'group': group,
             'tooltip_data': tooltip_data
@@ -1477,7 +1508,7 @@ def render_network_tab(filtered_data):
 
 
     # Verificar se McLOUGHLIN está nos nodes
-    mcl_in_nodes = any('McLOUGHLIN' in n.get('label', '').upper() for n in nodes)
+    mcl_in_nodes = any('McLOUGHLIN' in str(n.get('label', '')).upper() for n in nodes)
 
     # ========================================================================
     # PREPARAR DADOS DAS ARESTAS
@@ -1844,7 +1875,14 @@ def render_temporal_tab(data):
         )
 
     with col2:
-        total_athletes = df['athlete_id'].nunique()
+        # Contar atletas únicos por name (ou name+noc se disponível)
+        if 'name' in df.columns and 'noc' in df.columns:
+            total_athletes = df.groupby(['name', 'noc']).ngroups
+        elif 'name' in df.columns:
+            total_athletes = df['name'].nunique()
+        else:
+            total_athletes = len(df)
+
         st.metric(
             "Atletas Únicos",
             f"{total_athletes:,}",
@@ -2348,8 +2386,9 @@ def render_temporal_tab(data):
     )
 
     if selected_sports_temporal:
-        # Preparar agregação por esporte
-        agg_dict_sports = {'athlete_id': 'count'}
+        # Preparar agregação por esporte (usar 'name' para contar)
+        count_col = 'name' if 'name' in df.columns else df.columns[0]
+        agg_dict_sports = {count_col: 'count'}
         if 'original_pagerank' in df.columns:
             agg_dict_sports['original_pagerank'] = 'mean'
 
@@ -2357,7 +2396,7 @@ def render_temporal_tab(data):
 
         # Renomear colunas
         column_mapping_sports = {
-            'athlete_id': 'num_athletes',
+            count_col: 'num_athletes',
             'original_pagerank': 'avg_pagerank'
         }
         df_sports.rename(columns=column_mapping_sports, inplace=True)

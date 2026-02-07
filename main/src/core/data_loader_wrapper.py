@@ -119,8 +119,22 @@ class DataLoader:
             return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_athletes')
 
     def load_consolidated_edges(self) -> pd.DataFrame:
-        """Carrega arestas consolidadas de todos os esportes."""
-        return self._load_csv('consolidated_edges_data.csv', 'consolidated_edges')
+        """
+        Carrega arestas consolidadas de todos os esportes.
+
+        Prioriza carregar edges completos (149 redes per-event),
+        faz fallback para dados antigos (12 casos) se necessário.
+        """
+        try:
+            # Carregar edges completos (149 redes per-event)
+            df = self.auto_loader.load_csv('../results_all_mining/consolidated_all_edges.csv')
+            self._cached_data['consolidated_edges'] = df
+            print(f"  OK consolidated_edges: {len(df)} arestas, {df['network_id'].nunique()} redes")
+            return df
+        except Exception as e:
+            # Fallback: carregar edges antigos (12 casos)
+            print(f"  ⚠️  Usando fallback edges (dados antigos): {e}")
+            return self._load_csv('consolidated_edges_data.csv', 'consolidated_edges')
 
     def load_swimming_hybrid(self) -> pd.DataFrame:
         """Carrega dados do grafo híbrido de natação."""
