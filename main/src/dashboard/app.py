@@ -1506,7 +1506,7 @@ def render_network_tab(filtered_data):
 
         nodes.append({
             'id': node_id,
-            'label': row.get('name', f"Atleta {node_id}"),
+            'label': str(row.get('name', f"Atleta {node_id}")),  # Garantir que seja string
             'size': size,
             'group': group,
             'tooltip_data': tooltip_data
