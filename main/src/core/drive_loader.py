@@ -86,20 +86,36 @@ class DriveDataLoader:
             DataFrame do pandas
         """
         # Normaliza path (Windows vs Linux)
-        relative_path = relative_path.replace('\\', '/')
+        path = relative_path.replace('\\', '/')
         
-        if relative_path not in self.drive_mapping:
+        # Remove prefixos comuns que podem estar no caminho local mas não no Drive
+        if path not in self.drive_mapping:
+            prefixes_to_strip = [
+                '../results_all_mining/',
+                'results_all_mining/',
+                'main/results/',
+                'results/',
+                'main/'
+            ]
+            for prefix in prefixes_to_strip:
+                if path.startswith(prefix):
+                    test_path = path[len(prefix):]
+                    if test_path in self.drive_mapping:
+                        path = test_path
+                        break
+        
+        if path not in self.drive_mapping:
             raise FileNotFoundError(
-                f"Arquivo '{relative_path}' não encontrado no mapeamento do Drive.\n"
+                f"Arquivo '{path}' (original: '{relative_path}') não encontrado no mapeamento do Drive.\n"
                 f"Arquivos disponíveis:\n" + 
                 "\n".join(f"  - {p}" for p in sorted(self.drive_mapping.keys()))
             )
         
-        cache_path = self._get_cache_path(relative_path)
+        cache_path = self._get_cache_path(path)
         
         # Verifica se precisa baixar
         if force_download or not cache_path.exists():
-            url = self.drive_mapping[relative_path]['download_url']
+            url = self.drive_mapping[path]['download_url']
             self._download_file(url, cache_path)
         
         # Carrega do cache
