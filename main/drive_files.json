@@ -348,5 +348,35 @@
     "file_id": "1i79OpBzCjv73hBZAHNSwWXIBgq-pQXq-",
     "download_url": "https://drive.google.com/uc?export=download&id=1i79OpBzCjv73hBZAHNSwWXIBgq-pQXq-",
     "size_mb": 6.91
+  },
+  "rivalries_per_event.csv": {
+    "file_id": "1genOYg7awV1JJCpAL8z2r1OGkc5H0cGm",
+    "download_url": "https://drive.google.com/uc?export=download&id=1genOYg7awV1JJCpAL8z2r1OGkc5H0cGm",
+    "size_mb": 0.01
+  },
+  "network_metadata.csv": {
+    "file_id": "18aGvE2WGD9lBbb6vEOKbEL6w8ObRAa4F",
+    "download_url": "https://drive.google.com/uc?export=download&id=18aGvE2WGD9lBbb6vEOKbEL6w8ObRAa4F",
+    "size_mb": 0.02
+  },
+  "communities_all_networks.csv": {
+    "file_id": "1F5S8Rkya7cxsYHWi5evbtew8fvIpihLj",
+    "download_url": "https://drive.google.com/uc?export=download&id=1F5S8Rkya7cxsYHWi5evbtew8fvIpihLj",
+    "size_mb": 0.07
+  },
+  "community_hierarchy_per_event.csv": {
+    "file_id": "1h2ux8tkq4ttbZEWNh_dz7gL0QaHXBoOC",
+    "download_url": "https://drive.google.com/uc?export=download&id=1h2ux8tkq4ttbZEWNh_dz7gL0QaHXBoOC",
+    "size_mb": 0.13
+  },
+  "consolidated_all_networks.csv": {
+    "file_id": "1oAU-PtMyzCRBbDujDAQjbW0wZi0OYdDr",
+    "download_url": "https://drive.google.com/uc?export=download&id=1oAU-PtMyzCRBbDujDAQjbW0wZi0OYdDr",
+    "size_mb": 1.03
+  },
+  "consolidated_all_edges.csv": {
+    "file_id": "1ew8mJDNgy4erjgpbTT6MtHPobe3CejHs",
+    "download_url": "https://drive.google.com/uc?export=download&id=1ew8mJDNgy4erjgpbTT6MtHPobe3CejHs",
+    "size_mb": 4.1
   }
 }
