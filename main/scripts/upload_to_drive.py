@@ -26,7 +26,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 # Configurações
 PROJECT_ROOT = Path(__file__).parent.parent
-RESULTS_DIR = PROJECT_ROOT / 'results'
+RESULTS_DIR = PROJECT_ROOT / 'results_all_mining'  # ← Dados atualizados (133 redes)
 CREDENTIALS_FILE = PROJECT_ROOT / 'credentials.json'
 TOKEN_FILE = PROJECT_ROOT / 'token.json'
 MAPPING_FILE = PROJECT_ROOT / 'drive_files.json'
@@ -160,10 +160,14 @@ def upload_file_with_retry(service, file_path: Path, folder_id: str, existing_fi
 
 
 def get_all_data_files(results_dir: Path):
-    """Retorna lista de todos os CSVs e JSONs."""
+    """Retorna lista de todos os CSVs e JSONs (ignora backups)."""
     data_files = []
     for root, dirs, files in os.walk(results_dir):
         for file in files:
+            # Ignorar arquivos de backup
+            if '_BACKUP' in file or file.startswith('.'):
+                continue
+
             if file.endswith(('.csv', '.json')):
                 full_path = Path(root) / file
                 relative_path = full_path.relative_to(results_dir)
