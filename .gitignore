@@ -159,3 +159,15 @@ main/manim/
 main/results_old/
 *.csv
 !monografia/**/*.csv
+
+# Relatórios de sessão temporários
+SANITIZACAO_*.md
+RELATORIO_*.md
+
+# Backups de tex
+*.bak
+*.bak_*
+
+# PDFs gerados
+MONOGRAFIA_*.pdf
+*.bak*

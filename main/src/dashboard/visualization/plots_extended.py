@@ -133,6 +133,106 @@ def stacked_bar_profile_distribution(
 # VIOLIN PLOTS
 # ============================================================================
 
+def violin_betweenness_by_event(
+    df: pd.DataFrame,
+    interactive: bool = True,
+    save_path: Optional[str] = None,
+    figsize: tuple = (12, 8)
+) -> Union[go.Figure, matplotlib.figure.Figure]:
+    """
+    Violin plot: Distribuição de betweenness centrality por EVENTO.
+    
+    Cada violin = um evento específico (não agrega eventos diferentes).
+
+    Args:
+        df: DataFrame com colunas 'event_name', 'original_betweenness_centrality', 'sport'
+        interactive: Se True, usa Plotly
+        save_path: Caminho para salvar figura
+        figsize: Tamanho da figura para Matplotlib
+
+    Returns:
+        Figura Plotly ou Matplotlib
+    """
+    if interactive:
+        # Plotly
+        fig = create_plotly_figure(
+            title='Distribuição de Betweenness Centrality por Evento',
+            xaxis_title='Evento',
+            yaxis_title='Betweenness Centrality'
+        )
+
+        # Agrupar por evento e esporte para cor
+        if 'event_name' not in df.columns:
+            # Fallback: usar sport se event_name não existir
+            return violin_betweenness_by_sport(df, interactive, save_path, figsize)
+        
+        events = sorted(df['event_name'].unique())
+        
+        # Limitar a 20 eventos para legibilidade (silenciosamente)
+        # O warning será exibido no dashboard, não na função de visualização
+        if len(events) > 20:
+            events = events[:20]
+        
+        for i, event in enumerate(events):
+            subset = df[df['event_name'] == event]
+            if len(subset) == 0:
+                continue
+            
+            # Cor por esporte
+            sport = subset['sport'].iloc[0] if 'sport' in subset.columns else None
+            color = COLORS.get(sport, UFOP_CATEGORICAL[i % len(UFOP_CATEGORICAL)])
+
+            fig.add_trace(go.Violin(
+                y=subset['original_betweenness_centrality'],
+                name=event,
+                box_visible=True,
+                meanline_visible=True,
+                fillcolor=color,
+                opacity=0.6,
+                line_color=color
+            ))
+
+        # Rotacionar labels se muitos eventos
+        fig.update_xaxes(tickangle=-45)
+
+        if save_path:
+            fig.write_html(save_path) if save_path.endswith('.html') else fig.write_image(save_path)
+
+        return fig
+
+    else:
+        # Matplotlib
+        fig, ax = create_matplotlib_figure(figsize=figsize)
+
+        events = sorted(df['event_name'].unique())[:20]  # Limitar
+        colors = [UFOP_CATEGORICAL[i % len(UFOP_CATEGORICAL)] for i in range(len(events))]
+
+        parts = ax.violinplot(
+            [df[df['event_name'] == event]['original_betweenness_centrality'].dropna() for event in events],
+            positions=range(len(events)),
+            showmeans=True,
+            showmedians=True
+        )
+
+        # Colorir violins
+        for i, pc in enumerate(parts['bodies']):
+            pc.set_facecolor(colors[i])
+            pc.set_alpha(0.6)
+
+        ax.set_xticks(range(len(events)))
+        ax.set_xticklabels(events, rotation=45, ha='right')
+        ax.set_xlabel('Evento')
+        ax.set_ylabel('Betweenness Centrality')
+        ax.set_title('Distribuição de Betweenness Centrality por Evento')
+        
+        plt.tight_layout()
+
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
+        return fig
+
+
 def violin_betweenness_by_sport(
     df: pd.DataFrame,
     interactive: bool = True,

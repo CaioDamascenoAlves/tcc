@@ -28,6 +28,7 @@ from dashboard.visualization import (
     boxplot_metric_by_category,
     stacked_bar_profile_distribution,
     violin_betweenness_by_sport,
+    violin_betweenness_by_event,
     table_top_athletes,
 )
 from core.config.constants import SPORTS_LIST
@@ -122,7 +123,7 @@ def render_sidebar(data):
         - **Atletas-Ponte:** Conectores entre comunidades
         - **Rivalidades:** Confrontos entre grupos
         - **Rankings:** Top atletas por métrica
-        - **Evolução Temporal:** Mudanças ao longo do tempo
+        - **Rede Interativa:** Visualização gráfica das conexões
 
         **3. Convenções Visuais:**
         - **Cor Vinho (#8B2635):** Marca UFOP, valores importantes
@@ -208,14 +209,19 @@ def render_sidebar(data):
             min_year = int(years_available[0])
             max_year = int(years_available[-1])
 
-            selected_year_range = st.sidebar.slider(
-                "Período (anos)",
-                min_value=min_year,
-                max_value=max_year,
-                value=(min_year, max_year),
-                step=4,  # Olimpíadas a cada 4 anos
-                help="Selecione o intervalo de anos para análise"
-            )
+            # Se min==max (um único evento), não usar slider
+            if min_year == max_year:
+                st.sidebar.info(f"Período: {min_year}")
+                selected_year_range = (min_year, max_year)
+            else:
+                selected_year_range = st.sidebar.slider(
+                    "Período (anos)",
+                    min_value=min_year,
+                    max_value=max_year,
+                    value=(min_year, max_year),
+                    step=4,  # Olimpíadas a cada 4 anos
+                    help="Selecione o intervalo de anos para análise"
+                )
         else:
             selected_year_range = None
     else:
@@ -411,15 +417,28 @@ def filter_data(data, filters):
                 df = df[df['gender'].isin(filters['sex'])]
 
         # NOVO: Filtro por eventos específicos (per-event modeling)
-        if filters.get('events') and 'metadata' in data and not data['metadata'].empty and 'network_id' in df.columns:
+        # Apenas aplicar se eventos foram especificamente selecionados E é uma lista não-vazia
+        if filters.get('events') is not None and len(filters.get('events', [])) > 0 and 'metadata' in data and not data['metadata'].empty and 'network_id' in df.columns:
             # Obter network_ids correspondentes aos eventos selecionados
-            metadata = data['metadata']
+            # CRÍTICO: filtrar metadata pelos mesmos critérios de sport/sex ANTES de buscar network_ids
+            metadata = data['metadata'].copy()
+            
+            # Aplicar filtros de sport e sex no metadata primeiro
+            if filters['sports']:
+                metadata = metadata[metadata['sport'].isin(filters['sports'])]
+            if filters['sex']:
+                metadata = metadata[metadata['gender'].isin(filters['sex'])]
+            
+            # Agora buscar network_ids dos eventos selecionados no metadata já filtrado
             valid_network_ids = metadata[
                 metadata['event_name'].isin(filters['events'])
             ]['network_id'].unique()
 
-            df = df[df['network_id'].isin(valid_network_ids)]
-            print(f"DEBUG: Filtro de eventos aplicado - {len(valid_network_ids)} redes, {len(df)} atletas")
+            if len(valid_network_ids) > 0:
+                df = df[df['network_id'].isin(valid_network_ids)]
+                print(f"DEBUG: Filtro de eventos aplicado - {len(valid_network_ids)} redes, {len(df)} atletas")
+            else:
+                print(f"DEBUG: Nenhum network_id válido para eventos selecionados - metadata filtrado tem {len(metadata)} redes")
 
         if filters['year_range'] and 'year' in df.columns:
             df = df[(df['year'] >= filters['year_range'][0]) & (df['year'] <= filters['year_range'][1])]
@@ -438,38 +457,45 @@ def filter_data(data, filters):
             filtered['medal_profile'] = pd.DataFrame()
 
         # Communities
+        # Nota: communities tem network_id mas pode não ter sport/sex direto
         if 'communities' in data:
             df = data['communities'].copy()
-            if filters['sports']:
-                df = df[df['sport'].isin(filters['sports'])]
-            if filters['sex']:
-                df = df[df['sex'].isin(filters['sex'])]
+            # Filtrar por network_id baseado nos atletas filtrados
+            if 'network_id' in df.columns and 'network_id' in filtered['athletes'].columns and len(filtered['athletes']) > 0:
+                valid_network_ids = filtered['athletes']['network_id'].unique()
+                df = df[df['network_id'].isin(valid_network_ids)]
+            # Se não conseguiu filtrar por network_id ou athletes está vazio, manter todos
             filtered['communities'] = df
         else:
             filtered['communities'] = pd.DataFrame()
 
         # Hierarchy
+        # Nota: hierarchy tem network_id mas não tem sport/sex
+        # Filtrar por network_id baseado nos atletas filtrados
         df = data['hierarchy'].copy()
-        if filters['sports']:
-            df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex']:
-            df = df[df['sex'].isin(filters['sex'])]
+        if 'network_id' in df.columns and 'network_id' in filtered['athletes'].columns:
+            valid_network_ids = filtered['athletes']['network_id'].unique()
+            df = df[df['network_id'].isin(valid_network_ids)]
         filtered['hierarchy'] = df
 
         # Connectivity
         df = data['connectivity'].copy()
-        if filters['sports']:
+        if filters['sports'] and 'sport' in df.columns:
             df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex']:
+        if filters['sex'] and 'sex' in df.columns:
             df = df[df['sex'].isin(filters['sex'])]
         filtered['connectivity'] = df
 
-        # Rivalries
+        # Rivalries (ATUALIZADO: agora per-event com network_id)
         df = data['rivalries'].copy()
-        if filters['sports']:
+        if filters['sports'] and 'sport' in df.columns:
             df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex']:
+        if filters['sex'] and 'sex' in df.columns:
             df = df[df['sex'].isin(filters['sex'])]
+        # NOVO: Filtrar por network_id (per-event)
+        if 'network_id' in df.columns:
+            valid_network_ids = filtered['athletes']['network_id'].unique()
+            df = df[df['network_id'].isin(valid_network_ids)]
         filtered['rivalries'] = df
 
         # Metadata (IMPORTANTE: necessário para tab Network)
@@ -537,11 +563,24 @@ def render_overview_tab(data):
         )
 
     with col2:
-        num_communities = len(data['communities']) if 'communities' in data and data['communities'] is not None else 0
+        # Contar comunidades TOTAL (soma por rede, não nunique global)
+        # Cada rede tem suas próprias comunidades numeradas de 0...N
+        if 'athletes' in data and 'original_community' in data['athletes'].columns and 'network_id' in data['athletes'].columns:
+            # Contar comunidades únicas por rede e somar
+            num_communities = data['athletes'].groupby('network_id')['original_community'].nunique().sum()
+        elif 'communities' in data and data['communities'] is not None and len(data['communities']) > 0:
+            num_communities = len(data['communities'])
+        elif 'metadata' in data and 'n_communities' in data['metadata'].columns:
+            # Fallback: somar do metadata
+            num_communities = int(data['metadata']['n_communities'].sum())
+        else:
+            num_communities = 0
+        
         st.metric(
             "Comunidades Detectadas",
             f"{num_communities:,}",
-            help="Comunidades distintas identificadas por Louvain (considerando esporte e gênero)"
+            help="Total de comunidades nas redes SELECIONADAS pelos filtros da sidebar. "
+                 "Cada rede tem comunidades próprias (IDs reiniciam em 0 por rede)."
         )
 
     with col3:
@@ -579,8 +618,23 @@ def render_overview_tab(data):
     # Mantemos apenas Betweenness por esporte (comparação válida)
 
     with st.container():
-        render_subsection("Betweenness Centrality por Esporte", "Distribuição dos atletas-ponte (intermediadores) em cada esporte")
-        fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
+        render_subsection("Betweenness Centrality por Evento", "Distribuição dos atletas-ponte por evento específico")
+        
+        # Warning metodológico
+        if 'athletes' in data and 'event_name' in data['athletes'].columns:
+            n_events = data['athletes']['event_name'].nunique()
+            if n_events > 1:
+                st.warning(f"""
+                Atenção: {n_events} eventos selecionados. Betweenness é calculado por rede.
+                Filtre um único evento na sidebar para análise precisa.
+                """)
+            
+            # Warning de limitação de visualização
+            if n_events > 20:
+                st.info(f"Mostrando os 20 primeiros eventos de {n_events} para legibilidade. Use filtros para selecionar eventos específicos.")
+        
+        # Usar evento como agrupamento, não esporte
+        fig = violin_betweenness_by_event(data['athletes'], interactive=True)
         st.plotly_chart(fig, use_container_width=True, key="overview_violin_betweenness")
 
 
@@ -600,25 +654,29 @@ def render_communities_tab(data):
         As **comunidades** são grupos de atletas densamente conectados entre si, identificados automaticamente pelo **algoritmo de Louvain**.
 
         **Hierarquia Estrutural:**
-        - **Núcleo**: Comunidades com alto PageRank médio - grupos de atletas de elite altamente conectados
-        - **Intermediária**: Comunidades com centralidade moderada - grupos competitivos estáveis
-        - **Periférica**: Comunidades com baixo PageRank médio - grupos menos centrais ou emergentes
+        - **Núcleo (top 20%)**: Comunidades com alto PageRank médio - grupos de elite altamente conectados
+        - **Intermediária (60%)**: Comunidades com centralidade moderada - grupos competitivos estáveis  
+        - **Periférica (20%)**: Comunidades com baixo PageRank médio - grupos menos centrais
 
-        **Distribuição de Medalhas:**
-        - Análise da distribuição de medalhas (ouro, prata, bronze) por comunidade
-        - Distribuição aproximadamente equilibrada entre os três tipos
-        - Média geral: 31.8% ouro, 33.4% prata, 34.8% bronze
-
-        **Segregação Estrutural:**
-        Mede o grau de isolamento entre comunidades. Alta segregação indica pouca interação entre grupos,
-        baixa segregação indica confrontos frequentes entre comunidades diferentes.
+        **Tamanho das Comunidades:**
+        Distribuição de atletas por comunidade. Comunidades pequenas (2-10 atletas) são mais comuns,
+        representando grupos especializados de competidores frequentes. Comunidades grandes (>20 atletas)
+        indicam eventos com alta recorrência de confrontos entre os mesmos atletas.
+        
+        **IMPORTANTE:** Cada rede (evento) tem suas próprias comunidades independentes. 
+        Filtre UMA rede específica para análise detalhada de um evento individual.
         """)
 
     # Subtabs
-    subtab1, subtab2, subtab3, subtab4 = st.tabs(["Hierarquia", "Distribuição de Medalhas", "Segregação", "Diversidade Temporal"])
+    subtab1, subtab2 = st.tabs(["Hierarquia", "Tamanho das Comunidades"])
 
     with subtab1:
         render_subsection("Hierarquia de Comunidades", "Análise da hierarquia estrutural baseada em PageRank médio")
+        
+        n_networks = data['athletes']['network_id'].nunique() if 'network_id' in data['athletes'].columns else 0
+        if n_networks > 1:
+            st.warning(f"⚠️ **{n_networks} redes selecionadas.** Hierarquia calculada DENTRO de cada rede. Use filtros para analisar rede individual.")
+        
         st.markdown("""
         Comunidades de **Núcleo** têm alta centralidade, **Periféricas** têm baixa.
         """)
@@ -660,9 +718,26 @@ def render_communities_tab(data):
 
         hierarchy_df = data['hierarchy'].copy()
 
+        # Converter hierarquia numérica para categórica se necessário
+        if hierarchy_df['hierarchy_level'].dtype in ['int64', 'float64']:
+            hierarchy_df['hierarchy_level'] = hierarchy_df['hierarchy_level'].map({
+                1: 'Núcleo',
+                2: 'Intermediária',
+                3: 'Periférica'
+            })
+
         # Contagem por nível
         level_counts = hierarchy_df['hierarchy_level'].value_counts()
         level_stats = hierarchy_df.groupby('hierarchy_level')['pagerank_mean'].mean()
+        
+        # Adicionar explicação sobre os números
+        total_hier = level_counts.sum()
+        st.info(f"""
+        **Classificação hierárquica:** {int(total_hier):,} comunidades classificadas em 3 níveis.
+        
+        Este número representa a soma das comunidades de TODAS as redes selecionadas pelos filtros da sidebar.
+        Cada comunidade é classificada dentro de sua rede (top 20% = Núcleo, meio 60% = Intermediária, bottom 20% = Periférica).
+        """)
 
         # Mapa de labels
         label_map = {
@@ -683,196 +758,77 @@ def render_communities_tab(data):
                 )
 
     with subtab2:
-        render_subsection("Distribuição de Medalhas por Comunidade", "Estatísticas descritivas da distribuição de medalhas")
+        render_subsection("Tamanho das Comunidades", "Distribuição de atletas por comunidade")
+        
         st.markdown("""
-        **Padrão predominantemente equilibrado**: Distribuição aproximadamente uniforme caracteriza
-        competição sistemática sem monopolização absoluta de posições superiores no pódio.
+        **Análise estrutural**: Comunidades variam em tamanho desde grupos pequenos (2-3 atletas) 
+        até grandes redes de dezenas de atletas conectados por competições.
         """)
 
-        # Verificar se temos dados de communities com medalhas
+        # Verificar se temos dados de communities
         if 'communities' in data and data['communities'] is not None and len(data['communities']) > 0:
-            medal_data = data['communities']
+            community_data = data['communities']
 
-            # Verificar se as colunas de medalhas existem
-            if all(col in medal_data.columns for col in ['gold_count', 'silver_count', 'bronze_count', 'total_medals']):
-                # Calcular percentuais
-                medal_data = medal_data.copy()
-                medal_data['gold_pct'] = (medal_data['gold_count'] / medal_data['total_medals'] * 100).fillna(0)
-                medal_data['silver_pct'] = (medal_data['silver_count'] / medal_data['total_medals'] * 100).fillna(0)
-                medal_data['bronze_pct'] = (medal_data['bronze_count'] / medal_data['total_medals'] * 100).fillna(0)
-
-                # Estatísticas descritivas
-                col1, col2, col3 = st.columns(3)
+            # Verificar se tem coluna size
+            if 'size' in community_data.columns:
+                import plotly.express as px
+                
+                # Estatísticas descritivas de tamanho
+                col1, col2, col3, col4 = st.columns(4)
 
                 with col1:
                     st.metric(
-                        "Média Ouro (%)",
-                        f"{medal_data['gold_pct'].mean():.1f}%",
-                        help="Percentual médio de medalhas de ouro nas comunidades"
+                        "Total Comunidades",
+                        f"{len(community_data):,}",
+                        help="Número total de comunidades nas redes selecionadas"
                     )
                 with col2:
                     st.metric(
-                        "Média Prata (%)",
-                        f"{medal_data['silver_pct'].mean():.1f}%",
-                        help="Percentual médio de medalhas de prata nas comunidades"
+                        "Tamanho Médio",
+                        f"{community_data['size'].mean():.1f}",
+                        help="Média de atletas por comunidade"
                     )
                 with col3:
                     st.metric(
-                        "Média Bronze (%)",
-                        f"{medal_data['bronze_pct'].mean():.1f}%",
-                        help="Percentual médio de medalhas de bronze nas comunidades"
+                        "Menor Comunidade",
+                        f"{int(community_data['size'].min())}",
+                        help="Comunidade com menos atletas"
+                    )
+                with col4:
+                    st.metric(
+                        "Maior Comunidade",
+                        f"{int(community_data['size'].max())}",
+                        help="Comunidade com mais atletas"
                     )
 
                 st.markdown("---")
 
-                # Visualização da distribuição - usar gráfico simples de barras empilhadas
-                import plotly.graph_objects as go
-
-                # Agrupar por esporte
-                sport_medals = medal_data.groupby('sport')[['gold_pct', 'silver_pct', 'bronze_pct']].mean()
-
-                fig = go.Figure()
-                fig.add_trace(go.Bar(
-                    name='Ouro',
-                    x=sport_medals.index,
-                    y=sport_medals['gold_pct'],
-                    marker_color='gold'
-                ))
-                fig.add_trace(go.Bar(
-                    name='Prata',
-                    x=sport_medals.index,
-                    y=sport_medals['silver_pct'],
-                    marker_color='silver'
-                ))
-                fig.add_trace(go.Bar(
-                    name='Bronze',
-                    x=sport_medals.index,
-                    y=sport_medals['bronze_pct'],
-                    marker_color='#CD7F32'
-                ))
-
+                # Histograma de distribuição de tamanhos
+                fig = px.histogram(
+                    community_data,
+                    x='size',
+                    nbins=30,
+                    title='Distribuição de Tamanho das Comunidades',
+                    labels={'size': 'Número de Atletas', 'count': 'Número de Comunidades'},
+                    color_discrete_sequence=['#1f77b4']
+                )
                 fig.update_layout(
-                    barmode='stack',
-                    title='Distribuição Média de Medalhas por Esporte',
-                    xaxis_title='Esporte',
-                    yaxis_title='Percentual (%)',
-                    yaxis_range=[0, 100],
+                    xaxis_title='Número de Atletas na Comunidade',
+                    yaxis_title='Frequência (Número de Comunidades)',
+                    showlegend=False,
                     height=400
                 )
-
-                st.plotly_chart(fig, use_container_width=True, key="communities_medals_stacked")
+                st.plotly_chart(fig, use_container_width=True, key="communities_size_histogram")
+                
+                st.caption("""
+                **Interpretação**: A maioria das comunidades são pequenas (2-10 atletas), 
+                refletindo grupos especializados de competidores frequentes. 
+                Comunidades grandes (>20 atletas) são raras e indicam eventos com alta recorrência de confrontos.
+                """)
             else:
-                st.info("Colunas de medalhas não encontradas nos dados de comunidades.")
+                st.info("Coluna 'size' não encontrada nos dados de comunidades.")
         else:
-            st.info("Dados de distribuição de medalhas não disponíveis para visualização.")
-
-    with subtab3:
-        render_subsection("Segregação Estrutural", "Análise da conectividade intra vs inter-comunidade")
-        st.markdown("""
-        **Alta segregação**: Comunidades isoladas | **Baixa segregação**: Bem conectadas.
-        """)
-
-        # Avisar se múltiplos esportes selecionados
-        if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
-            st.warning("⚠️ **Atenção:** Múltiplos esportes selecionados. "
-                       "Segregação é mais significativa dentro de cada esporte.")
-
-        fig = heatmap_segregation(data['connectivity'], interactive=True)
-        st.plotly_chart(fig, use_container_width=True, key="communities_segregation_heatmap")
-
-        st.markdown("---")
-
-        # Tabela de conectividade
-        render_subsection("Tabela de Conectividade")
-        st.dataframe(
-            data['connectivity'][['sport', 'sex', 'intra_edges', 'inter_edges', 'segregation_score']],
-            use_container_width=True
-        )
-
-    with subtab4:
-        render_subsection("Diversidade Temporal (Entropia de Shannon)", "Análise da distribuição temporal de atletas por comunidade")
-        st.markdown("""
-        **Alta entropia**: Alta diversidade temporal - atletas distribuídos em múltiplas eras
-        **Baixa entropia**: Baixa diversidade temporal - atletas concentrados em poucas eras
-        """)
-
-        # Verificar se temos dados de community_profiles com entropia
-        if 'communities' in data and data['communities'] is not None and len(data['communities']) > 0:
-            profiles_df = data['communities']
-
-            # Estatísticas por esporte
-            st.markdown("### Entropia Temporal por Esporte")
-
-            entropy_stats = profiles_df.groupby('sport')['temporal_entropy'].agg(['mean', 'min', 'max', 'std']).reset_index()
-
-            col1, col2, col3 = st.columns(3)
-
-            sports = ['Swimming', 'Basketball', 'Football']
-            sport_labels = {'Swimming': 'Swimming', 'Basketball': 'Basketball', 'Football': 'Football'}
-
-            for idx, sport in enumerate(sports):
-                sport_data = entropy_stats[entropy_stats['sport'] == sport]
-                if len(sport_data) > 0:
-                    with [col1, col2, col3][idx]:
-                        st.metric(
-                            sport_labels[sport],
-                            f"{sport_data['mean'].values[0]:.2f}",
-                            help=f"Entropia temporal média. Min: {sport_data['min'].values[0]:.2f}, Max: {sport_data['max'].values[0]:.2f}"
-                        )
-
-            st.markdown("---")
-
-            # Interpretação
-            st.info("""
-            **Interpretação dos valores (da monografia):**
-            - **Swimming (1.60)**: Diversidade temporal moderada - comunidades especializadas por era
-            - **Basketball (2.46)**: Alta diversidade temporal - comunidades multi-era
-            - **Football (2.53)**: Alta diversidade temporal - comunidades multi-era
-
-            Esportes coletivos apresentam comunidades que agregam atletas de múltiplas décadas devido
-            à natureza densamente conectada destas redes.
-            """)
-
-            st.markdown("---")
-
-            # Gráfico de distribuição
-            import plotly.graph_objects as go
-
-            fig = go.Figure()
-
-            for sport in sports:
-                sport_df = profiles_df[profiles_df['sport'] == sport]
-                fig.add_trace(go.Box(
-                    y=sport_df['temporal_entropy'],
-                    name=sport_labels[sport],
-                    boxmean='sd'
-                ))
-
-            fig.update_layout(
-                title='Distribuição de Entropia Temporal por Esporte',
-                yaxis_title='Entropia de Shannon (Temporal)',
-                xaxis_title='Esporte',
-                height=400,
-                showlegend=False
-            )
-
-            st.plotly_chart(fig, use_container_width=True, key="entropy_boxplot")
-
-            st.markdown("---")
-
-            # Tabela detalhada
-            render_subsection("Entropia por Comunidade")
-
-            display_cols = ['sport', 'sex', 'community_id', 'size', 'temporal_entropy', 'geographic_entropy', 'year_start', 'year_end']
-            available_cols = [col for col in display_cols if col in profiles_df.columns]
-
-            st.dataframe(
-                profiles_df[available_cols].sort_values('temporal_entropy', ascending=False),
-                use_container_width=True,
-                height=400
-            )
-        else:
-            st.warning("Dados de entropia temporal não disponíveis. Execute a análise completa para gerar esses dados.")
+            st.info("Dados de comunidades não disponíveis para visualização.")
 
 
 # ============================================================================
@@ -932,6 +888,14 @@ def render_bridges_tab(data):
     with col1:
         with st.container():
             render_subsection("Distribuição por Esporte", "Violin plot mostrando a variação de betweenness em cada esporte")
+            
+            # Warning metodológico: agregação de múltiplos eventos
+            if 'athletes' in data and data['athletes']['event_name'].nunique() > 1:
+                st.info("""
+                📊 **Nota:** Esta distribuição agrega múltiplos eventos. 
+                Betweenness é calculado por rede. Padrões mostram diferenças estruturais entre esportes.
+                """)
+            
             fig = violin_betweenness_by_sport(data['athletes'], interactive=True)
             st.plotly_chart(fig, use_container_width=True, key="bridges_violin_betweenness")
 
@@ -948,18 +912,99 @@ def render_bridges_tab(data):
 
     st.markdown("---")
 
-    # Tabela detalhada
-    render_subsection("Atletas-Ponte por Esporte")
+    # Tabela detalhada com granularidade por evento
+    render_subsection("Atletas-Ponte Detalhados", "Visualização com informação de evento e ano")
+    
+    # Opção de agrupamento
+    groupby_option = st.radio(
+        "Agrupar por:",
+        ["Esporte", "Evento", "Período (Cold War / Pós-Guerra Fria)"],
+        horizontal=True,
+        help="Escolha o nível de granularidade da análise"
+    )
+    
+    # Preparar colunas para exibição
+    display_cols_base = ['name', 'noc', 'sport', 'sex']
+    
+    # Adicionar event_name e year se disponíveis
+    if 'event_name' in bridges.columns:
+        display_cols_base.append('event_name')
+    if 'year' in bridges.columns:
+        display_cols_base.append('year')
+    
+    display_cols_base.extend(['original_betweenness_centrality', 'original_pagerank'])
+    
+    # Filtrar apenas colunas que existem
+    display_cols = [col for col in display_cols_base if col in bridges.columns]
+    
+    if groupby_option == "Esporte":
+        st.markdown("**Top 5 atletas-ponte por esporte:**")
+        for sport in sorted(bridges['sport'].unique()):
+            sport_bridges = bridges[bridges['sport'] == sport].nlargest(5, 'original_betweenness_centrality')
 
-    for sport in sorted(data['athletes']['sport'].unique()):
-        sport_bridges = bridges[bridges['sport'] == sport].nlargest(5, 'original_betweenness_centrality')
-
-        if len(sport_bridges) > 0:
-            with st.expander(f"{sport} ({len(sport_bridges[sport_bridges['sport'] == sport])} bridges)"):
-                st.dataframe(
-                    sport_bridges[['name', 'noc', 'sex', 'original_betweenness_centrality', 'original_pagerank']],
-                    use_container_width=True
-                )
+            if len(sport_bridges) > 0:
+                with st.expander(f"🏆 {sport.title()} ({len(bridges[bridges['sport'] == sport])} bridges no total)"):
+                    st.dataframe(
+                        sport_bridges[display_cols],
+                        use_container_width=True,
+                        hide_index=True
+                    )
+    
+    elif groupby_option == "Evento":
+        st.markdown("**Top 3 atletas-ponte por evento específico:**")
+        
+        # Verificar se event_name existe
+        if 'event_name' not in bridges.columns:
+            st.warning("⚠️ Coluna 'event_name' não disponível nos dados. Mostrando por esporte.")
+        else:
+            # Agrupar por esporte primeiro para organização
+            for sport in sorted(bridges['sport'].unique()):
+                sport_bridges = bridges[bridges['sport'] == sport]
+                events_in_sport = sport_bridges['event_name'].unique()
+                
+                with st.expander(f"🏆 {sport.title()} ({len(events_in_sport)} eventos)"):
+                    for event in sorted(events_in_sport)[:10]:  # Limitar a 10 eventos por esporte
+                        event_bridges = sport_bridges[sport_bridges['event_name'] == event].nlargest(3, 'original_betweenness_centrality')
+                        
+                        if len(event_bridges) > 0:
+                            st.markdown(f"**{event}**")
+                            st.dataframe(
+                                event_bridges[display_cols],
+                                use_container_width=True,
+                                hide_index=True
+                            )
+                            st.markdown("---")
+    
+    elif groupby_option == "Período (Cold War / Pós-Guerra Fria)":
+        st.markdown("**Atletas-ponte por período histórico:**")
+        
+        # Verificar se year existe
+        if 'year' not in bridges.columns:
+            st.warning("⚠️ Coluna 'year' não disponível nos dados. Mostrando por esporte.")
+        else:
+            # Definir períodos
+            bridges_with_period = bridges.copy()
+            bridges_with_period['periodo'] = bridges_with_period['year'].apply(
+                lambda y: "Pré-Guerra Fria (até 1947)" if y < 1948 else 
+                         ("Guerra Fria (1948-1991)" if y <= 1991 else "Pós-Guerra Fria (1992+)")
+            )
+            
+            for periodo in ["Pré-Guerra Fria (até 1947)", "Guerra Fria (1948-1991)", "Pós-Guerra Fria (1992+)"]:
+                periodo_bridges = bridges_with_period[bridges_with_period['periodo'] == periodo].nlargest(10, 'original_betweenness_centrality')
+                
+                if len(periodo_bridges) > 0:
+                    with st.expander(f"🕐 {periodo} ({len(bridges_with_period[bridges_with_period['periodo'] == periodo])} bridges)"):
+                        st.dataframe(
+                            periodo_bridges[display_cols],
+                            use_container_width=True,
+                            hide_index=True
+                        )
+    
+    # Nota metodológica
+    st.info("""
+    💡 **Interpretação:** Betweenness centrality identifica atletas que conectam diferentes grupos. 
+    Valores mais altos indicam maior importância estrutural na rede do evento específico.
+    """)
 
 
 # ============================================================================
@@ -981,10 +1026,13 @@ def render_rivalries_tab(filtered_data):
 
     with st.expander("ℹ️ Sobre Rivalidades Estruturais"):
         st.markdown("""
-        **Rivalidades estruturais** são identificadas pelo número de arestas (confrontos) entre pares de comunidades.
+        **Rivalidades estruturais** são identificadas pelo número de arestas (confrontos) entre pares de comunidades **dentro de cada evento**.
         Quanto maior o número de confrontos, mais intensa a rivalidade estrutural entre os grupos.
 
         **Nota:** As rivalidades mostradas respeitam os filtros globais selecionados na sidebar.
+        
+        ✅ **Atualização:** Os dados de rivalidades agora são calculados **POR EVENTO** (per-event modeling).
+        Cada rivalidade pertence a uma rede específica (evento + ano), permitindo análise granular.
         """)
 
     # Usar dados já filtrados (não carregar novamente!)
@@ -1038,9 +1086,38 @@ def render_rivalries_tab(filtered_data):
 
     # Tabela completa
     render_subsection("Tabela Completa de Rivalidades")
+    
+    # Preparar DataFrame para exibição
+    display_df = rivalries_filtered.sort_values('num_confronts', ascending=False).copy()
+    
+    # Selecionar colunas relevantes (se existirem)
+    cols_to_show = []
+    if 'event_name' in display_df.columns:
+        cols_to_show.append('event_name')
+    if 'sport' in display_df.columns:
+        cols_to_show.append('sport')
+    if 'sex' in display_df.columns:
+        cols_to_show.append('sex')
+    
+    cols_to_show.extend(['community_1', 'community_2', 'num_confronts'])
+    
+    # Renomear colunas para português
+    rename_map = {
+        'event_name': 'Evento',
+        'sport': 'Esporte',
+        'sex': 'Sexo',
+        'community_1': 'Comunidade 1',
+        'community_2': 'Comunidade 2',
+        'num_confronts': 'Confrontos'
+    }
+    
+    display_df = display_df[[col for col in cols_to_show if col in display_df.columns]]
+    display_df = display_df.rename(columns=rename_map)
+    
     st.dataframe(
-        rivalries_filtered.sort_values('num_confronts', ascending=False),
-        use_container_width=True
+        display_df,
+        use_container_width=True,
+        hide_index=True
     )
 
 
@@ -1106,111 +1183,76 @@ def render_rankings_tab(data):
 
     st.markdown("---")
 
-    # Rankings por esporte (evita comparação cross-sport)
-    st.markdown(f"### Top {top_n} por Esporte")
-    st.info(f"📊 **{selected_metric_name}** é calculado independentemente para cada rede. "
-            "Rankings são apresentados por esporte para evitar comparações enviesadas entre modalidades.")
+    # Rankings por evento (per-event modeling)
+    st.markdown(f"### Top {top_n} por Evento")
+    st.info(f"📊 **{selected_metric_name}** é calculado independentemente para cada rede (evento). "
+            "Rankings são apresentados por evento para análise granular.")
 
     # Verifica se há dados filtrados
     if 'athletes' not in data or data['athletes'].empty:
         st.warning("⚠️ Nenhum dado disponível com os filtros atuais.")
         return
 
-    # Itera sobre esportes disponíveis
-    available_sports = sorted(data['athletes']['sport'].unique())
-
-    if len(available_sports) == 0:
-        st.warning("⚠️ Nenhum esporte disponível nos dados filtrados.")
+    # Verificar se tem event_name nos dados
+    if 'event_name' not in data['athletes'].columns:
+        st.error("❌ Coluna 'event_name' não encontrada nos dados. Impossível agrupar por evento.")
         return
 
-    for sport in available_sports:
-        with st.expander(f"🏅 {sport.title()}", expanded=True):
-            sport_data = data['athletes'][data['athletes']['sport'] == sport].copy()
+    # Agrupar por evento (event_name é único por network_id)
+    available_events = sorted(data['athletes']['event_name'].dropna().unique())
 
-            # Verifica gêneros disponíveis (usar 'sex' ou 'gender' para compatibilidade)
-            sex_col = 'sex' if 'sex' in sport_data.columns else 'gender'
-            available_genders = sport_data[sex_col].unique()
+    if len(available_events) == 0:
+        st.warning("⚠️ Nenhum evento disponível nos dados filtrados.")
+        return
 
-            # Criar colunas side-by-side apenas se houver ambos os gêneros
-            if 'M' in available_genders and 'F' in available_genders:
-                col_m, col_f = st.columns(2)
+    for event in available_events:
+        with st.expander(f"🏅 {event}", expanded=False):
+            event_data = data['athletes'][data['athletes']['event_name'] == event].copy()
 
-                with col_m:
-                    st.markdown("**Masculino**")
-                    m_data = sport_data[sport_data[sex_col] == 'M']
-                    if not m_data.empty:
-                        fig_m = table_top_athletes(
-                            m_data,
-                            metric_column=selected_metric,
-                            top_n=top_n,
-                            interactive=True
-                        )
-                        st.plotly_chart(fig_m, use_container_width=True, key=f"ranking_{sport}_M")
-                    else:
-                        st.info("Sem dados masculinos")
-
-                with col_f:
-                    st.markdown("**Feminino**")
-                    f_data = sport_data[sport_data[sex_col] == 'F']
-                    if not f_data.empty:
-                        fig_f = table_top_athletes(
-                            f_data,
-                            metric_column=selected_metric,
-                            top_n=top_n,
-                            interactive=True
-                        )
-                        st.plotly_chart(fig_f, use_container_width=True, key=f"ranking_{sport}_F")
-                    else:
-                        st.info("Sem dados femininos")
-
-            # Se houver apenas um gênero, mostra em largura completa
-            elif 'M' in available_genders:
-                st.markdown("**Masculino**")
-                m_data = sport_data[sport_data[sex_col] == 'M']
-                fig_m = table_top_athletes(
-                    m_data,
+            # Pegar informações do evento
+            event_sport = event_data['sport'].iloc[0] if 'sport' in event_data.columns else 'N/A'
+            event_sex = event_data['sex'].iloc[0] if 'sex' in event_data.columns else event_data['gender'].iloc[0] if 'gender' in event_data.columns else 'N/A'
+            
+            st.caption(f"**Esporte:** {event_sport} | **Sexo:** {event_sex}")
+            
+            # Mostrar ranking do evento
+            if not event_data.empty:
+                fig = table_top_athletes(
+                    event_data,
                     metric_column=selected_metric,
                     top_n=top_n,
                     interactive=True
                 )
-                st.plotly_chart(fig_m, use_container_width=True, key=f"ranking_{sport}_M")
-
-            elif 'F' in available_genders:
-                st.markdown("**Feminino**")
-                f_data = sport_data[sport_data[sex_col] == 'F']
-                fig_f = table_top_athletes(
-                    f_data,
-                    metric_column=selected_metric,
-                    top_n=top_n,
-                    interactive=True
-                )
-                st.plotly_chart(fig_f, use_container_width=True, key=f"ranking_{sport}_F")
-
+                st.plotly_chart(fig, use_container_width=True, key=f"ranking_{event.replace(' ', '_')}")
             else:
-                st.warning(f"⚠️ Nenhum dado disponível para {sport.title()}")
+                st.info("Sem dados para este evento")
 
     st.markdown("---")
 
-    # Distribuição
-    render_section_title(f"Distribuição de {selected_metric_name}", "Análise estatística da métrica selecionada")
+    # Distribuição por evento (não por esporte)
+    render_section_title(f"Distribuição de {selected_metric_name}", "Análise estatística da métrica selecionada por evento")
 
-    # Aviso para PageRank com múltiplos esportes
-    if selected_metric == 'original_pagerank' and 'athletes' in data and data['athletes']['sport'].nunique() > 1:
-        st.warning("⚠️ **Atenção:** PageRank é específico a cada rede e não deve ser comparado entre esportes diferentes. "
-                   "Use os filtros da sidebar para selecionar um único esporte para análise precisa.")
+    # Aviso para PageRank
+    if selected_metric == 'original_pagerank':
+        st.info("📊 **PageRank** é calculado independentemente para cada evento (rede). "
+                "A distribuição mostra variação entre todos os eventos selecionados.")
 
-    # Boxplot por esporte (apenas se não for PageRank com múltiplos esportes)
-    if not (selected_metric == 'original_pagerank' and data['athletes']['sport'].nunique() > 1):
+    # Boxplot por evento (limitado para não poluir)
+    n_events = data['athletes']['event_name'].nunique() if 'event_name' in data['athletes'].columns else 0
+    
+    if n_events > 0 and n_events <= 10:
         fig = boxplot_metric_by_category(
             data['athletes'],
             metric_column=selected_metric,
-            category_column='sport',
+            category_column='event_name',
             interactive=True,
-            title=f'{selected_metric_name} por Esporte'
+            title=f'{selected_metric_name} por Evento'
         )
-        st.plotly_chart(fig, use_container_width=True, key="rankings_boxplot_by_sport")
+        st.plotly_chart(fig, use_container_width=True, key="rankings_boxplot_by_event")
+    elif n_events > 10:
+        st.warning(f"⚠️ Muitos eventos selecionados ({n_events}). Use os filtros da sidebar para reduzir e visualizar a distribuição.")
     else:
-        st.info("💡 Selecione um único esporte nos filtros da sidebar para visualizar a distribuição de PageRank.")
+        st.info("Sem dados de eventos para visualizar distribuição.")
 
 
 # ============================================================================
@@ -1733,8 +1775,24 @@ def render_network_tab(filtered_data):
         """)
 
 
+# ==============================================================================
+# FUNÇÃO DESABILITADA: render_temporal_tab
+# ==============================================================================
+# MOTIVO: Incompatível com modelagem per-event atual
+#
+# A aba "Evolução Temporal" foi removida porque a modelagem per-event agrega
+# todos os anos de um evento em uma única rede (ex: "Athletics_Mens_10000m"
+# contém atletas de 1912-2021).
+#
+# Para análise temporal válida seria necessário criar redes separadas por ano
+# (ex: "Athletics_Mens_10000m_1992", "Athletics_Mens_10000m_1996", etc.),
+# recalcular métricas para cada ano, e então comparar evolução.
+#
+# Removido em: 2026-02-07
+# ==============================================================================
+
 def render_temporal_tab(data):
-    """Tab: Evolução Temporal."""
+    """Tab: Evolução Temporal. [DESABILITADA - Ver comentário acima]"""
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
     from core.config.olympic_eras import (
@@ -1841,17 +1899,99 @@ def render_temporal_tab(data):
         - **Anotações nos gráficos**: Destacam transições e eventos importantes
         """)
 
-    # Verificar se temos dados temporais
-    if 'year' not in data['athletes'].columns:
-        st.warning("Dados temporais não disponíveis. Aplique o filtro temporal na sidebar.")
+    # Verificar se temos dados temporais REAIS (não apenas coluna year = 0)
+    has_temporal_data = False
+    if 'year' in data['athletes'].columns:
+        valid_years = data['athletes'][data['athletes']['year'] > 0]
+        has_temporal_data = len(valid_years) > 0
+
+    if not has_temporal_data:
+        st.error("❌ **Dados temporais não disponíveis**")
+        st.warning("""
+        **Por quê?**
+
+        Os dados filtrados não contêm informação temporal válida (coluna `year` ausente ou = 0).
+
+        **Possíveis causas:**
+        - Apenas dados antigos (12 casos agregados) selecionados nos filtros
+        - Dados sem informação de ano nas redes originais
+
+        **Para análise temporal você precisa:**
+        - Selecionar redes per-event (149 redes) nos filtros da barra lateral
+        - Escolher esportes que tenham dados temporais (athletics, swimming, etc.)
+
+        Esta aba permanece no dashboard para referência futura, caso dados temporais sejam adicionados.
+        """)
+
+        st.info("💡 **Sugestão:** Use as outras abas para análise estrutural das redes (sem dimensão temporal).")
         return
 
-    with st.spinner("Processando análise temporal..."):
-        # Preparar dados agregados por ano
-        df = data['athletes'].copy()
+    # ========================================
+    # SELETOR DE EVENTO ESPECÍFICO
+    # ========================================
 
+    st.markdown("---")
+    render_subsection("⚙️ Configuração de Análise Temporal", "Selecione o evento para visualizar sua evolução ao longo do tempo")
+
+    # Filtrar apenas dados com year > 0 (ignorar dados antigos sem info temporal)
+    df_all = data['athletes'][data['athletes']['year'] > 0].copy()
+
+    if len(df_all) == 0:
+        st.error("❌ Nenhum dado temporal disponível após filtros aplicados.")
+        return
+
+    # Obter lista de eventos disponíveis
+    sex_col = 'sex' if 'sex' in df_all.columns else 'gender'
+    df_all['event_full'] = df_all['sport'] + ' - ' + df_all['event_name'] + ' (' + df_all[sex_col] + ')'
+    available_events = sorted(df_all['event_full'].unique())
+
+    # Contar anos por evento
+    event_year_counts = df_all.groupby('event_full')['year'].nunique().to_dict()
+
+    # Opções de seleção
+    col_sel1, col_sel2 = st.columns([3, 1])
+
+    with col_sel1:
+        selected_event_full = st.selectbox(
+            "Selecione um evento específico",
+            options=available_events,
+            help="Escolha qual evento você quer analisar temporalmente. Cada evento é uma rede independente."
+        )
+
+    with col_sel2:
+        n_years = event_year_counts.get(selected_event_full, 0)
+        st.metric(
+            "Edições",
+            f"{n_years}",
+            help="Número de anos olímpicos com dados para este evento"
+        )
+
+    # Extrair sport, event_name, sex do selecionado
+    parts = selected_event_full.split(' - ')
+    selected_sport = parts[0]
+    event_and_sex = parts[1]
+    selected_sex = event_and_sex[-2] if event_and_sex.endswith('(M)') or event_and_sex.endswith('(F)') else None
+    selected_event = event_and_sex.rsplit(' (', 1)[0]
+
+    # Filtrar dados do evento selecionado
+    df = df_all[
+        (df_all['sport'] == selected_sport) &
+        (df_all['event_name'] == selected_event) &
+        (df_all[sex_col] == selected_sex)
+    ].copy()
+
+    if len(df) == 0:
+        st.error(f"❌ Nenhum dado encontrado para {selected_event_full}")
+        return
+
+    st.info(f"📊 Analisando **{len(df):,} atletas** em **{df['year'].nunique()} edições** de **{selected_event_full}**")
+
+    # ========================================
+    # PROCESSAR DADOS TEMPORAIS
+    # ========================================
+
+    with st.spinner("Processando análise temporal..."):
         # Preparar dicionário de agregação com colunas disponíveis
-        # Usar 'name' para contar atletas (ou 'noc' como fallback)
         count_col = 'name' if 'name' in df.columns else ('noc' if 'noc' in df.columns else df.columns[0])
         agg_dict = {count_col: 'count'}
 
@@ -1862,6 +2002,7 @@ def render_temporal_tab(data):
         if 'original_total_degree' in df.columns:
             agg_dict['original_total_degree'] = 'mean'
 
+        # Agrupar por ano (já filtrado para evento específico)
         df_by_year = df.groupby('year').agg(agg_dict).reset_index()
 
         # Renomear colunas
@@ -1993,11 +2134,6 @@ def render_temporal_tab(data):
         if 'avg_pagerank' in df_by_year.columns:
             with st.container():
                 render_subsection("Evolução do PageRank Médio", "Mudanças na centralidade média dos atletas ao longo do tempo")
-
-                # Aviso se múltiplos esportes selecionados
-                if 'athletes' in data and data['athletes']['sport'].nunique() > 1:
-                    st.warning("⚠️ **Atenção:** Múltiplos esportes selecionados. PageRank é específico a cada rede. "
-                               "Para análise temporal precisa, selecione um único esporte nos filtros.")
 
                 fig = go.Figure()
 
@@ -2514,13 +2650,12 @@ def main():
     st.markdown("---")
 
     # Tabs principais
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "Visão Geral",
         "Comunidades",
         "Atletas-Ponte",
         "Rivalidades",
         "Rankings",
-        "Evolução Temporal",
         "Rede Interativa"
     ])
 
@@ -2540,9 +2675,6 @@ def main():
         render_rankings_tab(filtered_data)
 
     with tab6:
-        render_temporal_tab(filtered_data)
-
-    with tab7:
         render_network_tab(filtered_data)
 
 

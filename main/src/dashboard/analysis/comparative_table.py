@@ -216,142 +216,124 @@ def create_table_with_tooltips(df_transposed, metric_explanations):
 
 def generate_comparative_metrics(data: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     """
-    Gera métricas comparativas para todos os esportes.
+    Gera métricas comparativas POR EVENTO (não por esporte agregado).
+    
+    RIGOR ACADÊMICO: Cada linha = uma rede independente (evento específico).
+    Não agregamos eventos diferentes - cada um tem suas métricas próprias.
 
     Args:
-        data: Dicionário com DataFrames (athletes, hierarchy, etc.)
+        data: Dicionário com DataFrames (metadata, athletes, etc.)
 
     Returns:
-        DataFrame com métricas comparativas por esporte
+        DataFrame com métricas por EVENTO individual
     """
-    athletes_df = data['athletes']
-    communities_df = data.get('communities', data.get('hierarchy', pd.DataFrame()))  # Usar communities, fallback para hierarchy
-    medal_profile_df = data['medal_profile']
-
-    # Esportes disponíveis
-    sports = sorted(athletes_df['sport'].unique())
-
+    # Usar metadata como fonte principal (149 redes)
+    metadata_df = data.get('metadata', pd.DataFrame())
+    
+    if metadata_df.empty:
+        st.warning("⚠️ Metadata não disponível. Tabela comparativa desabilitada.")
+        return pd.DataFrame()
+    
+    # Dados de atletas (para métricas complementares)
+    athletes_df = data.get('athletes', pd.DataFrame())
+    
     metrics = []
-
-    for sport in sports:
-        # Filtrar dados do esporte
-        sport_athletes = athletes_df[athletes_df['sport'] == sport]
-        sport_communities = communities_df[communities_df['sport'] == sport]
-        sport_profile = medal_profile_df[medal_profile_df['sport'] == sport]
-
-        # === ESTRUTURA DA REDE ===
-        num_athletes = len(sport_athletes)
-        num_communities = len(sport_communities)
-
-        # Densidade (aproximada via degree médio / total possível)
-        avg_degree = sport_athletes['original_total_degree'].mean() if 'original_total_degree' in sport_athletes.columns else 0
-        max_possible_edges = num_athletes * (num_athletes - 1)
-        density = (avg_degree / num_athletes * 100) if num_athletes > 1 else 0
-
-        # === CENTRALIDADE ===
-        avg_pagerank = sport_athletes['original_pagerank'].mean() if 'original_pagerank' in sport_athletes.columns else 0
-
-        # Concentração: % do PageRank total nos top 10%
-        if 'original_pagerank' in sport_athletes.columns:
-            top_10_pct = int(num_athletes * 0.1)
-            top_pagerank_sum = sport_athletes.nlargest(top_10_pct, 'original_pagerank')['original_pagerank'].sum()
-            total_pagerank_sum = sport_athletes['original_pagerank'].sum()
-            concentration = (top_pagerank_sum / total_pagerank_sum * 100) if total_pagerank_sum > 0 else 0
-        else:
-            concentration = 0
-
-        avg_betweenness = sport_athletes['original_betweenness_centrality'].mean() if 'original_betweenness_centrality' in sport_athletes.columns else 0
-
-        # === COMUNIDADES ===
-        # Modularidade estimada pelo tamanho médio das comunidades
-        avg_community_size = sport_communities['size'].mean() if 'size' in sport_communities.columns else 0
-        modularity_label = (
-            "Alta" if avg_community_size < 50 else
-            "Média" if avg_community_size < 150 else
-            "Baixa"
-        )
-
-        # Segregação média
-        avg_segregation = sport_communities['segregation_score'].mean() if 'segregation_score' in sport_communities.columns else 0
-        segregation_label = (
-            "Alta" if avg_segregation > 0.7 else
-            "Média" if avg_segregation > 0.4 else
-            "Baixa"
-        )
-
-        # Perfil predominante
-        if len(sport_profile) > 0:
-            profile_counts = sport_profile['competitive_profile'].value_counts()
-            predominant_profile = profile_counts.idxmax() if len(profile_counts) > 0 else "N/A"
-        else:
-            predominant_profile = "N/A"
-
-        # === ATLETAS-PONTE ===
-        bridges = MetricsCalculator.identify_bridge_athletes(sport_athletes)
-        num_bridges = len(bridges)
-        pct_bridges = (num_bridges / num_athletes * 100) if num_athletes > 0 else 0
-
-        # === TEMPORAL ===
-        if 'year' in sport_athletes.columns:
-            years = sorted(sport_athletes['year'].dropna().unique())
-            if len(years) > 1:
-                year_range = f"{int(years[0])}-{int(years[-1])}"
-
-                # Crescimento
-                first_year_athletes = len(sport_athletes[sport_athletes['year'] == years[0]])
-                last_year_athletes = len(sport_athletes[sport_athletes['year'] == years[-1]])
-                growth = ((last_year_athletes / first_year_athletes) - 1) * 100 if first_year_athletes > 0 else 0
+    
+    for _, network in metadata_df.iterrows():
+        network_id = network['network_id']
+        sport = network['sport']
+        gender = network.get('gender', network.get('sex', 'N/A'))
+        event_name = network['event_name']
+        
+        # Identificador único do evento
+        event_label = f"{sport.title()} {gender.upper()} - {event_name}"
+        
+        # === FILTRAR ATHLETES PARA ESTA REDE (usado em múltiplos lugares) ===
+        network_athletes = athletes_df[athletes_df['network_id'] == network_id] if not athletes_df.empty else pd.DataFrame()
+        
+        # === ESTRUTURA DA REDE (direto do metadata) ===
+        num_athletes = network.get('n_athletes', 0)
+        num_edges = network.get('n_edges', 0)
+        density = network.get('density', 0) * 100  # Converter para %
+        num_communities = network.get('n_communities', 0)
+        modularity = network.get('modularity', 0)
+        
+        # === CENTRALIDADE (do athletes_df já filtrado acima) ===
+        if not network_athletes.empty and len(network_athletes) > 0:
+            # PageRank médio
+            avg_pagerank = network_athletes['original_pagerank'].mean() if 'original_pagerank' in network_athletes.columns else 0
+            
+            # Concentração Top 10%
+            if 'original_pagerank' in network_athletes.columns:
+                top_10_pct = max(1, int(len(network_athletes) * 0.1))
+                top_pagerank_sum = network_athletes.nlargest(top_10_pct, 'original_pagerank')['original_pagerank'].sum()
+                total_pagerank_sum = network_athletes['original_pagerank'].sum()
+                concentration = (top_pagerank_sum / total_pagerank_sum * 100) if total_pagerank_sum > 0 else 0
             else:
-                year_range = "N/A"
-                growth = 0
+                concentration = 0
+            
+            # Betweenness médio
+            avg_betweenness = network_athletes['original_betweenness_centrality'].mean() if 'original_betweenness_centrality' in network_athletes.columns else 0
+            
+            # Atletas-ponte
+            bridges = MetricsCalculator.identify_bridge_athletes(network_athletes)
+            num_bridges = len(bridges)
+            pct_bridges = (num_bridges / len(network_athletes) * 100) if len(network_athletes) > 0 else 0
         else:
-            year_range = "N/A"
-            growth = 0
-
-        # === HIERARQUIA ===
-        if 'hierarchy_level' in sport_communities.columns:
-            # Normalizar para remover acentos
-            hierarchy_norm = sport_communities.copy()
-            hierarchy_norm['hierarchy_level_norm'] = hierarchy_norm['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
-
-            nucleo_count = len(hierarchy_norm[hierarchy_norm['hierarchy_level_norm'] == 'Nucleo'])
-            intermediaria_count = len(hierarchy_norm[hierarchy_norm['hierarchy_level_norm'] == 'Intermediaria'])
-            periferica_count = len(hierarchy_norm[hierarchy_norm['hierarchy_level_norm'] == 'Periferica'])
-
-            hierarchy_distribution = f"N:{nucleo_count} I:{intermediaria_count} P:{periferica_count}"
-        else:
-            hierarchy_distribution = "N/A"
-
-        # Compilar métricas (mantendo tipos numéricos)
+            avg_pagerank = 0
+            concentration = 0
+            avg_betweenness = 0
+            num_bridges = 0
+            pct_bridges = 0
+        
+        # === CLASSIFICAÇÃO QUALITATIVA ===
+        # Modularidade
+        modularity_label = (
+            "Alta" if modularity > 0.6 else
+            "Média" if modularity > 0.3 else
+            "Baixa"
+        )
+        
+        # Densidade
+        density_label = (
+            "Densa" if density > 30 else
+            "Moderada" if density > 10 else
+            "Esparsa"
+        )
+        
+        # Compilar métricas
         metrics.append({
-            'Esporte': sport,
-
+            'Evento': event_label,
+            'Esporte': sport.title(),
+            'Sexo': gender.upper(),
+            
             # Estrutura
-            'Atletas': num_athletes,
-            'Comunidades': num_communities,
+            'Atletas': int(num_athletes),
+            'Arestas': int(num_edges),
             'Densidade': round(density, 2),
-
+            'Classe Densidade': density_label,
+            
+            # Comunidades
+            'Comunidades': int(num_communities),
+            'Modularidade': round(modularity, 3),
+            'Classe Modularidade': modularity_label,
+            
             # Centralidade
             'PageRank Médio': round(avg_pagerank, 6),
-            'Concentração Top10': round(concentration, 1),
+            'Concentração Top10%': round(concentration, 1),
             'Betweenness Médio': round(avg_betweenness, 6),
-
-            # Comunidades
-            'Modularidade': modularity_label,
-            'Segregação': segregation_label,
-            'Perfil': predominant_profile,
-            'Hierarquia': hierarchy_distribution,
-
-            # Atletas-Ponte
-            'Bridges': num_bridges,
+            
+            # Bridges
+            'Bridges': int(num_bridges),
             'Bridges %': round(pct_bridges, 1),
-
-            # Temporal
-            'Período': year_range,
-            'Crescimento': round(growth, 0),
         })
-
-    return pd.DataFrame(metrics)
+    
+    df = pd.DataFrame(metrics)
+    
+    # Ordenar por esporte, depois sexo, depois evento
+    df = df.sort_values(['Esporte', 'Sexo', 'Evento'])
+    
+    return df
 
 
 def style_comparative_table(df: pd.DataFrame) -> pd.DataFrame:
@@ -526,13 +508,26 @@ def render_metric_explanations(metrics: list):
 
 def render_comparative_table(data: Dict[str, pd.DataFrame]):
     """
-    Renderiza a tabela comparativa no Streamlit com formatação profissional.
+    Renderiza tabela comparativa POR EVENTO (149 redes independentes).
+    
+    RIGOR ACADÊMICO: Mostra cada rede como linha individual.
+    Cada evento (ex: "Athletics M - 100m") é tratado separadamente.
 
     Args:
-        data: Dicionário com DataFrames (athletes, hierarchy, etc.)
+        data: Dicionário com DataFrames (metadata, athletes, etc.)
     """
-    st.subheader("Tabela Comparativa dos Esportes")
-    st.caption("Resumo executivo de todas as métricas de rede por esporte")
+    st.subheader("Tabela Comparativa por Evento")
+    st.caption("Cada linha representa uma rede independente (evento específico em modalidade específica)")
+
+    # Warning metodológico
+    st.warning("""
+    ⚠️ **Metodologia per-event:** Cada linha é uma rede INDEPENDENTE.
+    
+    - Não agregamos eventos diferentes
+    - Cada evento tem suas próprias métricas de centralidade
+    - PageRank/Betweenness não são comparáveis entre linhas diferentes
+    - **Comparações válidas:** Densidade, Modularidade, Número de comunidades
+    """)
 
     # Gerar métricas
     df = generate_comparative_metrics(data)
@@ -544,172 +539,153 @@ def render_comparative_table(data: Dict[str, pd.DataFrame]):
 
     csv = convert_df_to_csv(df)
     st.download_button(
-        label=" Download Tabela Comparativa (CSV)",
+        label="📥 Download Tabela Completa (CSV)",
         data=csv,
-        file_name="tabela_comparativa_esportes.csv",
+        file_name="tabela_comparativa_eventos.csv",
         mime="text/csv",
-        help="Exportar tabela comparativa completa em formato CSV"
+        help="Exportar tabela comparativa completa com todos os eventos"
     )
 
     if len(df) == 0:
         st.warning("Nenhum dado disponível para comparação.")
         return
 
+    # Filtros adicionais
+    st.markdown("### Filtros de Visualização")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        sports_filter = st.multiselect(
+            "Esportes",
+            options=sorted(df['Esporte'].unique()),
+            default=[],
+            help="Filtrar por esportes específicos (vazio = todos)"
+        )
+    
+    with col2:
+        sex_filter = st.multiselect(
+            "Sexo",
+            options=sorted(df['Sexo'].unique()),
+            default=[],
+            help="Filtrar por sexo (vazio = todos)"
+        )
+    
+    # Aplicar filtros
+    df_filtered = df.copy()
+    if sports_filter:
+        df_filtered = df_filtered[df_filtered['Esporte'].isin(sports_filter)]
+    if sex_filter:
+        df_filtered = df_filtered[df_filtered['Sexo'].isin(sex_filter)]
+    
+    st.info(f"Mostrando {len(df_filtered)} de {len(df)} redes")
+
     # Tabs para diferentes visualizações
     tab1, tab2, tab3 = st.tabs([
-        "Visão Completa",
-        "Estrutura & Centralidade",
-        "Comunidades & Temporal"
+        "Tabela Completa",
+        "Estrutura da Rede",
+        "Estatísticas Resumidas"
     ])
 
     with tab1:
-        st.markdown("**Todas as Métricas por Esporte**")
-
-        # Explicações das métricas
-        all_metrics = [col for col in df.columns if col != 'Esporte']
-        render_metric_explanations(all_metrics)
-
-        # Criar tabela com todas as métricas
-        df_display = df.set_index('Esporte')
-        fig = create_plotly_table(df_display, "Comparação Completa dos Esportes")
-        st.plotly_chart(fig, use_container_width=True, key="comparative_table_full")
-
-        # Legenda de cores
-        st.markdown("---")
-        st.caption("**Legenda:**  Verde = Valor máximo |  Vermelho = Valor mínimo")
-
-        # Insights automáticos
-        st.markdown("**Destaques Principais**")
-
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            max_athletes_sport = df.loc[df['Atletas'].idxmax(), 'Esporte']
-            max_athletes = df['Atletas'].max()
-            st.metric(
-                "Maior Rede",
-                max_athletes_sport,
-                f"{max_athletes:,} atletas",
-                help="Esporte com maior número de atletas na rede"
-            )
-
-        with col2:
-            max_communities_sport = df.loc[df['Comunidades'].idxmax(), 'Esporte']
-            max_communities = df['Comunidades'].max()
-            st.metric(
-                "Mais Comunidades",
-                max_communities_sport,
-                f"{max_communities} comunidades",
-                help="Esporte com maior fragmentação em grupos distintos"
-            )
-
-        with col3:
-            max_bridges_sport = df.loc[df['Bridges %'].idxmax(), 'Esporte']
-            max_bridges_pct = df['Bridges %'].max()
-            st.metric(
-                "Mais Bridges",
-                max_bridges_sport,
-                f"{max_bridges_pct:.1f}%",
-                help="Esporte com maior percentual de atletas-ponte conectando comunidades"
-            )
+        st.markdown("**Todos os Eventos e Métricas**")
+        
+        # Mostrar tabela paginada
+        st.dataframe(
+            df_filtered,
+            use_container_width=True,
+            height=600,
+            column_config={
+                "Evento": st.column_config.TextColumn("Evento", width="large"),
+                "Densidade": st.column_config.NumberColumn("Densidade (%)", format="%.2f%%"),
+                "Modularidade": st.column_config.NumberColumn("Modularidade", format="%.3f"),
+                "PageRank Médio": st.column_config.NumberColumn("PageRank Médio", format="%.6f"),
+                "Concentração Top10%": st.column_config.NumberColumn("Conc. Top10%", format="%.1f%%"),
+                "Bridges %": st.column_config.NumberColumn("Bridges %", format="%.1f%%"),
+            }
+        )
 
     with tab2:
-        st.markdown("**Estrutura da Rede & Centralidade**")
-
-        # Explicações das métricas
-        structure_metrics = ['Atletas', 'Comunidades', 'Densidade', 'PageRank Médio', 'Concentração Top10', 'Betweenness Médio']
-        render_metric_explanations(structure_metrics)
-
-        # Selecionar colunas relevantes
-        df_structure = df[['Esporte', 'Atletas', 'Comunidades', 'Densidade',
-                           'PageRank Médio', 'Concentração Top10', 'Betweenness Médio']].set_index('Esporte')
-
-        fig = create_plotly_table(df_structure, "Métricas de Estrutura e Centralidade")
-        st.plotly_chart(fig, use_container_width=True, key="comparative_table_structure")
-
-        # Insights rápidos
-        st.markdown("---")
-        st.markdown("**Destaques**")
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            max_density_sport = df.loc[df['Densidade'].idxmax(), 'Esporte']
-            max_density = df['Densidade'].max()
-            st.metric(
-                "Rede Mais Densa",
-                max_density_sport,
-                f"{max_density:.2f}%",
-                help="Maior proporção de conexões existentes vs possíveis"
-            )
-
-        with col2:
-            max_conc_sport = df.loc[df['Concentração Top10'].idxmax(), 'Esporte']
-            max_conc = df['Concentração Top10'].max()
-            st.metric(
-                "Maior Concentração",
-                max_conc_sport,
-                f"{max_conc:.1f}%",
-                help="Maior concentração de PageRank no top 10%"
-            )
-
-        with col3:
-            max_bet_sport = df.loc[df['Betweenness Médio'].idxmax(), 'Esporte']
-            max_bet = df['Betweenness Médio'].max()
-            st.metric(
-                "Maior Betweenness",
-                max_bet_sport,
-                f"{max_bet:.6f}",
-                help="Maior potencial de intermediação entre grupos"
-            )
+        st.markdown("**Métricas Estruturais (Comparáveis Entre Eventos)**")
+        
+        # Selecionar apenas métricas estruturais válidas
+        structural_cols = ['Evento', 'Esporte', 'Sexo', 'Atletas', 'Arestas', 
+                          'Densidade', 'Comunidades', 'Modularidade', 'Classe Densidade', 'Classe Modularidade']
+        df_structural = df_filtered[structural_cols]
+        
+        st.dataframe(
+            df_structural,
+            use_container_width=True,
+            height=600,
+            column_config={
+                "Densidade": st.column_config.NumberColumn("Densidade (%)", format="%.2f%%"),
+                "Modularidade": st.column_config.NumberColumn("Modularidade", format="%.3f"),
+            }
+        )
+        
+        st.info("""
+        Interpretação: Estas métricas são comparáveis entre eventos:
+        - Densidade: percentual de conexões existentes vs possíveis
+        - Modularidade: quão bem definidas estão as comunidades
+        - Número de comunidades: fragmentação da rede
+        """)
 
     with tab3:
-        st.markdown("**Comunidades & Evolução Temporal**")
-
-        # Explicações das métricas
-        community_metrics = ['Modularidade', 'Segregação', 'Perfil', 'Hierarquia', 'Bridges', 'Bridges %', 'Período', 'Crescimento']
-        render_metric_explanations(community_metrics)
-
-        # Selecionar colunas relevantes
-        df_communities = df[['Esporte', 'Modularidade', 'Segregação', 'Perfil',
-                            'Hierarquia', 'Bridges', 'Bridges %', 'Período', 'Crescimento']].set_index('Esporte')
-
-        fig = create_plotly_table(df_communities, "Métricas de Comunidades e Evolução")
-        st.plotly_chart(fig, use_container_width=True, key="comparative_table_communities")
-
-        # Insights rápidos
+        st.markdown("**Estatísticas Agregadas por Esporte**")
+        
+        # Agregar por esporte para estatísticas DESCRITIVAS (não de centralidade)
+        stats_by_sport = df_filtered.groupby('Esporte').agg({
+            'Atletas': ['count', 'mean', 'sum'],
+            'Densidade': 'mean',
+            'Modularidade': 'mean',
+            'Comunidades': 'mean',
+        }).round(2)
+        
+        stats_by_sport.columns = ['N Eventos', 'Média Atletas/Evento', 'Total Atletas', 
+                                  'Densidade Média', 'Modularidade Média', 'Comunidades Média']
+        stats_by_sport = stats_by_sport.reset_index()
+        
+        st.dataframe(stats_by_sport, use_container_width=True)
+        
+        st.info("""
+        Nota: Esta agregação por esporte mostra padrões gerais:
+        - Quantos eventos cada esporte tem nos dados
+        - Médias de métricas estruturais (válido para comparação)
+        - Não inclui PageRank/Betweenness (não são agregáveis)
+        """)
+        
+        # Destaques
         st.markdown("---")
         st.markdown("**Destaques**")
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            max_bridges_pct_sport = df.loc[df['Bridges %'].idxmax(), 'Esporte']
-            max_bridges_pct = df['Bridges %'].max()
+            max_density_event = df_filtered.loc[df_filtered['Densidade'].idxmax(), 'Evento']
+            max_density = df_filtered['Densidade'].max()
             st.metric(
-                "Mais Bridges",
-                max_bridges_pct_sport,
-                f"{max_bridges_pct:.1f}%",
-                help="Maior percentual de atletas-ponte"
+                "Rede Mais Densa",
+                max_density_event,
+                f"{max_density:.2f}%",
+                help="Evento com maior proporção de conexões"
             )
 
         with col2:
-            max_growth_sport = df.loc[df['Crescimento'].idxmax(), 'Esporte']
-            max_growth = df['Crescimento'].max()
+            max_modularity_event = df_filtered.loc[df_filtered['Modularidade'].idxmax(), 'Evento']
+            max_modularity = df_filtered['Modularidade'].max()
             st.metric(
-                "Maior Crescimento",
-                max_growth_sport,
-                f"{max_growth:.0f}%",
-                help="Maior evolução de participação entre primeira e última edição"
+                "Maior Modularidade",
+                max_modularity_event,
+                f"{max_modularity:.3f}",
+                help="Comunidades mais bem definidas"
             )
 
         with col3:
-            # Contar perfis predominantes
-            profile_counts = df['Perfil'].value_counts()
-            most_common_profile = profile_counts.idxmax() if len(profile_counts) > 0 else "N/A"
+            max_athletes_event = df_filtered.loc[df_filtered['Atletas'].idxmax(), 'Evento']
+            max_athletes = df_filtered['Atletas'].max()
             st.metric(
-                "Perfil Mais Comum",
-                most_common_profile,
-                f"{profile_counts.max()} esportes",
-                help="Perfil competitivo mais frequente entre os esportes"
+                "Maior Rede",
+                max_athletes_event,
+                f"{max_athletes:,} atletas",
+                help="Evento com mais atletas"
             )
 
 
