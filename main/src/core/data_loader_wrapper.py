@@ -159,28 +159,32 @@ class DataLoader:
 
     def load_rivalry_pairs(self, event_type: str = 'all') -> pd.DataFrame:
         """
-        Carrega pares de rivalidade top.
+        Carrega pares de rivalidade PER-EVENT.
+        
+        ATUALIZADO: Agora usa rivalries_per_event.csv (por network_id),
+        substituindo o arquivo agregado por esporte.
 
         Args:
-            event_type: 'individual', 'team', ou 'all' (padrão)
+            event_type: Ignorado (mantido por compatibilidade)
         """
-        filename = f'additional_analyses/top_rivalry_pairs_{event_type}.csv'
-        cache_key = f'rivalry_pairs_{event_type}'
-
-        # Tentar carregar arquivo específico, fallback para all
-        try:
-            return self._load_csv(filename, cache_key)
-        except:
-            # Fallback para arquivo consolidado
-            return self._load_csv('additional_analyses/top_rivalry_pairs_all.csv', 'rivalry_pairs_all')
+        return self._load_csv('../results_all_mining/rivalries_per_event.csv', 'rivalry_pairs_per_event')
 
     def load_top_rivalries(self, event_type: str = 'all') -> pd.DataFrame:
         """Alias para load_rivalry_pairs (compatibilidade)."""
         return self.load_rivalry_pairs(event_type)
 
     def load_community_hierarchy(self) -> pd.DataFrame:
-        """Carrega dados de hierarquia entre comunidades."""
-        return self._load_csv('additional_analyses/community_hierarchy.csv', 'community_hierarchy')
+        """
+        Carrega dados de hierarquia entre comunidades.
+        
+        Prioriza dados novos (149 redes per-event), faz fallback para dados antigos.
+        """
+        try:
+            # Tentar carregar hierarquia nova (149 redes)
+            return self.auto_loader.load_csv('../results_all_mining/community_hierarchy_per_event.csv')
+        except:
+            # Fallback para dados antigos (12 casos)
+            return self._load_csv('additional_analyses/community_hierarchy.csv', 'community_hierarchy')
 
     def load_inter_community_connectivity(self) -> pd.DataFrame:
         """Carrega conectividade entre comunidades."""

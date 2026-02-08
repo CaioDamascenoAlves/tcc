@@ -1,196 +1,90 @@
-# Documentação Acadêmica
+# Documentação do Projeto TCC
 
-Este diretório contém toda a documentação acadêmica formal do projeto TCC.
+**Última atualização:** 2026-02-07
 
-## Estrutura
+Esta pasta contém documentação técnica e conceitual do projeto de análise de redes olímpicas.
 
-```
-docs/
- monografia/ # Monografia LaTeX (documento principal)
- apresentacao/ # Apresentação Beamer (defesa)
-```
+---
 
-## Monografia
+## 📚 Documentos Mantidos
 
-### Localização
-`docs/monografia/`
+### Casos de Estudo
+- **`casos_de_estudo_FINAL.md`** - Documentação dos 12 casos de estudo selecionados (6 pares M/F)
+- **`casos_de_estudo_selecionados.md`** - [VERIFICAR] Possível duplicata
 
-### Compilação
+### Explicações Conceituais
+- **`explicacao_rede_bipartida_orientadora.md`** - Explicação sobre modelagem de redes para orientadora
+- **`possibilidades_modelagem_redes.md`** - Diferentes abordagens de modelagem exploradas
 
-```bash
-cd docs/monografia
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex
-```
+### Validação e Sanitização
+- **`SANITIZACAO_VALIDACAO_COMPLETA.md`** - Relatório completo de validação dados vs texto (2026-02-07)
 
-Saída: `main.pdf`
+---
 
-### Estrutura da Monografia
+## 🗑️ Documentos Removidos (2026-02-07)
 
-```
-monografia/
- main.tex # Documento principal
- preambulo/ # Elementos pré-textuais
- capa.tex
- folha_rosto.tex
- resumo.tex
- abstract.tex
- textuais/ # Conteúdo principal
- introducao.tex
- revisao.tex
- desenvolvimento.tex
- resultados.tex
- conclusao.tex
- postextuais/ # Elementos pós-textuais
- referencias.bib
- apendices.tex
- figuras/ # Figuras geradas (PNG 300 DPI)
- tabelas/ # Tabelas LaTeX geradas
-```
+Foram removidos 24 arquivos .md obsoletos de documentação de processo:
+- Checklists de fases concluídas
+- Planos de refatoração executados
+- Relatórios de correções pontuais
+- Documentos de decisões já implementadas
 
-### Gerar Figuras e Tabelas
+**Motivo:** Esses documentos eram úteis durante o desenvolvimento mas tornaram-se obsoletos após implementação completa.
 
-```bash
-# Gerar figuras
-cd src/outputs
-python figures.py
+**Backups:** Caso necessário, consultar commits anteriores do Git.
 
-# Gerar tabelas
-python tables.py
-```
+---
 
-Figuras salvas em: `docs/monografia/figuras/`
-Tabelas salvas em: `docs/monografia/tabelas/`
+## 📁 Estrutura de Dados
 
-### Dependências LaTeX
+### Dados Válidos (133 redes per-event)
+- `main/results_all_mining/` - Dados minerados das 133 redes
+  - `consolidated_all_networks.csv` - Atletas e métricas
+  - `consolidated_all_edges.csv` - Arestas das redes
+  - `network_metadata.csv` - Metadata das redes
+  - `communities_all_networks.csv` - Comunidades detectadas
+  - `community_hierarchy_per_event.csv` - Hierarquia de comunidades
+  - `rivalries_per_event.csv` - Rivalidades por evento
 
-Pacotes necessários:
-- abntex2 (formatação ABNT)
-- babel (português)
-- graphicx (imagens)
-- amsmath (matemática)
-- booktabs (tabelas profissionais)
-- hyperref (links e PDF metadata)
+### Backups
+- `*_BACKUP_with_original.csv` - Backups antes da remoção das 16 redes "original" inválidas
 
-## Apresentação
+---
 
-### Localização
-`docs/apresentacao/`
+## ⚠️ Mudanças Recentes
 
-### Compilação
+### 2026-02-07: Sanitização e Correção
 
-```bash
-cd docs/apresentacao
-pdflatex main.tex
-```
+1. **Removidas 16 redes "original" inválidas**
+   - Eram agregações antigas incompatíveis com modelagem per-event
+   - Mantidas apenas 133 redes per-event válidas
 
-Saída: `main.pdf`
+2. **Corrigida extração de ano**
+   - Script de mineração agora extrai ano do campo "games" do GEXF
+   - Corrige 30 redes que tinham year=0
 
-### Estrutura da Apresentação
+3. **Sanitização de documentação**
+   - Removidos 24 arquivos .md obsoletos
+   - Mantidos apenas documentos conceituais e de referência
 
-```
-apresentacao/
- main.tex # Slides Beamer
- figuras/ # Figuras para slides
- logos/ # Logos institucionais
-```
+---
 
-### Tema Beamer
+## 🔍 Como Usar Esta Documentação
 
-Usa tema customizado com:
-- Cores institucionais UFOP (vinho)
-- Layout limpo e profissional
-- Navegação clara
-- Blocos para destaques
+**Para entender a modelagem:**
+- Leia `explicacao_rede_bipartida_orientadora.md`
+- Consulte `possibilidades_modelagem_redes.md` para abordagens alternativas
 
-## Padrões de Formatação
+**Para validar dados:**
+- Consulte `SANITIZACAO_VALIDACAO_COMPLETA.md`
+- Verifique números citados no texto contra dados reais
 
-### Figuras
+**Para ver casos de estudo:**
+- Leia `casos_de_estudo_FINAL.md`
+- Contém detalhes dos 12 eventos analisados
 
-**Formato**: PNG, 300 DPI (qualidade de publicação)
-**Tamanho**: Ajustado para caber na largura do texto
+---
 
-Inclusão em LaTeX:
-```latex
-\begin{figure}[htbp]
- \centering
- \includegraphics[width=0.8\textwidth]{figuras/fig_size_vs_pagerank.png}
- \caption{Relação entre tamanho e centralidade estrutural das comunidades}
- \label{fig:size_pagerank}
-\end{figure}
-```
+## 📞 Contato
 
-### Tabelas
-
-**Formato**: LaTeX (booktabs)
-**Estilo**: Linhas horizontais, sem linhas verticais
-
-Inclusão em LaTeX:
-```latex
-\begin{table}[htbp]
- \centering
- \caption{Estatísticas das comunidades detectadas}
- \label{tab:comunidades}
- \input{tabelas/tab_comunidades_summary.tex}
-\end{table}
-```
-
-### Referências Bibliográficas
-
-**Formato**: BibTeX
-**Estilo**: ABNT (abntex2cite)
-
-Arquivo: `monografia/postextuais/referencias.bib`
-
-Citação em LaTeX:
-```latex
-\cite{newman2010networks}
-\citeonline{barabasi2016network}
-```
-
-## Normas ABNT
-
-A monografia segue as normas ABNT:
-- NBR 14724:2011 (Trabalhos acadêmicos)
-- NBR 6023:2018 (Referências)
-- NBR 10520:2002 (Citações)
-- NBR 6028:2003 (Resumo)
-
-Implementadas pelo pacote abntex2.
-
-## Controle de Versão
-
-Arquivos compilados (.aux, .log, .pdf) são ignorados pelo Git (.gitignore).
-
-Comite apenas:
-- Arquivos .tex fonte
-- Arquivos .bib
-- Figuras finais em figuras/
-- Tabelas finais em tabelas/
-
-## Workflow Recomendado
-
-1. **Desenvolver análises** em `src/pipeline/`
-2. **Gerar figuras** com `src/outputs/figures.py`
-3. **Gerar tabelas** com `src/outputs/tables.py`
-4. **Escrever texto** em `docs/monografia/textuais/`
-5. **Incluir figuras/tabelas** no LaTeX
-6. **Compilar** e revisar
-7. **Iterar** até finalização
-
-## Notas
-
-- Sempre compile 2x após modificar texto
-- Compile 3x após modificar referências
-- Use `bibtex` após adicionar novas citações
-- Verifique avisos (warnings) no console do LaTeX
-- Revise hyperlinks e referências cruzadas
-
-## TODO
-
-- [ ] Adicionar template para apêndices
-- [ ] Criar script de compilação automática
-- [ ] Adicionar verificação de referências quebradas
-- [ ] Implementar contagem de palavras
+Para dúvidas sobre a documentação, consultar autor do TCC ou orientadora.

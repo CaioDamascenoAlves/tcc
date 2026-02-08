@@ -55,9 +55,25 @@ def scatter_size_vs_pagerank(
     Returns:
         Figura Plotly ou Matplotlib
     """
-    # Normalizar hierarchy_level (remover acentos)
     df = df.copy()
-    df['hierarchy_level'] = df['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+    
+    # Converter hierarchy_level para categorias se for numérico
+    if 'hierarchy_level' in df.columns:
+        if pd.api.types.is_numeric_dtype(df['hierarchy_level']):
+            # Novo formato: hierarchy_level é 1, 2, 3, etc.
+            # Mapear para categorias: 1 = Núcleo, 2-3 = Intermediária, 4+ = Periférica
+            def map_hierarchy(level):
+                if level == 1:
+                    return 'Nucleo'
+                elif level in [2, 3]:
+                    return 'Intermediaria'
+                else:
+                    return 'Periferica'
+            
+            df['hierarchy_level'] = df['hierarchy_level'].apply(map_hierarchy)
+        else:
+            # Formato antigo: já é string, apenas normalizar
+            df['hierarchy_level'] = df['hierarchy_level'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
 
     if interactive:
         # Plotly
@@ -412,6 +428,31 @@ def heatmap_segregation(
     Returns:
         Figura Plotly ou Matplotlib
     """
+    # Verificar se DataFrame está vazio
+    if df.empty or len(df) == 0:
+        # Retornar figura vazia com mensagem
+        if interactive:
+            fig = go.Figure()
+            fig.add_annotation(
+                text="Nenhum dado de segregação disponível com os filtros atuais",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False,
+                font=dict(size=14)
+            )
+            fig.update_layout(
+                title='Segregação Estrutural por Esporte e Sexo',
+                xaxis=dict(visible=False),
+                yaxis=dict(visible=False),
+                template='plotly_white'
+            )
+            return fig
+        else:
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.text(0.5, 0.5, 'Nenhum dado disponível', 
+                   ha='center', va='center', fontsize=12)
+            ax.axis('off')
+            return fig
+    
     # Preparar dados em formato pivotado
     pivot = df.pivot_table(
         values='segregation_score',
@@ -419,6 +460,28 @@ def heatmap_segregation(
         columns='sex',
         aggfunc='mean'
     )
+    
+    # Verificar se pivot está vazio após pivotagem
+    if pivot.empty or pivot.size == 0:
+        if interactive:
+            fig = go.Figure()
+            fig.add_annotation(
+                text="Dados insuficientes para gerar heatmap",
+                xref="paper", yref="paper",
+                x=0.5, y=0.5, showarrow=False,
+                font=dict(size=14)
+            )
+            fig.update_layout(
+                title='Segregação Estrutural por Esporte e Sexo',
+                template='plotly_white'
+            )
+            return fig
+        else:
+            fig, ax = plt.subplots(figsize=figsize)
+            ax.text(0.5, 0.5, 'Dados insuficientes', 
+                   ha='center', va='center', fontsize=12)
+            ax.axis('off')
+            return fig
 
     if interactive:
         # Plotly
@@ -525,10 +588,11 @@ def barplot_top_rivalries(
     figsize: tuple = (10, 6)
 ) -> Union[go.Figure, matplotlib.figure.Figure]:
     """
-    Barplot: Top N rivalidades estruturais.
+    Barplot: Top N rivalidades estruturais (PER-EVENT).
 
     Args:
-        df: DataFrame com colunas 'sport', 'sex', 'community_1', 'community_2', 'num_confronts'
+        df: DataFrame com colunas 'network_id', 'sport', 'sex', 'event_name', 
+            'community_1', 'community_2', 'num_confronts'
         top_n: Número de rivalidades a mostrar
         interactive: Se True, usa Plotly. Se False, usa Matplotlib.
         save_path: Caminho para salvar figura
@@ -591,11 +655,17 @@ def barplot_top_rivalries(
             ax.axis('off')
             return fig
 
-    # Criar label para rivalidade
-    top_df['rivalry_label'] = top_df.apply(
-        lambda row: f"{row['sport']} {row['sex']}: C{row['community_1']}-C{row['community_2']}",
-        axis=1
-    )
+    # Criar label para rivalidade (ATUALIZADO: mostra event_name se disponível)
+    if 'event_name' in top_df.columns:
+        top_df['rivalry_label'] = top_df.apply(
+            lambda row: f"{row['event_name'][:30]}: C{row['community_1']:.0f}-C{row['community_2']:.0f}",
+            axis=1
+        )
+    else:
+        top_df['rivalry_label'] = top_df.apply(
+            lambda row: f"{row['sport']} {row['sex']}: C{row['community_1']}-C{row['community_2']}",
+            axis=1
+        )
 
     if interactive:
         # Plotly
@@ -648,16 +718,21 @@ def barplot_top_rivalries(
             yanchor="top"
         )
 
-        # Adicionar destaque para rivalidade mais intensa
+        # Adicionar destaque para rivalidade mais intensa (ATUALIZADO: mostra event_name)
+        rivalry_text = f"<b>Rivalidade Mais Intensa:</b><br>"
+        if 'event_name' in top_rivalry and pd.notna(top_rivalry.get('event_name')):
+            rivalry_text += f"{top_rivalry['event_name']}<br>"
+        else:
+            rivalry_text += f"{top_rivalry['sport']} {top_rivalry['sex']}<br>"
+        rivalry_text += (f"C{top_rivalry['community_1']:.0f} vs C{top_rivalry['community_2']:.0f}<br>"
+                        f"{top_rivalry['num_confronts']:.0f} confrontos")
+        
         fig.add_annotation(
             x=0.02,
             y=0.02,
             xref="paper",
             yref="paper",
-            text=(f"<b>Rivalidade Mais Intensa:</b><br>"
-                  f"{top_rivalry['sport']} {top_rivalry['sex']}<br>"
-                  f"C{top_rivalry['community_1']} vs C{top_rivalry['community_2']}<br>"
-                  f"{top_rivalry['num_confronts']:.0f} confrontos"),
+            text=rivalry_text,
             showarrow=False,
             bgcolor="rgba(255, 232, 237, 0.9)",
             bordercolor="#8B2635",

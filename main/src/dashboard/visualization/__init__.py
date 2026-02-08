@@ -18,6 +18,7 @@ from .plots import (
 from .plots_extended import (
     stacked_bar_profile_distribution,
     violin_betweenness_by_sport,
+    violin_betweenness_by_event,
     line_pagerank_evolution,
     table_top_athletes,
     create_all_plots,
@@ -36,6 +37,7 @@ __all__ = [
     # Plots estendidos
     'stacked_bar_profile_distribution',
     'violin_betweenness_by_sport',
+    'violin_betweenness_by_event',
     'line_pagerank_evolution',
     'table_top_athletes',
 

@@ -218,6 +218,17 @@ class UniversalNetworkMiner:
             for node in G.nodes():
                 node_data = G.nodes[node]
 
+                # Extrair ano: tentar campo 'year' primeiro, depois extrair de 'games'
+                year = node_data.get('year', 0)
+                if year == 0 or year is None:
+                    # Tentar extrair do campo 'games' (formato: "YYYY Summer" ou "YYYY Winter")
+                    games = node_data.get('games', '')
+                    if games and isinstance(games, str):
+                        try:
+                            year = int(games.split()[0])
+                        except (ValueError, IndexError):
+                            year = 0
+
                 athletes_data.append({
                     'network_id': network_id,
                     'sport': net_info['sport'],
@@ -225,7 +236,7 @@ class UniversalNetworkMiner:
                     'event_name': net_info['event_name'],
                     'athlete_name': node_data.get('label', node),
                     'noc': node_data.get('noc', 'UNK'),
-                    'year': node_data.get('year', 0),
+                    'year': year,
                     'pagerank': pagerank.get(node, 0.0),
                     'betweenness': betweenness.get(node, 0.0),
                     'degree': degree.get(node, 0),
