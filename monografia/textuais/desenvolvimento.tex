@@ -39,7 +39,52 @@ A decisão metodológica mais crítica da modelagem refere-se ao critério de se
 
 A escolha pela modelagem per-event fundamenta-se em preservação da homogeneidade competitiva intra-rede. Agregar eventos distintos de um mesmo esporte (por exemplo, 100m livre e maratona aquática em natação, ou 100m rasos e lançamento de dardo em atletismo) produz redes artificialmente mescladas com subpopulações desconectadas de atletas especializados em diferentes tipos físico-técnicos de competição. A segmentação por evento específico assegura que cada rede modele atletas que efetivamente competiram diretamente entre si ou contra adversários estruturalmente equivalentes, preservando validade da hierarquia competitiva capturada.
 
-A aplicação deste critério ao \textit{dataset} limpo (83.497 registros de medalhistas, 1896-2021) resultou em 149 redes competitivas independentes, cobrindo eventos de seis modalidades esportivas: Futebol, Basquete, Atletismo, Natação, Judô e Boxe. Para viabilizar análise aprofundada sem comprometer qualidade interpretativa, foi conduzida seleção de 12 casos de estudo representativos através de amostragem por critério (\textit{criterion sampling}) \cite{Palinkas2015Purposeful}, técnica estabelecida em pesquisa qualitativa que identifica casos que atendem critérios pré-determinados de importância. O critério multi-dimensional desenvolvido, denominado \textit{Iconic Score}, pondera quatro fatores: (1) longevidade histórica do evento (número de edições olímpicas em que foi disputado), (2) diversidade geográfica (número de países competidores), (3) volume de participantes (total de atletas medalhistas), e (4) equilíbrio de gênero (paridade masculino/feminino para cada esporte). Os 12 casos selecionados totalizam 2.978 atletas únicos e 11.847 registros de medalhas, distribuídos em 142 comunidades detectadas.
+A aplicação deste critério ao \textit{dataset} limpo (83.497 registros de medalhistas, 1896-2021) resultou em 149 redes competitivas independentes, cobrindo eventos de seis modalidades esportivas: Futebol, Basquete, Atletismo, Natação, Judô e Boxe. Para viabilizar análise aprofundada sem comprometer qualidade interpretativa, foi conduzida seleção de 12 casos de estudo representativos através de amostragem por critério (\textit{criterion sampling}) \cite{Palinkas2015Purposeful}, técnica estabelecida em pesquisa qualitativa que identifica casos que atendem critérios pré-determinados de importância.
+
+\subsection{Formalização do Iconic Score}
+\label{sec:iconic_score}
+
+O critério multi-dimensional desenvolvido, denominado \textit{Iconic Score}, quantifica a representatividade e relevância histórica de cada evento olímpico através da ponderação de quatro fatores estruturais: longevidade histórica, diversidade geográfica, volume de participantes e equilíbrio de gênero. A formalização matemática do \textit{Iconic Score} para um evento $e$ é dada por:
+
+\begin{equation}
+\text{IS}_e = w_L \cdot L_{\text{norm}}(e) + w_G \cdot G_{\text{norm}}(e) + w_V \cdot V_{\text{norm}}(e) + w_B \cdot B(e)
+\label{eq:iconic_score}
+\end{equation}
+
+onde cada componente é definido como:
+
+\begin{itemize}
+    \item \textbf{Longevidade histórica normalizada} $L_{\text{norm}}(e)$: Captura tradição do evento através do número de edições olímpicas disputadas, normalizado via min-max:
+    \[
+    L_{\text{norm}}(e) = \frac{\text{edições}_e - \min_i(\text{edições}_i)}{\max_i(\text{edições}_i) - \min_i(\text{edições}_i)}
+    \]
+
+    \item \textbf{Diversidade geográfica normalizada} $G_{\text{norm}}(e)$: Quantifica alcance global através do número de países representados no pódio historicamente:
+    \[
+    G_{\text{norm}}(e) = \frac{\text{países}_e - \min_i(\text{países}_i)}{\max_i(\text{países}_i) - \min_i(\text{países}_i)}
+    \]
+
+    \item \textbf{Volume de participantes normalizado} $V_{\text{norm}}(e)$: Reflete magnitude competitiva através do total de atletas medalhistas:
+    \[
+    V_{\text{norm}}(e) = \frac{\text{atletas}_e - \min_i(\text{atletas}_i)}{\max_i(\text{atletas}_i) - \min_i(\text{atletas}_i)}
+    \]
+
+    \item \textbf{Equilíbrio de gênero} $B(e)$: Pondera paridade masculino/feminino para cada esporte, definido como:
+    \[
+    B(e) = 1 - \frac{|\text{atletas}_M - \text{atletas}_F|}{\text{atletas}_M + \text{atletas}_F}
+    \]
+    onde $B(e) = 1$ indica paridade perfeita e $B(e) = 0$ indica ausência de uma versão de gênero.
+\end{itemize}
+
+Os pesos atribuídos refletem priorização de critérios históricos e estruturais sobre volume bruto:
+
+\[
+w_L = 0.30, \quad w_G = 0.30, \quad w_V = 0.20, \quad w_B = 0.20
+\]
+
+Esta parametrização atribui maior peso a longevidade e diversidade geográfica (60\% combinados), priorizando eventos com tradição olímpica consolidada e alcance global, enquanto volume de participantes e equilíbrio de gênero contribuem complementarmente (40\% combinados). A soma dos pesos totaliza $\sum w_i = 1.0$, garantindo que $\text{IS}_e \in [0, 1]$.
+
+A aplicação do \textit{Iconic Score} ao conjunto de 149 redes permitiu seleção sistemática dos 12 casos de estudo com maior representatividade histórica e estrutural, distribuídos em três tipologias competitivas: esportes coletivos (Futebol, Basquete), esportes individuais de performance (Atletismo 100m, Natação 100m Nado Livre) e esportes de combate (Judô, Boxe). Os casos selecionados foram estratificados por gênero para possibilitar análise comparativa masculino/feminino, totalizando 2.978 atletas únicos e 11.847 registros de medalhas distribuídos em 142 comunidades detectadas.
 
 As arestas capturam hierarquia competitiva direta: em cada evento, medalhistas são ordenados hierarquicamente (Ouro > Prata > Bronze), estabelecendo arestas direcionadas do medalhista de posição inferior para o superior. A quantificação desta hierarquia através de pesos numéricos exige decisão metodológica que afeta diretamente propriedades estruturais das redes resultantes. Conforme revisado no Capítulo~\ref{cap:revisao}, o sistema histórico 3-2-1 quantifica hierarquia de medalhas, enquanto sistemas dinâmicos com decay temporal modelam variação de força competitiva ao longo do tempo \cite{Motegi2012NetworkBased}.
 
