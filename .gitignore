@@ -171,3 +171,12 @@ RELATORIO_*.md
 # PDFs gerados
 MONOGRAFIA_*.pdf
 *.bak*
+
+# Validation results (keep only consolidated table)
+main/analysis/validation_results/*.json
+main/analysis/validation_results/*_table.tex
+
+# Documentation files (local only)
+AVALIACAO_TCC.md
+PLANO_ACAO_VALIDACOES.md
+TODO.md

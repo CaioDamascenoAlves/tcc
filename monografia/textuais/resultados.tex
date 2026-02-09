@@ -10,75 +10,59 @@ A aplicação da metodologia per-event aos dados olímpicos históricos (1896-20
 \section{Validação Empírica de Algoritmos: Louvain vs Infomap}
 \label{sec:resultados_validacao_louvain}
 
-A comparação empírica entre algoritmos de detecção de comunidades, conduzida na rede de natação masculina (973 atletas, 5.572 arestas direcionadas), revelou concordância estrutural substancial entre \textit{Louvain} e Infomap. Os resultados quantitativos validam a escolha metodológica descrita na Seção~\ref{sec:validacao_louvain} do Capítulo~\ref{cap:desenvolvimento}.
+A validação da escolha metodológica de \textit{Louvain} para detecção de comunidades demandou comparação empírica sistemática com Infomap, algoritmo nativo para grafos direcionados. A análise foi conduzida nas 12 redes principais do estudo (6 esportes × 2 gêneros), totalizando 2.964 atletas e 41.929 arestas direcionadas. Esta validação multi-esporte permite avaliar robustez da concordância estrutural entre algoritmos em diferentes topologias competitivas: esportes individuais de performance (Atletismo, Natação), esportes de combate (Judô, Boxe) e esportes coletivos (Basquete, Futebol).
 
-\subsection{Concordância Estrutural}
+\subsection{Concordância Estrutural: Evidência Quantitativa}
 
-As métricas de concordância estrutural entre as partições detectadas pelos dois algoritmos demonstraram:
+A Tabela~\ref{tab:louvain_infomap_validation_12networks} apresenta métricas de concordância estrutural para as 12 redes analisadas. Os resultados demonstram convergência robusta entre os algoritmos:
 
-\begin{itemize}
-    \item \textbf{Normalized Mutual Information (NMI):} 0.8521, indicando concordância substancial na organização comunitária fundamental
-    \item \textbf{Adjusted Rand Index (ARI):} 0.7832, confirmando que ambos os métodos identificam essencialmente a mesma estrutura subjacente
-\end{itemize}
+\input{./tabelas/tab_louvain_infomap_validation_12networks.tex}
 
-Este nível de concordância (NMI > 0.85) evidencia que \textit{Louvain} e Infomap detectam a mesma organização comunitária essencial, validando que a simetrização necessária para \textit{Louvain} preserva a estrutura fundamental da rede direcionada.
+O \textbf{NMI médio de 0.9686} (escala 0-1, onde 1 = concordância perfeita) evidencia que \textit{Louvain} (não-direcionado) e Infomap (direcionado) detectam essencialmente a mesma estrutura comunitária subjacente. Este valor excede substancialmente o limiar NMI > 0.8 estabelecido na literatura \cite{Vinh2010NMI} como indicativo de concordância forte, confirmando que a simetrização necessária para \textit{Louvain} preserva a organização comunitária fundamental das redes direcionadas de competição.
 
-\subsection{Qualidade das Partições}
+O \textbf{ARI médio de 0.8995} (Adjusted Rand Index, escala -1 a 1) reforça esta conclusão, demonstrando que 90\% das decisões de agrupamento são idênticas entre os algoritmos após ajuste para concordância aleatória. Três redes apresentaram concordância perfeita (NMI = ARI = 1.0): Football Feminino, Boxing Fly Feminino, evidenciando que em determinadas topologias os algoritmos convergem para partições idênticas.
 
-A análise de modularidade revelou diferença significativa na qualidade estrutural das partições:
+\subsection{Qualidade das Partições: Modularidade Comparável}
 
-\begin{itemize}
-    \item \textbf{Modularidade \textit{Louvain}:} 0.7973
-    \item \textbf{Modularidade Infomap:} 0.7423
-    \item \textbf{Diferença:} 7.4\% superior para \textit{Louvain}
-\end{itemize}
-
-Ambos os valores excedem substancialmente o limiar Q > 0.3 estabelecido por \citeonline{Newman2006Modularity} como indicativo de estrutura de comunidades significativa. A modularidade superior de \textit{Louvain} evidencia partições com maior coesão interna e separação externa.
-
-\subsection{Granularidade das Comunidades}
-
-A fragmentação comunitária diferiu substancialmente entre os métodos:
+A modularidade média apresentou valores elevados e similares entre os métodos:
 
 \begin{itemize}
-    \item \textbf{Número de comunidades \textit{Louvain}:} 39
-    \item \textbf{Número de comunidades Infomap:} 68
-    \item \textbf{Fragmentação Infomap:} 74\% superior
-    \item \textbf{Tamanho médio \textit{Louvain}:} 24.9 atletas por comunidade
-    \item \textbf{Tamanho médio Infomap:} 14.3 atletas por comunidade
+    \item \textbf{Modularidade média \textit{Louvain}:} Q = 0.7820
+    \item \textbf{Modularidade média Infomap:} Q = 0.7723
+    \item \textbf{Diferença:} 1.2\% (praticamente idêntica)
 \end{itemize}
 
-Comunidades de tamanho médio 25 atletas mostraram-se mais adequadas para interpretação no contexto de análise histórica estendida (125 anos de competições olímpicas), permitindo caracterização temporal e geográfica mais robusta comparada à fragmentação em grupos de 14 atletas.
+Ambos os valores excedem amplamente o limiar Q > 0.3 estabelecido por \citeonline{Newman2006Modularity} como indicativo de estrutura de comunidades significativa. A similaridade das modularidades (diferença < 2\%) contrasta com validações anteriores em rede única, evidenciando que a diferença observada era específica daquela topologia, não padrão sistemático.
 
-\subsection{Métricas Agregadas}
+\subsection{Padrões Cross-Esporte}
 
-As métricas agregadas das comunidades apresentaram diferenças marginais:
+A validação revelou padrões consistentes em diferentes tipologias esportivas:
 
 \begin{itemize}
-    \item \textbf{Entropia geográfica \textit{Louvain}:} 1.697
-    \item \textbf{Entropia geográfica Infomap:} 1.656
-    \item \textbf{Diferença:} 2.4\% (praticamente idêntica)
+    \item \textbf{Esportes individuais de performance:} Athletics e Swimming apresentaram NMI > 0.97, com modularidades elevadas (Q > 0.88), evidenciando estruturas comunitárias robustas e bem-definidas independentes de direção.
+
+    \item \textbf{Esportes coletivos:} Basketball e Football exibiram NMI > 0.95, com Basketball Feminino atingindo concordância quase perfeita (NMI = 0.9907). Modularidades menores (Q ~ 0.60-0.79) refletem topologia mais densa característica de esportes de equipe.
+
+    \item \textbf{Esportes de combate:} Judo e Boxing demonstraram maior variabilidade (NMI 0.87-1.0), com Boxing Fly Feminino apresentando concordância perfeita apesar de modularidade reduzida (Q = 0.44), característica de rede pequena (10 atletas).
 \end{itemize}
 
-\begin{itemize}
-    \item \textbf{Coeficiente de Gini de \textit{PageRank} \textit{Louvain}:} 0.296
-    \item \textbf{Coeficiente de Gini de \textit{PageRank} Infomap:} 0.316
-    \item \textbf{Diferença:} 6.7\% (similar)
-\end{itemize}
+Esta replicação do padrão em topologias heterogêneas (redes de 10 a 1.275 atletas, densidades de 0.013 a 0.074) fortalece a validade externa da conclusão.
 
-Esta similaridade nas métricas agregadas confirma que, embora Infomap fragmente mais, as propriedades estatísticas fundamentais das comunidades detectadas permanecem consistentes entre os métodos.
+\subsection{Síntese da Validação Empírica}
 
-\subsection{Síntese da Validação}
-
-A validação empírica demonstrou que:
+A validação sistemática em 12 redes heterogêneas demonstrou que:
 
 \begin{enumerate}
-    \item A concordância estrutural NMI > 0.85 valida que simetrização preserva estrutura comunitária essencial
-    \item Modularidade 7.4\% superior evidencia maior qualidade estrutural das partições de \textit{Louvain}
-    \item Tamanho médio de 25 atletas por comunidade facilita interpretação temporal e geográfica
-    \item Eficiência computacional $O(n \log n)$ permite escalabilidade para análise simultânea de múltiplas modalidades
+    \item \textbf{Concordância estrutural robusta:} NMI médio de 0.97 evidencia que simetrização preserva estrutura comunitária essencial em todas as topologias analisadas.
+
+    \item \textbf{Qualidade equivalente:} Modularidades praticamente idênticas (Q ~ 0.78) confirmam que \textit{Louvain} produz partições de qualidade comparável ao Infomap.
+
+    \item \textbf{Padrão replicado cross-esporte:} Concordância elevada observada em esportes individuais, coletivos e de combate, validando generalização da escolha metodológica.
+
+    \item \textbf{Eficiência computacional:} Complexidade $O(n \log n)$ de \textit{Louvain} permitiu processamento simultâneo das 12 redes em tempo razoável, viabilizando análise em larga escala.
 \end{enumerate}
 
-Estes resultados fundamentam quantitativamente a escolha de \textit{Louvain} com simetrização para detecção de comunidades, reservando análise direcionada para cálculo de métricas de centralidade individual (\textit{PageRank}, betweenness) que quantificam hierarquias competitivas.
+Estes resultados fundamentam quantitativamente a arquitetura analítica híbrida adotada: detecção de comunidades sobre grafo simetrizado (\textit{Louvain}) combinada com quantificação de hierarquias competitivas sobre grafo direcionado original (\textit{PageRank}, betweenness). Esta combinação preserva vantagens de ambas as abordagens: comunidades estruturalmente coesas e mensuração precisa de dominância competitiva direcionada.
 
 \section{Visão Geral dos Casos de Estudo}
 
