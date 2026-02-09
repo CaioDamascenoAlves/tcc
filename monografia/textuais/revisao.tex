@@ -133,6 +133,40 @@ Para cada rede, os atletas são ordenados por \textit{PageRank}{} crescente, atr
 
 No presente trabalho, esta abordagem de normalização por percentis será empregada para comparações entre as 16 redes olímpicas construídas (6 modalidades segregadas por gênero). Como as redes possuem tamanhos distintos --- natação e atletismo têm milhares de atletas enquanto basquetebol e futebol têm centenas --- a comparação direta de valores absolutos de \textit{PageRank}{} seria metodologicamente inválida. A conversão em percentis permitirá identificar atletas de importância estrutural equivalente em diferentes modalidades, possibilitando análises comparativas robustas sobre como a estrutura hierárquica varia entre esportes individuais, coletivos e mistos.
 
+\section{Validação Estatística em Redes Complexas}
+
+Afirmações sobre propriedades estruturais de redes --- como superioridade de densidade, significância de diferenças em modularidade ou robustez de rankings --- demandam validação estatística rigorosa para excluir hipótese de que padrões observados resultem de variação aleatória. Diferentemente de dados tabulares convencionais onde observações são independentes, redes apresentam dependências estruturais intrínsecas: a presença de uma aresta afeta probabilidade de arestas adjacentes, violando pressupostos de independência em testes estatísticos clássicos. Esta seção revisa métodos específicos para inferência estatística em redes complexas.
+
+\subsection{Modelos Nulos e Configuration Model}
+
+Modelos nulos (\textit{null models}) para redes consistem em gerar redes aleatórias que preservam propriedades específicas da rede observada, permitindo testar se uma métrica de interesse (modularidade, centralidade, densidade) excede valores esperados sob aleatoriedade. O \textit{configuration model} \cite{Newman2018Networks} é o modelo nulo fundamental: preserva a distribuição de grau (número de conexões de cada nó) enquanto aleatoriza a estrutura de conexões. Formalmente, para uma rede com sequência de graus $(k_1, k_2, \ldots, k_n)$, o modelo gera redes aleatórias onde cada nó $i$ mantém exatamente $k_i$ conexões, mas os parceiros de conexão são escolhidos aleatoriamente respeitando graus.
+
+A validação de significância procede comparando a métrica observada na rede real contra distribuição de valores obtidos em $N$ realizações do modelo nulo (tipicamente $N = 1000$). Se a métrica observada excede o percentil 95 da distribuição nula, conclui-se significância estatística ($p < 0.05$). Este framework permite validar, por exemplo, se modularidade observada é significativamente superior à esperada em redes com mesma distribuição de grau mas conexões aleatórias, evidenciando estrutura de comunidades genuína ao invés de artefato topológico.
+
+\subsection{Testes de Permutação para Comparações Pareadas}
+
+Para comparações entre grupos de redes --- como densidades masculinas versus femininas em múltiplos esportes --- testes de permutação não-paramétricos oferecem abordagem robusta sem pressupostos distribucionais. O teste de Wilcoxon signed-rank \cite{VanderPlas2016Python} é apropriado para amostras pareadas (mesmos esportes, versões M/F): ordena diferenças absolutas entre pares, atribuindo sinais (positivo se F > M, negativo caso contrário), e testa se soma de ranks positivos excede esperado sob hipótese nula de igualdade. O teste é não-paramétrico (não assume normalidade) e robusto a outliers, apropriado para amostras pequenas ($n < 30$) típicas em análises cross-network.
+
+A estatística de teste é a soma $W$ dos ranks das diferenças positivas. Sob $H_0$ (nenhuma diferença sistemática), $W$ segue distribuição conhecida, permitindo cálculo de $p$-valor exato. Valores $p < 0.05$ indicam evidência estatística de diferença sistemática entre grupos, validando afirmações descritivas sobre superioridade ou inferioridade estrutural.
+
+\subsection{Bootstrap para Intervalos de Confiança}
+
+Reamostragem bootstrap \cite{VanderPlas2016Python} permite estimação de intervalos de confiança para métricas de redes sem pressupostos paramétricos. Para uma métrica de interesse (razão de densidades, PageRank médio, modularidade), o procedimento:
+
+\begin{enumerate}
+    \item Gera $B$ amostras bootstrap (tipicamente $B = 10.000$) reamostrando nós ou arestas com reposição
+    \item Calcula a métrica em cada amostra bootstrap, produzindo distribuição empírica
+    \item Extrai percentis 2.5 e 97.5 da distribuição para intervalo de confiança 95\%
+\end{enumerate}
+
+Intervalos de confiança quantificam incerteza amostral: se IC 95\% para razão de densidades F/M é $[1.54, 5.99]$ e exclui 1.0 (paridade), conclui-se com 95\% de confiança que densidade feminina é superior à masculina na população, não apenas na amostra observada. Esta validação fortalece inferências causais ao demonstrar que padrões não são artefatos de flutuações amostrais.
+
+\subsection{Implicações Metodológicas}
+
+A aplicação rigorosa de validação estatística em análise de redes transforma descobertas descritivas (densidade feminina observada é maior) em afirmações inferênciais fundamentadas (densidade feminina é significativamente superior, $p < 0.05$, IC 95\% exclui paridade). Esta transição é crítica para trabalhos científicos: afirmações não validadas estatisticamente permanecem hipóteses descritivas, enquanto validação formal fundamenta conclusões generalizáveis além da amostra analisada.
+
+No presente trabalho, modelos nulos serão empregados para validar significância de estrutura de comunidades, testes de permutação para comparações cross-gender, e bootstrap para intervalos de confiança em métricas agregadas. Esta abordagem multi-método garante robustez das conclusões independentemente de pressupostos específicos de cada técnica.
+
 \section{Trabalhos Relacionados}
 
 Revisados os fundamentos teóricos e metodológicos de análise de redes complexas, esta seção examina aplicações recentes ao contexto esportivo. A aplicação de análise de redes complexas ao domínio esportivo tem crescido substancialmente na última década, com estudos explorando diferentes modalidades, métricas e contextos competitivos. Os trabalhos a seguir ilustram como métricas de centralidade e detecção de comunidades revelam descobertas substantivas que transcendem análises tradicionais baseadas exclusivamente em estatísticas de performance.
