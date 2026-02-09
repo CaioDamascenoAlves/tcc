@@ -1,0 +1,27 @@
+VERIFICAÇÃO DE CONTAGEM DE ATLETAS
+================================================================================
+
+1. Dataset completo: 48,949 atletas
+2. 6 esportes (medalhistas): 8,679 atletas
+3. 12 casos de estudo: 2,826 atletas
+
+TABELA LATEX:
+
+\begin{table}[htbp]
+\centering
+\caption{Hierarquia e dimensões do conjunto de dados analisado}
+\label{tab:dataset_hierarchy}
+\begin{tabular}{llr}
+\toprule
+\textbf{Nível} & \textbf{Descrição} & \textbf{Atletas Únicos} \\
+\midrule
+Dataset completo & Todos os atletas (1896--2020) & 48,949 \\
+\addlinespace[0.5em]
+6 esportes & Medalhistas em athletics, swimming, basketball, boxing, football, judo & 8,679 \\
+& (149 redes Year $\times$ Event $\times$ Gender) & \\
+\addlinespace[0.5em]
+12 casos de estudo & Redes selecionadas via \textit{Iconic Score} & 2,826 \\
+& (subseleção representativa) & \\
+\bottomrule
+\end{tabular}
+\end{table}

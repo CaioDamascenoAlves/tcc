@@ -1,0 +1,555 @@
+{
+  "networks": [
+    {
+      "network": "Athletics 100m M",
+      "nodes": 78,
+      "edges": 91,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 78
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 78
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 78
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 78
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 78
+        }
+      ]
+    },
+    {
+      "network": "Athletics 100m F",
+      "nodes": 55,
+      "edges": 64,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 55
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 55
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 0.9996018315589718,
+          "rho": 0.9999811283367444,
+          "jaccard": 1.0,
+          "num_nodes": 55
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 55
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 55
+        }
+      ]
+    },
+    {
+      "network": "Swimming 100m M",
+      "nodes": 68,
+      "edges": 81,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 0.9999999999999999,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 68
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 0.9999999999999999,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 68
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 0.9999999999999999,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 68
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 0.9999999999999999,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 68
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 0.9999999999999999,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 68
+        }
+      ]
+    },
+    {
+      "network": "Swimming 100m F",
+      "nodes": 69,
+      "edges": 75,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 69
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 69
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 69
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 69
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 69
+        }
+      ]
+    },
+    {
+      "network": "Basketball M",
+      "nodes": 592,
+      "edges": 8515,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 592
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 592
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 0.9991347960762563,
+          "rho": 0.9999456460738826,
+          "jaccard": 1.0,
+          "num_nodes": 592
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 592
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 592
+        }
+      ]
+    },
+    {
+      "network": "Basketball F",
+      "nodes": 323,
+      "edges": 4793,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 0.9996103474254062,
+          "rho": 0.9999752878846987,
+          "jaccard": 1.0,
+          "num_nodes": 323
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 0.9996103474254062,
+          "rho": 0.9999752878846987,
+          "jaccard": 1.0,
+          "num_nodes": 323
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 323
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 1.0,
+          "jaccard": 1.0,
+          "num_nodes": 323
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 0.9996103474254062,
+          "rho": 0.9999752878846987,
+          "jaccard": 1.0,
+          "num_nodes": 323
+        }
+      ]
+    },
+    {
+      "network": "Football M",
+      "nodes": 1275,
+      "edges": 21620,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 1275
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 1275
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 1275
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 1275
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 1275
+        }
+      ]
+    },
+    {
+      "network": "Football F",
+      "nodes": 293,
+      "edges": 6285,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 293
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 293
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 293
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 293
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 293
+        }
+      ]
+    },
+    {
+      "network": "Judo -90kg M",
+      "nodes": 49,
+      "edges": 65,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 49
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 49
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 49
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 49
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 49
+        }
+      ]
+    },
+    {
+      "network": "Judo -70kg F",
+      "nodes": 22,
+      "edges": 34,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 22
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 22
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 22
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 22
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 1.0,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 22
+        }
+      ]
+    },
+    {
+      "network": "Boxing Fly M",
+      "nodes": 130,
+      "edges": 297,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 0.9999999999999998,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 130
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 0.9999999999999998,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 130
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 0.9999999999999998,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 130
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 0.9999999999999998,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 130
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 0.9999999999999998,
+          "rho": 0.9999999999999998,
+          "jaccard": 1.0,
+          "num_nodes": 130
+        }
+      ]
+    },
+    {
+      "network": "Boxing Fly F",
+      "nodes": 10,
+      "edges": 14,
+      "comparisons": [
+        {
+          "system": "3-2-1 (Cl\u00e1ssico)",
+          "tau": 0.9999999999999999,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 10
+        },
+        {
+          "system": "10-5-2 (Amplificado)",
+          "tau": 0.9999999999999999,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 10
+        },
+        {
+          "system": "4-2-1 (Dobro)",
+          "tau": 0.9999999999999999,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 10
+        },
+        {
+          "system": "7-4-2 (Intermedi\u00e1rio)",
+          "tau": 0.9999999999999999,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 10
+        },
+        {
+          "system": "1-1-1 (Uniforme)",
+          "tau": 0.9999999999999999,
+          "rho": 0.9999999999999999,
+          "jaccard": 1.0,
+          "num_nodes": 10
+        }
+      ]
+    }
+  ],
+  "aggregates": {
+    "3-2-1 (Cl\u00e1ssico)": {
+      "tau_mean": 0.9999675289521172,
+      "tau_std": 0.00010769428237695017,
+      "rho_mean": 0.9999979406570582,
+      "rho_std": 6.83006785251382e-06,
+      "jaccard_mean": 1.0,
+      "jaccard_std": 0.0,
+      "valid": true
+    },
+    "10-5-2 (Amplificado)": {
+      "tau_mean": 0.9999675289521172,
+      "tau_std": 0.00010769428237695017,
+      "rho_mean": 0.9999979406570582,
+      "rho_std": 6.83006785251382e-06,
+      "jaccard_mean": 1.0,
+      "jaccard_std": 0.0,
+      "valid": true
+    },
+    "4-2-1 (Dobro)": {
+      "tau_mean": 0.9998947189696024,
+      "tau_std": 0.0002539860220486394,
+      "rho_mean": 0.9999938978675522,
+      "rho_std": 1.5447914404759986e-05,
+      "jaccard_mean": 1.0,
+      "jaccard_std": 0.0,
+      "valid": true
+    },
+    "7-4-2 (Intermedi\u00e1rio)": {
+      "tau_mean": 1.0,
+      "tau_std": 7.850462293418876e-17,
+      "rho_mean": 1.0,
+      "rho_std": 1.1102230246251565e-16,
+      "jaccard_mean": 1.0,
+      "jaccard_std": 0.0,
+      "valid": true
+    },
+    "1-1-1 (Uniforme)": {
+      "tau_mean": 0.9999675289521172,
+      "tau_std": 0.00010769428237695017,
+      "rho_mean": 0.9999979406570582,
+      "rho_std": 6.83006785251382e-06,
+      "jaccard_mean": 1.0,
+      "jaccard_std": 0.0,
+      "valid": true
+    }
+  }
+}

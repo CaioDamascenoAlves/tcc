@@ -1,0 +1,21 @@
+\begin{table}[h]
+\centering
+\caption{Análise de sensibilidade de sistemas de ponderação de medalhas}
+\label{tab:weight_sensitivity}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Sistema} & \textbf{$\tau$ médio} & \textbf{$\rho$ médio} & \textbf{J médio} & \textbf{Validação} \\
+\hline
+3-2-1 (Clássico) & 1.0000 & 1.0000 & 1.00 & Válido \\
+10-5-2 (Amplificado) & 1.0000 & 1.0000 & 1.00 & Válido \\
+4-2-1 (Dobro) & 0.9999 & 1.0000 & 1.00 & Válido \\
+7-4-2 (Intermediário) & 1.0000 & 1.0000 & 1.00 & Válido \\
+1-1-1 (Uniforme) & 1.0000 & 1.0000 & 1.00 & Válido \\
+\hline
+\end{tabular}
+
+\vspace{0.3cm}
+
+\footnotesize
+\textit{Legenda: $\tau$ = Kendall Tau; $\rho$ = Spearman; J = Jaccard (top-10). Baseline: 5-3-2 (Adotado). Threshold de validação (Shiue et al. 2025): $\tau > 0.70$. Todos os sistemas apresentaram concordância quase perfeita ($\tau \approx 1.0$), demonstrando que rankings são robustos independentemente do sistema de ponderação adotado.}
+\end{table}
