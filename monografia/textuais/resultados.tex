@@ -76,6 +76,55 @@ Futebol apresenta as maiores redes em volume absoluto (1.275 atletas M, 293 F), 
 
 A aplicação do algoritmo de \textit{Louvain}{} resultou em modularidade não calculável para esportes coletivos (devido à natureza de equipes que compartilham medalhas coletivamente), e modularidade variável para esportes individuais. A segregação estrutural — quantificada pela razão entre conexões intra-comunidade e inter-comunidade — apresenta padrão dicotômico: esportes individuais exibem segregação completa ou extrema (índices 52-100), enquanto esportes coletivos mostram integração estrutural elevada (índices 1.5-15).
 
+\section{Análise de Sensibilidade do Sistema de Ponderação}
+\label{sec:weight_sensitivity}
+
+Conforme estabelecido no Capítulo~\ref{cap:desenvolvimento}, o sistema 5-3-2 foi adotado para quantificar hierarquias competitivas (Bronze→Ouro: peso 5, Prata→Ouro: peso 3, Bronze→Prata: peso 2). A robustez desta escolha demanda validação empírica demonstrando que rankings estruturais independem do sistema de ponderação específico, prevenindo que conclusões sejam artefatos de parametrização arbitrária.
+
+\subsection{Metodologia de Validação}
+
+Seguindo protocolo estabelecido por \citeonline{Shiue2025ApplyingPageRank}, a validação de sensibilidade compara o sistema adotado (5-3-2) contra cinco alternativas representativas:
+
+\begin{itemize}
+    \item \textbf{3-2-1 (Clássico):} Sistema histórico tradicionalmente utilizado em pontuações olímpicas
+    \item \textbf{10-5-2 (Amplificado):} Amplificação extrema de gaps competitivos
+    \item \textbf{4-2-1 (Dobro):} Dobro do sistema clássico, mantendo proporções
+    \item \textbf{7-4-2 (Intermediário):} Ponderação intermediária entre 5-3-2 e 10-5-2
+    \item \textbf{1-1-1 (Uniforme):} Ausência total de diferenciação entre posições
+\end{itemize}
+
+Para cada sistema alternativo, foram recalculados rankings via \textit{PageRank}{} nas 12 redes principais, quantificando concordância através de três métricas complementares:
+
+\begin{enumerate}
+    \item \textbf{Kendall Tau ($\tau$):} Correlação baseada em pares concordantes/discordantes. Threshold de validação: $\tau > 0.70$ \cite{Shiue2025ApplyingPageRank}.
+    \item \textbf{Spearman ($\rho$):} Correlação de rankings completos, sensível a distâncias ordinais.
+    \item \textbf{Jaccard (J):} Sobreposição no top-10 atletas, focalizando elite competitiva.
+\end{enumerate}
+
+\subsection{Resultados da Validação}
+
+A Tabela~\ref{tab:weight_sensitivity} apresenta concordância média agregada nas 12 redes analisadas:
+
+\input{./tabelas/tab_weight_sensitivity.tex}
+
+Os resultados evidenciam concordância quase perfeita ($\tau \approx 1.0$, $\rho \approx 1.0$, $J = 1.0$) entre todos os sistemas testados, superando amplamente o threshold de validação ($\tau > 0.70$) estabelecido por \citeonline{Shiue2025ApplyingPageRank}. A concordância perfeita no Jaccard top-10 ($J = 1.00$) demonstra que a elite competitiva identificada permanece idêntica independentemente da ponderação adotada: os mesmos atletas ocupam as primeiras posições sob qualquer sistema, com variações ordinais mínimas.
+
+Mesmo o sistema uniforme (1-1-1), que remove completamente diferenciação entre medalhas, produz rankings estruturalmente idênticos ($\tau = 1.0$). Esta robustez evidencia que a hierarquia competitiva emerge da topologia da rede (quem derrotou quem) ao invés de pesos numéricos específicos atribuídos às arestas. O algoritmo de \textit{PageRank}{} captura importância recursiva através da estrutura de conexões, tornando rankings resilientes a variações na quantificação de gap competitivo entre posições de pódio.
+
+\subsection{Implicações Metodológicas}
+
+A validação de sensibilidade suporta três conclusões metodológicas fundamentais:
+
+\begin{enumerate}
+    \item \textbf{Robustez estrutural:} Rankings competitivos são propriedades emergentes da topologia de rede, não artefatos de escolhas de parametrização.
+
+    \item \textbf{Liberdade exploratória:} Pesquisadores podem adotar sistemas de ponderação alinhados com objetivos analíticos específicos (amplificar gaps para estudar elite, uniformizar para análise igualitária) sem comprometer validade estrutural das conclusões.
+
+    \item \textbf{Generalização dos achados:} Descobertas sobre centralidade, comunidades e padrões competitivos apresentadas neste trabalho independem do sistema 5-3-2, validando-se sob qualquer ponderação alternativa testada.
+\end{enumerate}
+
+Esta robustez fortalece confiança nos resultados apresentados nas seções subsequentes, demonstrando que padrões identificados refletem propriedades intrínsecas da estrutura competitiva olímpica, não sensibilidade a decisões metodológicas específicas de ponderação.
+
 \section{Análise Comparativa Cross-Esporte}
 
 A comparação sistemática entre os 12 casos de estudo revela padrões estruturais que transcendem fronteiras esportivas, evidenciando princípios universais de organização competitiva e descobertas contra-intuitivas sobre diferenças de gênero.
