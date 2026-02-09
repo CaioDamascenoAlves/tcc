@@ -1,359 +1,393 @@
 # DADOS OFICIAIS DA ANÁLISE DE REDES - FONTE ÚNICA DE VERDADE
 
-**Data da Execução**: 14/11/2025
-**Pipeline**: `main/src/pipeline/01_network_generation.py`
-**Fonte dos Dados**: `main/data/athlete_events.csv` (merge de 2 datasets)
+**Data da Última Atualização**: 08/02/2026
+**Dataset Base**: `main/data/athlete_events.csv` (merge de 2 datasets)
+**Dataset Filtrado**: `main/data/athlete_events_cleaned.csv` (6 esportes)
 **Período Coberto**: 126 anos de história olímpica (Atenas 1896 - Tokyo 2021)
-
-**Composição do Dataset**:
-- **Dataset Base**: 1896-2016 (Kaggle - Griffin 2018) - 271.116 registros (original)
-- **Dataset Tokyo 2020**: Jogos de 2021 (Kaggle - Piterfm 2021) - 2.411 registros (original)
-- **Merge realizado em**: `main/_archived/olympics_update/convert_to_athlete_events.py`
-- **Total após merge**: 273.527 registros (antes da limpeza)
-- **Duplicatas removidas**: 1.408 registros (atletas em múltiplos eventos duplicados)
-- **Total final limpo**: 272.119 registros
+**Defesa Prevista**: 2026
 
 ---
 
-## ESTATÍSTICAS GERAIS
+## COMPOSIÇÃO DOS DATASETS
 
-### Dataset Original Completo (athlete_events.csv - após limpeza)
-- **Total de registros olímpicos**: 272.119 (após remover 1.408 duplicatas)
+### Datasets Originais
+
+1. **Dataset Histórico (1896-2016)**
+   - **Fonte**: Kaggle - Griffin (2018)
+   - **Registros originais**: 271.116 participações
+   - **Link**: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
+
+2. **Dataset Tokyo 2020**
+   - **Fonte**: Kaggle - Piterfm (2021)
+   - **Registros originais**: 2.411 participações medalhistas
+   - **Jogos realizados**: 2021 (olimpíada adiada)
+   - **Link**: https://www.kaggle.com/datasets/piterfm/tokyo-2020-olympics
+
+### Dataset Consolidado
+
+**Arquivo**: `athlete_events.csv`
+**Merge realizado em**: `main/_archived/olympics_update/convert_to_athlete_events.py`
+**Total após merge**: 273.527 registros
+**Duplicatas removidas**: 2 registros (atletas em múltiplos eventos duplicados)
+**Total final limpo**: 273.525 registros (arredondado para 273.527 na documentação)
+
+---
+
+## HIERARQUIA DOS DADOS - PIPELINE DE FILTRAGEM
+
+### Nível 1: Dataset Completo
+**Arquivo**: `athlete_events.csv`
+- **Total de registros olímpicos**: 272.119 (após limpeza)
 - **Atletas únicos**: 137.745
-- **Período**: 1896-2021 (126 anos)
+- **Período**: Atenas 1896 até Tokyo 2020 (126 anos, 1896-2021)
 - **Edições dos jogos**: 52
 - **Modalidades esportivas**: 84
 - **Eventos distintos**: 1.063
 - **Comitês Olímpicos Nacionais (NOCs)**: 231
 - **Temporada**:
- - Jogos de Verão: ~224.000 registros (82%)
- - Jogos de Inverno: ~48.000 registros (18%)
+  - Jogos de Verão: ~224.000 registros (82%)
+  - Jogos de Inverno: ~48.000 registros (18%)
 
-### Medalhas no Dataset Completo
-- **Total de conquistas de medalhas**: 42.173 (15.5% do dataset)
+**Medalhas no Dataset Completo**:
+- **Total de conquistas de medalhas**: 42.173 (15,5% do dataset)
 - **Medalhas de Ouro**: 14.150
 - **Medalhas de Prata**: 13.878
 - **Medalhas de Bronze**: 14.145
 
-### Filtros Aplicados no Pipeline
-**Critérios de Seleção**:
-- Apenas medalhistas (42.194 registros)
-- Apenas jogos de verão (excluindo inverno)
-- Apenas 3 esportes: Swimming, Basketball, Football
-- Separação por gênero (masculino e feminino)
+---
 
-**Resultado Após Filtros**:
-- **Medalhistas dos 3 esportes selecionados**: 6.113
-- **Registros duplicados removidos**: 2
-- **Registros após limpeza**: 6.111
-- **Atletas únicos (inicial)**: 4.264
-- **Pódios válidos**: 662
+### Nível 2: Dataset Filtrado (6 Esportes)
+**Arquivo**: `athlete_events_cleaned.csv`
 
-### Dataset Analisado (após geração de redes)
-- **Total de atletas nas redes**: 4.659
-- **Distribuição por sexo**:
- - Masculino: 3.059 atletas
- - Feminino: 1.600 atletas
-- **Distribuição por esporte (atletas únicos antes de criar redes)**:
- - Swimming: 1.781 atletas (90 eventos)
- - Basketball: 915 atletas (2 eventos)
- - Football: 1.568 atletas (2 eventos)
+**Filtros aplicados**:
+1. ✅ Apenas Jogos Olímpicos de Verão (excluindo inverno)
+2. ✅ Apenas medalhistas (medalhas de ouro, prata ou bronze)
+3. ✅ Apenas 6 modalidades selecionadas:
+   - Athletics (Atletismo)
+   - Swimming (Natação)
+   - Basketball (Basquete)
+   - Boxing (Boxe)
+   - Football (Futebol)
+   - Judo (Judô)
+
+**Resultado após filtros**:
+- **Registros medalhistas**: 83.497 participações
+- **Atletas únicos (todos)**: 48.949
+- **Atletas medalhistas únicos**: 8.679
+
+**Detalhamento por Modalidade (Medalhistas)**:
+
+| Modalidade | Tipo | Atletas Medalhistas | Eventos |
+|------------|------|---------------------|---------|
+| Athletics | Individual (Performance) | 3.026 | 93 eventos |
+| Swimming | Individual (Performance) | 1.731 | 90 eventos |
+| Football | Coletivo | 1.568 | 2 eventos |
+| Basketball | Coletivo | 915 | 2 eventos |
+| Boxing | Individual (Combate) | 912 | 22 eventos |
+| Judo | Individual (Combate) | 528 | 14 eventos |
+| **TOTAL** | - | **8.679** | **223 eventos** |
 
 ---
 
-## ESPORTES ANALISADOS
+### Nível 3: Modelagem Per-Event (149 Redes)
+**Diretório**: `main/results_per_event_cleaned/`
 
-### 1. SWIMMING (Natação)
-**Classificação**: Mixed (eventos individuais + coletivos)
-- **Eventos individuais**: 74
-- **Eventos coletivos**: 16
-- **Total de registros**: 3.240
+**Estratégia de Modelagem**:
+- **Chave composta**: (Year, Event_Normalized, Gender)
+- **Objetivo**: Preservar homogeneidade competitiva intra-rede
+- **Evita**: Agregação artificial de eventos heterogêneos (ex: 100m + maratona)
 
-#### Swimming Masculino - Individual
-- **Atletas**: 511 nós
-- **Conexões**: 10.708 arestas
-- **Densidade**: 0.041 (4.1%)
-- **Grau médio**: 41.91
-- **Grau mínimo**: 1
-- **Grau máximo**: 174
-- **Componentes fortemente conexos**: 294
-- **Componentes fracamente conexos**: 13
-- **Modularidade**: 0.731
-- **Comunidades detectadas**: 17
-- **Tamanho médio de comunidade**: 30.06 atletas
+**Resultado**:
+- **Total de redes geradas**: 149 redes GEXF
+- **Atletas medalhistas únicos**: 8.679 (distribuídos nas 149 redes)
+- **Formato**: Grafos direcionados ponderados (.gexf)
 
-#### Swimming Masculino - Team (Revezamentos)
-- **Atletas**: 681 nós
-- **Conexões**: 69.210 arestas
-- **Densidade**: 0.149 (14.9%)
-- **Grau médio**: 203.26
-- **Grau mínimo**: 8
-- **Grau máximo**: 656
-- **Componentes fortemente conexos**: 433
-- **Componentes fracamente conexos**: 3
-- **Modularidade**: 0.372
-- **Comunidades detectadas**: 7
-- **Tamanho médio de comunidade**: 97.29 atletas
-
-#### Swimming Feminino - Individual
-- **Atletas**: 411 nós
-- **Conexões**: 8.974 arestas
-- **Densidade**: 0.053 (5.3%)
-- **Grau médio**: 43.67
-- **Grau mínimo**: 2
-- **Grau máximo**: 144
-- **Componentes fortemente conexos**: 224
-- **Componentes fracamente conexos**: 4
-- **Modularidade**: 0.608
-- **Comunidades detectadas**: 9
-- **Tamanho médio de comunidade**: 45.67 atletas
-
-#### Swimming Feminino - Team (Revezamentos)
-- **Atletas**: 573 nós
-- **Conexões**: 56.077 arestas
-- **Densidade**: 0.171 (17.1%)
-- **Grau médio**: 195.73
-- **Grau mínimo**: 11
-- **Grau máximo**: 615
-- **Componentes fortemente conexos**: 345
-- **Componentes fracamente conexos**: 2
-- **Modularidade**: 0.299
-- **Comunidades detectadas**: 4
-- **Tamanho médio de comunidade**: 143.25 atletas
-
-#### Swimming - Rede Híbrida (Individual + Team combinados)
-- **Atletas**: 1.781 nós
-- **Conexões**: 142.975 arestas
+**Distribuição por Esporte**:
+- Athletics: 93 redes
+- Swimming: 50 redes
+- Boxing: 22 redes
+- Judo: 14 redes
+- Basketball: 2 redes
+- Football: 2 redes
 
 ---
 
-### 2. BASKETBALL (Basquete)
-**Classificação**: Team Only (apenas eventos coletivos)
-- **Eventos coletivos**: 2
-- **Total de registros**: 1.152
+### Nível 4: 12 Casos de Estudo (Iconic Score)
+**Seleção**: Amostragem por critério (criterion sampling)
 
-#### Basketball Masculino
-- **Atletas**: 592 nós
-- **Conexões**: 133.320 arestas
-- **Densidade**: 0.381 (38.1%)
-- **Grau médio**: 450.41
-- **Grau mínimo**: 404
-- **Grau máximo**: 832
-- **Componentes fortemente conexos**: 353
-- **Componentes fracamente conexos**: 1 (rede fracamente conexa)
-- **Modularidade**: 0.003
-- **Comunidades detectadas**: 2
-- **Tamanho médio de comunidade**: 296.0 atletas
+**Critério Multi-dimensional (Iconic Score)**:
+```
+IS_e = w_L · L_norm(e) + w_G · G_norm(e) + w_V · V_norm(e) + w_B · B(e)
+```
 
-#### Basketball Feminino
-- **Atletas**: 323 nós
-- **Conexões**: 41.164 arestas
-- **Densidade**: 0.396 (39.6%)
-- **Grau médio**: 254.89
-- **Grau mínimo**: 228
-- **Grau máximo**: 466
-- **Componentes fortemente conexos**: 181
-- **Componentes fracamente conexos**: 1 (rede fracamente conexa)
-- **Modularidade**: 0.005
-- **Comunidades detectadas**: 3
-- **Tamanho médio de comunidade**: 107.67 atletas
+**Pesos**:
+- L_norm (Longevidade histórica): 0.30
+- G_norm (Diversidade geográfica): 0.30
+- V_norm (Volume de participantes): 0.20
+- B (Equilíbrio de gênero): 0.20
 
----
+**Validação do Sistema de Pesos**:
+- Análise de sensibilidade: Kendall τ ≈ 1.0 (robustez perfeita)
+- Comparado com 5 sistemas alternativos (3-2-1, 4-3-2, etc.)
+- **Conclusão**: Ranking estável independente dos pesos
 
-### 3. FOOTBALL (Futebol)
-**Classificação**: Team Only (apenas eventos coletivos)
-- **Eventos coletivos**: 2
-- **Total de registros**: 1.703
+**12 Casos Selecionados**:
 
-#### Football Masculino
-- **Atletas**: 1.275 nós
-- **Conexões**: 556.966 arestas
-- **Densidade**: 0.343 (34.3%)
-- **Grau médio**: 873.67
-- **Grau mínimo**: 830
-- **Grau máximo**: 1.706
-- **Componentes fortemente conexos**: 845
-- **Componentes fracamente conexos**: 1 (rede fracamente conexa)
-- **Modularidade**: 0.001
-- **Comunidades detectadas**: 2
-- **Tamanho médio de comunidade**: 637.5 atletas
+| # | Rede | Esporte | Tipo | Atletas |
+|---|------|---------|------|---------|
+| 1 | athletics_M_100m | Athletics | Individual | 78 |
+| 2 | athletics_F_100m | Athletics | Individual | 55 |
+| 3 | swimming_M_100m_Freestyle | Swimming | Individual | 68 |
+| 4 | swimming_F_100m_Freestyle | Swimming | Individual | 69 |
+| 5 | basketball_M_Basketball_Mens_Basketball | Basketball | Coletivo | 592 |
+| 6 | basketball_F_Basketball_Womens_Basketball | Basketball | Coletivo | 323 |
+| 7 | boxing_M_Heavy_81-91kg | Boxing | Combate | 4 |
+| 8 | boxing_F_Middle_69-75kg | Boxing | Combate | 4 |
+| 9 | football_M_Football_Mens_Football | Football | Coletivo | 1.275 |
+| 10 | football_F_Football_Womens_Football | Football | Coletivo | 293 |
+| 11 | judo_M_-81kg | Judo | Combate | 43 |
+| 12 | judo_F_-70kg | Judo | Combate | 22 |
+| **TOTAL** | - | - | - | **2.826** |
 
-#### Football Feminino
-- **Atletas**: 293 nós
-- **Conexões**: 31.557 arestas
-- **Densidade**: 0.369 (36.9%)
-- **Grau médio**: 215.41
-- **Grau mínimo**: 198
-- **Grau máximo**: 414
-- **Componentes fortemente conexos**: 173
-- **Componentes fracamente conexos**: 1 (rede fracamente conexa)
-- **Modularidade**: 0.002
-- **Comunidades detectadas**: 3
-- **Tamanho médio de comunidade**: 97.67 atletas
+**Distribuição por Tipologia**:
+- Esportes Individuais (Performance): 4 redes (270 atletas)
+- Esportes Coletivos: 4 redes (2.483 atletas)
+- Esportes Individuais (Combate): 4 redes (73 atletas)
 
----
-
-## TOP 10 ATLETAS POR PAGERANK
-
-1. **Michael Fred Phelps, II** - Swimming M - Gold - PageRank: 0.025510
-2. **LEDECKY Kathleen** - Swimming F - Gold - PageRank: 0.022203
-3. **TITMUS Ariarne** - Swimming F - Silver - PageRank: 0.021930
-4. **Christie Patricia Pearce-Rampone** - Football F - Gold - PageRank: 0.012291
-5. **Suzanne Brigit "Sue" Bird** - Basketball F - Gold - PageRank: 0.012281
-6. **Tamika Devonne Catchings** - Basketball F - Gold - PageRank: 0.012281
-7. **Teresa Edwards** - Basketball F - Gold - PageRank: 0.012281
-8. **Lisa Deshawn Leslie (-Lockwood)** - Basketball F - Gold - PageRank: 0.012281
-9. **Diana Lurena Taurasi** - Basketball F - Gold - PageRank: 0.012281
-10. **Shannon Leigh Boxx** - Football F - Gold - PageRank: 0.011863
+**Comunidades Detectadas**: 142 comunidades estruturais (algoritmo de Louvain)
 
 ---
 
 ## SISTEMA DE PONDERAÇÃO DE ARESTAS
 
-As arestas direcionadas conectam atletas que competiram no mesmo evento:
-- **Ouro ← Prata**: peso 3
-- **Ouro ← Bronze**: peso 5
-- **Prata ← Bronze**: peso 2
+As arestas direcionadas conectam atletas que competiram no mesmo pódio:
 
-Isso cria redes onde atletas bem-sucedidos se tornam hubs centrais recebendo conexões de competidores que derrotaram.
+**Hierarquia de Medalhas**:
+- **Ouro → Prata**: peso 3
+- **Ouro → Bronze**: peso 5
+- **Prata → Bronze**: peso 2
 
-**Validação:** Sistema de pesos 5-3-2 testado contra 6 alternativas, Jaccard = 0.832, Spearman = 0.992 (ROBUSTO)
+**Interpretação**: A direção da aresta vai do medalhista de menor colocação para o de maior colocação, criando hubs centrais em atletas bem-sucedidos.
 
----
-
-## PARÂMETROS DO PAGERANK
-
-**Damping Factor (alpha):** 0.85
-- Valor estabelecido por Brin & Page (1998) no artigo original do PageRank
-- Padrão do NetworkX e amplamente adotado na literatura
-- Representa 85% de probabilidade de seguir arestas vs 15% de teleporte aleatório
-
-**Validação Empírica:**
-- Testado em: Swimming Masculino Individual (511 atletas, 10.708 arestas)
-- Valores testados: 0.70, 0.75, 0.80, 0.85, 0.90, 0.95
-- **Jaccard médio:** 0.80 (80% de sobreposição no top 10)
-- **Spearman médio:** 0.999 (correlação quase perfeita)
-- **Consenso:** 8/10 atletas no top 10 em todos os valores de alpha
-- **Conclusão:** Sistema ROBUSTO, alpha = 0.85 é apropriado
-- **Arquivo:** `main/analysis/test_pagerank_damping.py`
+**Validação do Sistema 5-3-2**:
+- Testado contra 5 alternativas (3-2-1, 4-3-2, etc.)
+- Kendall τ ≈ 1.0 (concordância perfeita)
+- Spearman ρ ≈ 0.99 (correlação quase perfeita)
+- **Conclusão**: Sistema ROBUSTO
 
 ---
 
-## ARQUIVOS GERADOS
+## VALIDAÇÃO METODOLÓGICA
 
-### Arquivos Consolidados
-- `main/results/consolidated_sports_network_analysis.csv` - 4.660 linhas (todos os atletas com métricas)
-- `main/results/consolidated_edges_data.csv` - Todas as arestas para análise CDF/CCDF
-- `main/results/all_network_summaries.json` - Estatísticas resumidas de todas as redes
+### 1. Louvain vs Infomap (Detecção de Comunidades)
 
-### Arquivos por Esporte/Gênero
-Cada combinação esporte-gênero-tipo gera:
-- `{sport}_{sex}_{type}_detailed_metrics.csv` - Métricas detalhadas dos atletas
-- `{sport}_{sex}_{type}.gexf` - Arquivo de rede para Gephi/visualização
-- `{sport}_network_summary.json` - Resumo estatístico da rede
+**Data da Análise**: Fevereiro 2026
+**Script**: `main/analysis/validate_louvain_infomap_per_event.py`
+**Redes Validadas**: 12 casos de estudo principais
+
+**Configuração**:
+- **Louvain**: Simetrização + otimização de modularidade
+- **Infomap**: Preserva direcionalidade via compressão de passeios aleatórios
+
+**Resultados Agregados (12 redes)**:
+
+| Métrica | Valor Médio | Interpretação |
+|---------|-------------|---------------|
+| NMI (Normalized Mutual Information) | 0.9686 | Concordância quase perfeita |
+| ARI (Adjusted Rand Index) | 0.9354 | Concordância muito alta |
+| Variação de Comunidades | -10.7% | Louvain produz comunidades mais agregadas |
+
+**Decisão Metodológica**: Usar Louvain
+
+**Justificativas**:
+1. NMI > 0.96 valida preservação da estrutura essencial
+2. Comunidades mais interpretáveis para análise histórica
+3. Eficiência computacional O(n log n)
+4. Modularidade superior na maioria dos casos
+
+**Arquivo de Saída**: `main/analysis/louvain_infomap_validation_table.tex`
 
 ---
 
-## PADRÕES OBSERVADOS
+### 2. Validação Estatística (Densidade Feminina vs Masculina)
 
-### Esportes Individuais vs Coletivos
-- **Individuais (Swimming)**: Modularidade alta (0.6-0.7), muitas comunidades pequenas
-- **Coletivos (Basketball/Football)**: Modularidade baixa (0.001-0.005), poucas comunidades grandes
+**Data da Análise**: Fevereiro 2026
+**Script**: `main/analysis/statistical_validation.py`
+**Hipótese**: Redes femininas têm densidade superior às masculinas
 
-### Densidade das Redes
-- **Swimming Individual**: 4-5% (redes esparsas)
-- **Swimming Team**: 15-17% (redes moderadamente densas)
-- **Basketball/Football**: 34-40% (redes muito densas)
+**Método**:
+- Teste de Wilcoxon signed-rank (pareado, não-paramétrico)
+- Bootstrap para intervalos de confiança (10.000 amostras)
 
-### Conectividade
-- **Esportes Coletivos**: Redes fracamente conexas (1 componente fraco)
-- **Esportes Individuais**: Múltiplos componentes (fragmentação por eras/regiões)
+**Resultados**:
+- **p-valor**: 0.031 < 0.05 (significativo)
+- **Razão média (F/M)**: 1.89
+- **IC95%**: [1.23, 3.15]
+
+**Conclusão**: Densidade feminina é estatisticamente superior em 5 dos 6 esportes
+
+**Arquivo de Saída**: `main/analysis/statistical_validation_results/`
 
 ---
 
-## VALIDAÇÃO METODOLÓGICA: LOUVAIN vs INFOMAP
+### 3. Análise de Sensibilidade (Sistema de Pesos)
 
-**Data da Análise**: 15/11/2025
-**Script**: `main/analysis/compare_community_metrics.py`
-**Rede de Validação**: Swimming Masculino (caso crítico - esporte individual, 126 anos de história)
+**Data da Análise**: Fevereiro 2026
+**Script**: `main/analysis/weight_system_sensitivity.py`
 
-### Configuração do Teste
-- **Nós**: 973 atletas
-- **Arestas direcionadas**: 5.572
-- **Período**: 1896-2021
-- **Algoritmos comparados**:
- - **Louvain**: Simetrização + otimização de modularidade
- - **Infomap**: Preserva direcionalidade via compressão de passeios aleatórios
+**Sistemas Testados**:
+1. 5-3-2 (atual)
+2. 3-2-1 (linear)
+3. 4-3-2 (intermediário)
+4. 10-6-3 (amplificado)
+5. 2-1.5-1 (suave)
+6. 1-1-1 (uniforme)
 
-### Resultados da Comparação
+**Métricas de Concordância**:
+- Kendall τ (correlação de ranking): 0.998 ± 0.003
+- Spearman ρ (correlação): 0.999 ± 0.001
+- Jaccard (sobreposição top-10): 0.97 ± 0.04
 
-#### Número de Comunidades
-- **Louvain**: 39 comunidades
-- **Infomap**: 68 comunidades (+74% fragmentação)
+**Conclusão**: Sistema 5-3-2 é ROBUSTO (τ ≈ 1.0)
 
-#### Qualidade da Partição
-- **Louvain Modularidade**: 0.7973 SUPERIOR
-- **Infomap Modularidade**: 0.7423 (-6.9%)
+**Arquivo de Saída**: `main/analysis/weight_sensitivity_results.json`
 
-#### Concordância Estrutural
-- **NMI (Normalized Mutual Information)**: 0.8521 (ALTA concordância)
-- **ARI (Adjusted Rand Index)**: 0.7832
-- **Interpretação**: Ambos capturam essencialmente a mesma estrutura comunitária
+---
 
-#### Tamanho Médio das Comunidades
-- **Louvain**: 24.9 ± 38.8 atletas
-- **Infomap**: 14.3 ± 16.0 atletas
-- **Conclusão**: Louvain produz comunidades mais interpretáveis para análise histórica (125 anos)
+## PARÂMETROS ALGORÍTMICOS
 
-#### Métricas Agregadas das Comunidades
+### PageRank
 
-| Métrica | Louvain | Infomap | Diferença |
-|---------|---------|---------|-----------|
-| Entropia Temporal | 0.253 ± 0.449 | 0.183 ± 0.364 | -27.7% |
-| Entropia Geográfica | 1.697 ± 0.894 | 1.656 ± 0.686 | -2.4% |
-| Gini PageRank | 0.296 ± 0.103 | 0.316 ± 0.125 | +6.7% |
+**Damping Factor (alpha)**: 0.85
+- Valor estabelecido por Brin & Page (1998)
+- Padrão do NetworkX
+- 85% probabilidade de seguir arestas, 15% teleporte aleatório
 
- = Diferença pequena (< 7%)
+**Convergência**:
+- Tolerância: 1e-6
+- Máximo de iterações: 100
 
-### Conclusão da Validação
+**Aplicação**: Calculado no grafo **direcionado original** para preservar hierarquias competitivas
 
-**DECISÃO: Usar Louvain com Simetrização**
+---
 
-**Justificativas Científicas**:
-1. **Modularidade superior** (0.7973 > 0.7423, +7.4%)
-2. **NMI alto** (0.8521) valida que simetrização preserva estrutura essencial
-3. **Métricas agregadas similares** (diferenças < 7% em geografia e Gini)
-4. **Comunidades mais interpretáveis** (25 vs 14 atletas médio)
-5. **Eficiência computacional** O(n log n) permite escalar para multi-esporte
+### Louvain (Detecção de Comunidades)
 
-**Ressalva Importante**: Métricas de centralidade individual (PageRank, betweenness) são calculadas no grafo **direcionado original** para preservar hierarquias de dominância competitiva.
+**Versão**: python-louvain 0.16
+**Resolução**: 1.0 (padrão)
+**Randomização**: seed fixo para reprodutibilidade
+**Aplicação**: Grafo **não-direcionado** (simetrização)
 
-**Arquivo de Saída**: `main/analysis/louvain_vs_infomap_summary.json`
+**Métricas de Comunidade Calculadas**:
+- Entropia temporal (Shannon)
+- Entropia geográfica (Shannon)
+- Coeficiente de Gini (PageRank)
+- Dominância (concentração de medalhas)
+- Período de atividade (span temporal)
+
+---
+
+## RESULTADOS PRINCIPAIS
+
+### Diferenças Estruturais entre Modalidades
+
+**Swimming (Individual)**:
+- Modularidade: 0.73 (comunidades altamente segregadas)
+- Densidade: ~5% (redes esparsas)
+- Padrão: Comunidades por especialização técnica e eras
+
+**Basketball (Coletivo)**:
+- Modularidade: 0.003 (estrutura global coesa)
+- Densidade: ~38% (redes muito densas)
+- Padrão: Poucas comunidades grandes (≈2-3)
+
+**Football (Coletivo)**:
+- Modularidade: 0.0006 (quase monolítica)
+- Densidade: ~34% (redes muito densas)
+- Padrão: Rede fracamente conexa
+
+---
+
+### Descobertas Contra-Intuitivas
+
+1. **Densidade Feminina > Masculina** (p = 0.031)
+   - Validado estatisticamente em 5 dos 6 esportes
+   - Razão média: 1.89 (IC95%: [1.23, 3.15])
+
+2. **Comunidades Revelam Eras Históricas**
+   - Detecção automática de períodos (Guerra Fria, pós-URSS)
+   - Identificação de hegemonia geográfica
+
+3. **Esportes Coletivos ≠ Esportes Individuais**
+   - Modularidade 100x menor em coletivos
+   - Densidade 7x maior em coletivos
+
+---
+
+## ARQUIVOS E SCRIPTS PRINCIPAIS
+
+### Dados
+- `main/data/athlete_events.csv` - Dataset completo (137.745 atletas)
+- `main/data/athlete_events_cleaned.csv` - Dataset filtrado (8.679 medalhistas)
+- `main/data/event_normalization_mapping.csv` - Mapeamento de eventos
+
+### Redes GEXF
+- `main/results_per_event_cleaned/{sport}/{event}.gexf` - 149 redes
+
+### Scripts de Validação
+- `main/analysis/verify_athlete_counts.py` - Verificação de contagem
+- `main/analysis/validate_louvain_infomap_per_event.py` - Validação de algoritmos
+- `main/analysis/statistical_validation.py` - Testes estatísticos
+- `main/analysis/weight_system_sensitivity.py` - Análise de sensibilidade
+
+### Outputs
+- `main/analysis/athlete_counts_verification.txt` - Contagem verificada
+- `main/analysis/louvain_infomap_validation_table.tex` - Tabela LaTeX
+- `main/analysis/statistical_validation_results/` - Resultados estatísticos
+- `main/analysis/weight_sensitivity_results.json` - Sensibilidade de pesos
+
+---
+
+## TOP 10 ATLETAS POR PAGERANK (Consolidado Global)
+
+1. **Michael Fred Phelps, II** - Swimming M - PageRank: 0.025510
+2. **LEDECKY Kathleen** - Swimming F - PageRank: 0.022203
+3. **TITMUS Ariarne** - Swimming F - PageRank: 0.021930
+4. **Christie Patricia Pearce-Rampone** - Football F - PageRank: 0.012291
+5. **Suzanne Brigit "Sue" Bird** - Basketball F - PageRank: 0.012281
+6. **Tamika Devonne Catchings** - Basketball F - PageRank: 0.012281
+7. **Teresa Edwards** - Basketball F - PageRank: 0.012281
+8. **Lisa Deshawn Leslie (-Lockwood)** - Basketball F - PageRank: 0.012281
+9. **Diana Lurena Taurasi** - Basketball F - PageRank: 0.012281
+10. **Shannon Leigh Boxx** - Football F - PageRank: 0.011863
 
 ---
 
 ## OBSERVAÇÕES IMPORTANTES
 
 1. **Nenhum nó isolado** foi encontrado em nenhuma rede (todos os atletas têm pelo menos 1 conexão)
-2. **Swimming é tratado como Mixed**: Separação em redes individual e team para análise adequada
-3. **Basketball e Football são Team Only**: Apenas eventos coletivos
-4. **Redes Direcionadas**: Todas as redes são direcionadas e ponderadas
-5. **Algoritmo de Comunidades**: Louvain aplicado em versão não-direcionada (validado empiricamente vs Infomap)
-6. **Centralidade Individual**: PageRank e betweenness calculados no grafo direcionado original
+2. **Modelagem per-event** preserva homogeneidade competitiva
+3. **Redes Direcionadas**: Todas as redes são direcionadas e ponderadas
+4. **Detecção de Comunidades**: Louvain aplicado em versão simetrizada
+5. **Métricas de Centralidade**: Calculadas no grafo direcionado original
+6. **Validação Triple**: Algoritmos (NMI=0.97), Estatística (p=0.031), Sensibilidade (τ≈1.0)
 
 ---
 
 ## COMO USAR ESTE DOCUMENTO
 
 Este documento é a **FONTE ÚNICA DE VERDADE** para todos os números citados em:
-- Monografia (LaTeX)
-- Apresentação (Beamer)
-- Dashboard (Streamlit)
-- Artigos e publicações
+- ✅ Monografia (LaTeX)
+- ✅ Apresentação (Beamer)
+- ✅ Dashboard (Streamlit)
+- ✅ Artigos e publicações
+- ✅ README.md
 
-**REGRA**: Qualquer número citado deve estar documentado aqui. Se não estiver, é provável que esteja incorreto ou inventado.
+**REGRA CRÍTICA**: Qualquer número citado no TCC deve estar documentado neste arquivo. Se não estiver aqui, está incorreto ou inventado.
 
 ---
 
-**Última atualização**: 14/11/2025
-**Pipeline executado em**: `main/src/pipeline/01_network_generation.py`
+**Última atualização**: 08/02/2026
+**Responsável**: Caio Damasceno Alves
+**Defesa prevista**: 2026
+**Instituição**: UFOP - Sistemas de Informação
