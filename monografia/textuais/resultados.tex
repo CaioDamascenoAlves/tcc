@@ -144,6 +144,21 @@ Boxe feminino apresenta o razão mais extremo (25.65×), explicado pela introdu�
 
 A única exceção — Natação 100m Nado Livre com densidade masculina superior — pode ser atribuída à longevidade quase equivalente das versões masculina (desde 1896) e feminina (desde 1912), permitindo acumulação histórica similar de confrontos competitivos.
 
+\subsubsection{Validação Estatística Formal}
+\label{sec:statistical_validation_density}
+
+A afirmação de que redes femininas apresentam densidade superior demanda validação estatística rigorosa para excluir hipótese de que diferenças observadas sejam resultado de variação aleatória. Aplicou-se teste de Wilcoxon signed-rank pareado, apropriado para comparações de amostras dependentes (mesmos esportes, versões M/F) sem pressuposto de normalidade.
+
+A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observadas, razões F/M e resultado do teste:
+
+\input{./tabelas/tab_statistical_validation_density.tex}
+
+O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese nula ($H_0: \text{densidade}_F = \text{densidade}_M$) em favor da hipótese alternativa ($H_1: \text{densidade}_F > \text{densidade}_M$) com significância estatística ao nível $\alpha = 0.05$. Teste t pareado paramétrico corrobora conclusão ($p = 0.042 < 0.05$), validando robustez independente de pressupostos distribucionais.
+
+Intervalo de confiança bootstrap (95\%) para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
+
+Esta validação estatística formal fundamenta quantitativamente afirmações descritivas sobre diferenças de gênero, demonstrando que padrão observado não é artefato amostral, mas propriedade estrutural robusta das redes competitivas olímpicas.
+
 \subsection{Atletas com Maior Centralidade Estrutural por Esporte}
 
 Valores de \textit{PageRank}{} refletem centralidade estrutural dentro do contexto específico de cada modalidade esportiva. Comparações diretas entre esportes distintos são metodologicamente problemáticas devido a diferenças fundamentais em estrutura de competição: esportes coletivos (onde equipes inteiras recebem medalhas simultaneamente) apresentam topologia de rede radicalmente distinta de esportes individuais (onde cada atleta compete isoladamente). Consequentemente, a identificação de atletas centrais é apresentada de forma independente por esporte, sem agregação cross-modalidade. A Figura~\ref{fig:top20_pagerank} apresenta os três atletas de maior \textit{PageRank}{} em cada modalidade, segregados por gênero.
