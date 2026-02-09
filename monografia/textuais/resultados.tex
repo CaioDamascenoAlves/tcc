@@ -147,7 +147,7 @@ A única exceção — Natação 100m Nado Livre com densidade masculina superio
 \subsubsection{Validação Estatística Formal}
 \label{sec:statistical_validation_density}
 
-A afirmação de que redes femininas apresentam densidade superior demanda validação estatística rigorosa para excluir hipótese de que diferenças observadas sejam resultado de variação aleatória. Aplicou-se teste de Wilcoxon signed-rank pareado, apropriado para comparações de amostras dependentes (mesmos esportes, versões M/F) sem pressuposto de normalidade.
+A afirmação de que redes femininas apresentam densidade superior demanda validação estatística rigorosa para excluir hipótese de que diferenças observadas sejam resultado de variação aleatória. Aplicou-se teste de Wilcoxon signed-rank pareado \cite{VanderPlas2016Python}, apropriado para comparações de amostras dependentes (mesmos esportes, versões M/F) sem pressuposto de normalidade.
 
 A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observadas, razões F/M e resultado do teste:
 
@@ -155,7 +155,7 @@ A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observada
 
 O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese nula ($H_0: \text{densidade}_F = \text{densidade}_M$) em favor da hipótese alternativa ($H_1: \text{densidade}_F > \text{densidade}_M$) com significância estatística ao nível $\alpha = 0.05$. Teste t pareado paramétrico corrobora conclusão ($p = 0.042 < 0.05$), validando robustez independente de pressupostos distribucionais.
 
-Intervalo de confiança bootstrap (95\%) para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
+Intervalo de confiança bootstrap (95\%, 10.000 amostras) \cite{VanderPlas2016Python} para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
 
 Esta validação estatística formal fundamenta quantitativamente afirmações descritivas sobre diferenças de gênero, demonstrando que padrão observado não é artefato amostral, mas propriedade estrutural robusta das redes competitivas olímpicas.
 
