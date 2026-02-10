@@ -175,6 +175,64 @@ Para avaliar a segregação estrutural, calculou-se a razão entre conexões int
 
 Para identificar a estrutura hierárquica no conjunto de comunidades, calculou-se o \textit{PageRank} médio de cada comunidade e aplicou-se a categorização em três níveis (Núcleo, Intermediária e Periférica), conforme metodologia apresentada na Seção 2.3 do Capítulo~\ref{cap:revisao}. Esta hierarquização permite distinguir comunidades em posições estruturalmente distintas na rede global.
 
+\section{Análise de Variáveis Confundidoras em Comparações Cross-Gender}
+\label{sec:confounder_methodology}
+
+Conforme fundamentado na Seção 2.5.4 do Capítulo~\ref{cap:revisao}, comparações estruturais entre redes masculinas e femininas requerem controle explícito de variáveis confundidoras que poderiam explicar diferenças observadas através de mecanismos alternativos não relacionados a gênero. A análise preliminar das 12 redes principais revelou densidade média feminina 5.66× superior à masculina (0.1079 versus 0.0191), padrão consistente em 5 dos 6 esportes. Esta seção detalha a metodologia de regressão linear múltipla implementada para validar se esta diferença representa efeito genuíno de gênero ou artefato de confounders estruturais.
+
+\subsection{Identificação de Variáveis Confundidoras}
+
+Três classes de confounders foram identificadas como potencialmente explicativas:
+
+\textbf{Longevidade histórica (anos de atividade)}: Eventos com maior histórico olímpico acumulam mais atletas ao longo do tempo, potencialmente afetando densidade. Futebol masculino (1900-2021, 121 anos) apresenta características fundamentalmente distintas de futebol feminino (1996-2021, 25 anos). Se redes femininas sistematicamente possuem menor longevidade histórica devido a introdução tardia no programa olímpico, densidade superior poderia ser artefato temporal.
+
+\textbf{Tamanho do campo competitivo (número de atletas)}: Redes maiores tendem naturalmente a densidades menores devido a crescimento quadrático de arestas possíveis versus crescimento linear de nós. Se eventos masculinos sistematicamente atraem maior volume de competidores, densidade inferior poderia resultar de efeito de escala.
+
+\textbf{Tipologia esportiva (individual versus coletivo)}: Esportes coletivos distribuem medalhas simultaneamente a múltiplos atletas, potencialmente produzindo redes mais densas. Se eventos femininos concentram-se desproporcionalmente em esportes coletivos ou categorias de peso restritas, densidade superior poderia refletir viés de tipologia.
+
+\subsection{Especificação do Modelo de Regressão}
+
+Para controlar simultaneamente os três confounders, especificou-se modelo de regressão linear múltipla com densidade de rede como variável dependente:
+
+\begin{equation}
+\text{densidade}_i = \beta_0 + \beta_1 \cdot \text{gênero}_i + \beta_2 \cdot \log(\text{nodes}_i) + \beta_3 \cdot \log(\text{anos}_i) + \beta_4 \cdot \text{tipo}_i + \epsilon_i
+\label{eq:density_regression}
+\end{equation}
+
+\noindent onde: $\text{gênero}_i$ é variável binária (M=0, F=1), $\log(\text{nodes}_i)$ é logaritmo natural do número de atletas, $\log(\text{anos}_i)$ é logaritmo natural dos anos de atividade olímpica, $\text{tipo}_i$ é variável binária de tipologia (individual=0, coletivo=1), e $\epsilon_i$ é o termo de erro aleatório.
+
+A transformação logarítmica de nodes e anos fundamenta-se em: (i) linearização de relações multiplicativas; (ii) estabilização de variância heteroscedástica em variáveis de contagem.
+
+O coeficiente $\beta_1$ (gênero) representa diferença esperada em densidade entre redes femininas e masculinas, mantendo constantes tamanho, longevidade e tipologia. Se $\beta_1$ significativo ($p < 0.05$), conclui-se efeito genuíno de gênero após controle de confounders.
+
+\subsection{Procedimento de Inferência Estatística}
+
+A estimação utilizou mínimos quadrados ordinários (OLS). A significância estatística foi avaliada através de reamostragem \textit{bootstrap} com $B = 1000$ iterações, evitando pressupostos paramétricos sobre distribuição dos erros. Para cada iteração:
+
+\begin{enumerate}
+    \item Reamostra-se conjunto de 12 redes com reposição
+    \item Ajusta-se modelo de regressão na amostra \textit{bootstrap}
+    \item Armazenam-se coeficientes $\hat{\beta}_j^{(b)}$
+\end{enumerate}
+
+P-valores são calculados via teste bicaudal: $p_j = 2 \cdot \min(P(\hat{\beta}_j^{(b)} \leq 0), P(\hat{\beta}_j^{(b)} \geq 0))$, quantificando proporção de amostras onde coeficiente apresenta sinal oposto ao observado. P-valores $< 0.05$ indicam significância estatística.
+
+A qualidade do ajuste é quantificada pelo coeficiente de determinação $R^2$, medindo proporção da variância em densidade explicada pelos preditores. Valores $R^2 > 0.7$ indicam especificação adequada de preditores relevantes.
+
+\subsection{Construção do Dataset de Análise}
+
+Para cada uma das 12 redes principais, extraíram-se:
+
+\begin{itemize}
+    \item \textbf{Densidade}: calculada como $d = \frac{2m}{n(n-1)}$ para grafos simetrizados
+    \item \textbf{Número de atletas}: contagem de vértices únicos ($n$)
+    \item \textbf{Anos de atividade}: (ano máximo $-$ ano mínimo $+ 4$), aproximando ciclo olímpico completo
+    \item \textbf{Gênero}: extraído da nomenclatura do evento (M/F)
+    \item \textbf{Tipologia}: classificação binária (individual/coletivo)
+\end{itemize}
+
+O mapeamento entre nomenclaturas demandou harmonização manual devido a inconsistências nos rótulos (ex: ``M Football'' versus ``M Football Men's Football''). Anos de atividade foram calculados através de agregação temporal no dataset histórico filtrado por medalhistas.
+
 \section{Dashboard Interativo de Visualização}
 
 Calculadas as métricas de rede e caracterizadas as comunidades detectadas, a exploração interativa dos resultados demanda interface que integre múltiplas perspectivas analíticas. Para facilitar exploração e interpretação dos resultados, foi desenvolvido dashboard interativo utilizando framework Streamlit, biblioteca Python para criação rápida de aplicações web analíticas. O dashboard integra todos os artefatos gerados pelo pipeline de análise: arquivos CSV consolidados contendo métricas de atletas e comunidades, arquivos JSON com resumos estatísticos por esporte e gênero, e dados de conectividade inter-comunidade para análise de rivalidades estruturais.

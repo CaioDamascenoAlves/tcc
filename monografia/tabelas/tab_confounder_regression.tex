@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering
+\caption{Análise de regressão: efeito do gênero na densidade da rede controlando para confounders}
+\label{tab:confounder_regression}
+\begin{tabular}{lrrr}
+\hline
+\textbf{Variável} & \textbf{Coeficiente} & \textbf{p-valor} & \textbf{Sig.} \\
+\hline
+Gênero (F=1) & -0.0293 & 0.0280 & ** \\
+log(Nodes) & -0.0093 & 0.5820 & NS \\
+log(Anos) & -0.1128 & 0.0780 & * \\
+Tipo (Team=1) & -0.0118 & 0.9740 & NS \\
+\hline
+\multicolumn{4}{l}{\small Modelo: $\text{densidade} \sim \beta_0 + \beta_1 \cdot \text{gênero} + \beta_2 \cdot \log(\text{nodes}) + \beta_3 \cdot \log(\text{anos}) + \beta_4 \cdot \text{tipo}$} \\
+\multicolumn{4}{l}{\small $R^2 = 0.9146$; Gênero: F=1, M=0; Tipo: Team=1, Individual=0} \\
+\multicolumn{4}{l}{\small p-valores via bootstrap ($n=1000$); *** $p<0.01$, ** $p<0.05$, * $p<0.10$, NS não significativo} \\
+\end{tabular}
+\end{table}
