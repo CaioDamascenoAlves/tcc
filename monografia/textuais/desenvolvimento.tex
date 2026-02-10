@@ -41,9 +41,9 @@ A Tabela~\ref{tab:dataset_hierarchy} apresenta a hierarquia dos dados, evidencia
 
 Com os dados curados e validados, a construção das redes competitivas demanda decisões fundamentais sobre representação de vértices, arestas, critérios de segmentação e ponderação de conexões. Cada vértice nas redes competitivas representa atleta único identificado pelo ID, com atributos extraídos do \textit{dataset} original preservados: sexo, idade, altura, peso, equipe, código nacional olímpico, jogos, cidade e medalha. Este enriquecimento atributivo permite análises multifacetadas que correlacionam estrutura de rede com características demográficas, geográficas e temporais \cite{Sousa2018Computational}. 
 
-A decisão metodológica mais crítica da modelagem refere-se ao critério de segmentação dos dados em redes independentes. O processo de construção adotado segrega os dados pela chave composta (Year, Event\_Normalized), gerando grafos direcionados independentes para cada evento olímpico específico realizado em cada edição dos jogos. Esta abordagem per-event produz redes granulares que capturam dinâmicas competitivas específicas de cada modalidade esportiva individual, ao invés de agregar eventos heterogêneos em categorias amplas por esporte ou gênero \cite{Radicchi2016OlympicDominance}.
+A decisão metodológica mais crítica da modelagem refere-se ao critério de segmentação dos dados em redes independentes. O processo de construção adotado segrega os dados pela chave composta (Year, Event\_Normalized), gerando grafos direcionados independentes para cada evento olímpico específico realizado em cada edição dos jogos. Esta abordagem \textit{per-event} produz redes granulares que capturam dinâmicas competitivas específicas de cada modalidade esportiva individual, ao invés de agregar eventos heterogêneos em categorias amplas por esporte ou gênero \cite{Radicchi2016OlympicDominance}.
 
-A escolha pela modelagem per-event fundamenta-se em preservação da homogeneidade competitiva intra-rede. Agregar eventos distintos de um mesmo esporte (por exemplo, 100m livre e maratona aquática em natação, ou 100m rasos e lançamento de dardo em atletismo) produz redes artificialmente mescladas com subpopulações desconectadas de atletas especializados em diferentes tipos físico-técnicos de competição. A segmentação por evento específico assegura que cada rede modele atletas que efetivamente competiram diretamente entre si ou contra adversários estruturalmente equivalentes, preservando validade da hierarquia competitiva capturada.
+A escolha pela modelagem \textit{per-event} fundamenta-se em preservação da homogeneidade competitiva intra-rede. Agregar eventos distintos de um mesmo esporte (por exemplo, 100m livre e maratona aquática em natação, ou 100m rasos e lançamento de dardo em atletismo) produz redes artificialmente mescladas com subpopulações desconectadas de atletas especializados em diferentes tipos físico-técnicos de competição. A segmentação por evento específico assegura que cada rede modele atletas que efetivamente competiram diretamente entre si ou contra adversários estruturalmente equivalentes, preservando validade da hierarquia competitiva capturada.
 
 A aplicação deste critério ao \textit{dataset} limpo (83.497 registros de medalhistas, 1896-2021) resultou em 149 redes competitivas independentes, cobrindo eventos de seis modalidades esportivas: Futebol, Basquete, Atletismo, Natação, Judô e Boxe. Para viabilizar análise aprofundada sem comprometer qualidade interpretativa, foi conduzida seleção de 12 casos de estudo representativos através de amostragem por critério (\textit{criterion sampling}) \cite{Palinkas2015Purposeful}, técnica estabelecida em pesquisa qualitativa que identifica casos que atendem critérios pré-determinados de importância.
 
@@ -110,7 +110,7 @@ Quando dois atletas compartilham pódio em múltiplos eventos, os pesos são acu
 
 A escolha do sistema 5-3-2 constitui decisão exploratória cuja robustez foi validada empiricamente através de análise de sensibilidade comparando contra seis alternativas (incluindo 3-2-1 clássico e variantes com decay temporal), conforme protocolo estabelecido por \citeonline{Shiue2025ApplyingPageRank}. A validação quantificou concordância de rankings através de coeficiente de Jaccard (sobreposição no top-10) e correlação de Spearman (ordem completa dos rankings). Os resultados, apresentados detalhadamente no Capítulo~\ref{cap:resultados}, demonstram que diferentes sistemas de ponderação produzem rankings estruturalmente consistentes, validando robustez das análises independentemente da parametrização específica adotada.
 
-A modelagem per-event permite que os grafos resultantes capturem heterogeneidade estrutural, com número de vértices e arestas variando conforme densidade competitiva e tipos de interdependência de cada evento específico.
+A modelagem \textit{per-event} permite que os grafos resultantes capturem heterogeneidade estrutural, com número de vértices e arestas variando conforme densidade competitiva e tipos de interdependência de cada evento específico.
 
 \section{Implementação Técnica e Pipeline de Análise}
 
@@ -161,7 +161,7 @@ Esta decisão metodológica estabelece arquitetura analítica híbrida: estrutur
 
 \section{Métricas de Análise de Redes}
 
-Validadas as decisões metodológicas sobre construção e detecção de comunidades, a caracterização estrutural das redes requer cálculo de métricas conforme fundamentação do Capítulo~\ref{cap:revisao}. Foram calculadas quatro métricas de centralidade sobre os grafos direcionados: \textit{PageRank} (importância recursiva considerando qualidade dos competidores derrotados), \textit{degree centrality} (in-degree e out-degree para quantificar vitórias e derrotas), \textit{betweenness} (atletas-ponte conectando grupos ou eras), e \textit{closeness} (proximidade média na estrutura global).
+Validadas as decisões metodológicas sobre construção e detecção de comunidades, a caracterização estrutural das redes requer cálculo de métricas conforme fundamentação do Capítulo~\ref{cap:revisao}. Foram calculadas quatro métricas de centralidade sobre os grafos direcionados: \textit{PageRank} (importância recursiva considerando qualidade dos competidores derrotados), \textit{degree centrality} (in-\textit{degree} e out-\textit{degree} para quantificar vitórias e derrotas), \textit{betweenness} (atletas-ponte conectando grupos ou eras), e \textit{closeness} (proximidade média na estrutura global).
 
 A detecção de comunidades utilizou algoritmo de \textit{Louvain} \cite{Blondel2008Louvain} sobre versão simetrizada dos grafos, conforme validação apresentada na Seção~\ref{sec:validacao_louvain}. O processo iterativo de otimização de modularidade revelou estruturas hierárquicas presentes nas redes.
 
@@ -221,7 +221,7 @@ P-valores são calculados via teste bicaudal: $p_j = 2 \cdot \min(P(\hat{\beta}_
 
 A qualidade do ajuste é quantificada pelo coeficiente de determinação $R^2$, medindo proporção da variância em densidade explicada pelos preditores. Valores $R^2 > 0.7$ indicam especificação adequada de preditores relevantes.
 
-\subsection{Construção do Dataset de Análise}
+\subsection{Construção do \textit{Dataset} de Análise}
 
 Para cada uma das 12 redes principais, extraíram-se:
 

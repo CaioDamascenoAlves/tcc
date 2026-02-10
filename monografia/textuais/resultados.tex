@@ -5,7 +5,7 @@
 \label{cap:resultados}
 % ---
 
-A aplicação da metodologia per-event aos dados olímpicos históricos (1896-2021) gerou 149 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — totalizam 2.826 atletas medalhistas distribuídos em 142 comunidades detectadas. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
+A aplicação da metodologia \textit{per-event} aos dados olímpicos históricos (1896-2021) gerou 149 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — totalizam 2.826 atletas medalhistas distribuídos em 142 comunidades detectadas. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
 
 \section{Validação Empírica de Algoritmos: Louvain vs Infomap}
 \label{sec:resultados_validacao_louvain}
@@ -96,7 +96,7 @@ Seguindo protocolo estabelecido por \citeonline{Shiue2025ApplyingPageRank}, a va
 Para cada sistema alternativo, foram recalculados rankings via \textit{PageRank}{} nas 12 redes principais, quantificando concordância através de três métricas complementares:
 
 \begin{enumerate}
-    \item \textbf{Kendall Tau ($\tau$):} Correlação baseada em pares concordantes/discordantes. Threshold de validação: $\tau > 0.70$ \cite{Shiue2025ApplyingPageRank}.
+    \item \textbf{Kendall Tau ($\tau$):} Correlação baseada em pares concordantes/discordantes. \textit{Threshold} de validação: $\tau > 0.70$ \cite{Shiue2025ApplyingPageRank}.
     \item \textbf{Spearman ($\rho$):} Correlação de rankings completos, sensível a distâncias ordinais.
     \item \textbf{Jaccard (J):} Sobreposição no top-10 atletas, focalizando elite competitiva.
 \end{enumerate}
@@ -155,7 +155,7 @@ A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observada
 
 O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese nula ($H_0: \text{densidade}_F = \text{densidade}_M$) em favor da hipótese alternativa ($H_1: \text{densidade}_F > \text{densidade}_M$) com significância estatística ao nível $\alpha = 0.05$. Teste t pareado paramétrico corrobora conclusão ($p = 0.042 < 0.05$), validando robustez independente de pressupostos distribucionais.
 
-Intervalo de confiança bootstrap (95\%, 10.000 amostras) \cite{VanderPlas2016Python} para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
+Intervalo de confiança \textit{bootstrap} (95\%, 10.000 amostras) \cite{VanderPlas2016Python} para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
 
 A Tabela~\ref{tab:confidence_intervals} apresenta métricas agregadas com intervalos de confiança para as 12 redes, estratificadas por gênero:
 
@@ -170,14 +170,14 @@ Esta validação estatística formal fundamenta quantitativamente afirmações d
 
 A validação estatística anterior demonstrou que densidade feminina é significativamente superior à masculina ($p = 0.031$). Entretanto, esta diferença poderia ser explicada por três confounders estruturais ao invés de efeito genuíno de gênero: (i) longevidade histórica (eventos femininos introduzidos tardiamente), (ii) tamanho do campo competitivo (eventos masculinos com mais atletas), ou (iii) tipologia esportiva (distribuição desigual de eventos coletivos versus individuais). Para validar se o efeito de gênero persiste após controlar estas variáveis, aplicou-se modelo de regressão linear múltipla conforme metodologia descrita na Seção~\ref{sec:confounder_methodology} do Capítulo~\ref{cap:desenvolvimento}.
 
-\subsubsection{Dataset de Análise: As 12 Redes Estudadas}
+\subsubsection{\textit{Dataset} de Análise: As 12 Redes Estudadas}
 
 A Tabela~\ref{tab:confounder_data} apresenta os dados completos das 12 redes analisadas, evidenciando heterogeneidade estrutural que motivou controle de confounders:
 
 \begin{table}[H]
 \centering
 \small
-\caption{Dataset completo das 12 redes para análise de regressão}
+\caption{\textit{Dataset} completo das 12 redes para análise de regressão}
 \label{tab:confounder_data}
 \begin{tabular}{llllrrr}
 \hline
@@ -205,7 +205,7 @@ A tabela evidencia heterogeneidade substancial: densidade varia 313× (0.0133 a 
 
 \subsubsection{Resultados da Regressão Múltipla}
 
-O modelo de regressão especificado pela Equação~\ref{eq:density_regression} produziu $R^2 = 0.9146$, indicando que 91.46\% da variância em densidade é explicada pelos quatro preditores (gênero, log(nodes), log(anos), tipo). A Tabela~\ref{tab:confounder_regression} apresenta coeficientes, p-valores bootstrap e significância estatística:
+O modelo de regressão especificado pela Equação~\ref{eq:density_regression} produziu $R^2 = 0.9146$, indicando que 91.46\% da variância em densidade é explicada pelos quatro preditores (gênero, log(nodes), log(anos), tipo). A Tabela~\ref{tab:confounder_regression} apresenta coeficientes, p-valores \textit{bootstrap} e significância estatística:
 
 \input{./tabelas/tab_confounder_regression.tex}
 
@@ -281,13 +281,13 @@ A análise de resiliência quantifica vulnerabilidade das redes à remoção de 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figuras/05_resilience_removal_impact.pdf}
-    \caption{Impacto de remoção de 10\% dos nós: comparação entre remoção aleatória e remoção direcionada por \textit{PageRank}{}. Remoção aleatória causa fragmentação mínima (+0.2 componentes em média), enquanto remoção direcionada fragmenta severamente (+7.9 componentes), evidenciando vulnerabilidade assimétrica típica de redes \textit{scale-free} com hubs críticos.}
+    \caption{Impacto de remoção de 10\% dos nós: comparação entre remoção aleatória e remoção direcionada por \textit{PageRank}{}. Remoção aleatória causa fragmentação mínima (+0.2 componentes em média), enquanto remoção direcionada fragmenta severamente (+7.9 componentes), evidenciando vulnerabilidade assimétrica típica de redes \textit{scale-free} com \textit{hubs} críticos.}
     \label{fig:resilience}
 \end{figure}
 
 Remoção aleatória de 10\% dos atletas causa impacto estrutural mínimo: aumento médio de apenas 0.2 componentes fracamente conexos, indicando robustez a falhas randômicas. Em contraste, remoção direcionada — eliminando top 10\% atletas por \textit{PageRank}{} — fragmenta severamente as redes: aumento médio de 7.9 componentes, incremento 39.5× superior à remoção aleatória.
 
-Esta vulnerabilidade assimétrica caracteriza redes \textit{scale-free}: poucos hubs concentram conectividade, e sua remoção desintegra estrutura global. No contexto olímpico, isto evidencia que atletas dominantes (alto \textit{PageRank}{}) atuam como pontes temporais: conectam gerações competitivas ao enfrentar tanto veteranos quanto novatos ao longo de carreiras estendidas. Sua ausência fragmenta a rede em componentes temporalmente isolados.
+Esta vulnerabilidade assimétrica caracteriza redes \textit{scale-free}: poucos \textit{hubs} concentram conectividade, e sua remoção desintegra estrutura global. No contexto olímpico, isto evidencia que atletas dominantes (alto \textit{PageRank}{}) atuam como pontes temporais: conectam gerações competitivas ao enfrentar tanto veteranos quanto novatos ao longo de carreiras estendidas. Sua ausência fragmenta a rede em componentes temporalmente isolados.
 
 \subsection{Dinâmica Temporal: Evolução Estrutural por Década}
 
@@ -320,7 +320,7 @@ Três padrões evolutivos emergem:
     \item \textbf{Densidade persistentemente elevada (redes pequenas recentes):} Judô -70kg Feminino (introduzido em 1992) mantém densidade acima de 8\% em 2021, e Boxing Feminino (2012) permanece em 33\%. Estas modalidades ainda não completaram ciclo de expansão global, operando em regime de campo competitivo limitado.
 \end{enumerate}
 
-\subsubsection{Modularidade e Clustering: Resiliência Estrutural}
+\subsubsection{Modularidade e \textit{Clustering}: Resiliência Estrutural}
 
 A Figura~\ref{fig:temporal_modularity} revela que modularidade — capacidade de formação de comunidades coesas — mantém-se elevada (Q > 0.60) em todas as 12 redes ao longo de suas respectivas histórias, independentemente de declínio de densidade:
 
@@ -345,11 +345,11 @@ A análise temporal dinâmica das 12 redes individuais revela três descobertas 
     \item \textbf{Persistência de estrutura comunitária:} Modularidade mantém-se elevada independentemente de densidade, indicando que organização temporal/geográfica da competição olímpica é propriedade emergente robusta, não artefato de redes densas.
 \end{enumerate}
 
-Estes padrões fundamentam a modelagem per-event adotada: agregação temporal mascararia dinâmicas evolutivas críticas, enquanto análise granular por rede individual revela processos estruturais universais que transcendem especificidades esportivas.
+Estes padrões fundamentam a modelagem \textit{per-event} adotada: agregação temporal mascararia dinâmicas evolutivas críticas, enquanto análise granular por rede individual revela processos estruturais universais que transcendem especificidades esportivas.
 
 \section{Análise Intra-Esporte: Comparações por Evento Específico}
 
-As seções anteriores revelaram padrões estruturais gerais através de comparações cross-esporte (Seção~\ref{sec:resultados_confounders}) e análises de robustez metodológica. Complementarmente, a modelagem per-event permite análise comparativa detalhada \textit{dentro} de cada modalidade, revelando como gênero, estrutura de torneio e características técnicas específicas moldam dinâmicas competitivas de forma distinta em cada contexto esportivo. As subseções seguintes apresentam análise par-a-par (masculino vs feminino) para cada um dos 6 esportes, evidenciando heterogeneidade de padrões que seria invisível em agregações cross-modalidade.
+As seções anteriores revelaram padrões estruturais gerais através de comparações cross-esporte (Seção~\ref{sec:resultados_confounders}) e análises de robustez metodológica. Complementarmente, a modelagem \textit{per-event} permite análise comparativa detalhada \textit{dentro} de cada modalidade, revelando como gênero, estrutura de torneio e características técnicas específicas moldam dinâmicas competitivas de forma distinta em cada contexto esportivo. As subseções seguintes apresentam análise par-a-par (masculino vs feminino) para cada um dos 6 esportes, evidenciando heterogeneidade de padrões que seria invisível em agregações cross-modalidade.
 
 \subsection{Futebol (Futebol)}
 
@@ -454,7 +454,7 @@ A Figura~\ref{fig:geographic_gini} quantifica desigualdade na distribuição de 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{figuras/geographic_gini_coefficient.pdf}
-    \caption{Coeficiente de Gini por rede individual, ordenado por magnitude. Athletics 100m Masculino apresenta maior desigualdade (Gini = 0.626), onde USA concentra quase metade de todas as medalhas históricas. Judô Feminino -70kg apresenta menor desigualdade (Gini = 0.150), com distribuição mais equitativa entre 12 países participantes. Linha tracejada indica threshold de desigualdade moderada (Gini = 0.50).}
+    \caption{Coeficiente de Gini por rede individual, ordenado por magnitude. Athletics 100m Masculino apresenta maior desigualdade (Gini = 0.626), onde USA concentra quase metade de todas as medalhas históricas. Judô Feminino -70kg apresenta menor desigualdade (Gini = 0.150), com distribuição mais equitativa entre 12 países participantes. Linha tracejada indica \textit{threshold} de desigualdade moderada (Gini = 0.50).}
     \label{fig:geographic_gini}
 \end{figure}
 
@@ -493,7 +493,7 @@ A Figura~\ref{fig:outliers_boxplots} apresenta distribuições completas via box
     \label{fig:outliers_boxplots}
 \end{figure}
 
-Apenas 3 valores outlier foram identificados via IQR (threshold conservador), todos em 2 redes específicas:
+Apenas 3 valores outlier foram identificados via IQR (\textit{threshold} conservador), todos em 2 redes específicas:
 
 \begin{enumerate}
     \item \textbf{Boxing Feminino Middleweight — Densidade elevada (0.417):} Z-score de 3.26 confirma outlier extremo. Esta densidade — 31× superior ao mínimo observado (Futebol Masculino: 0.013) — é \textbf{legítima} e reflete (i) introdução recente (2012, apenas 3 edições olímpicas), (ii) campo competitivo mínimo (4 atletas medalhistas únicos), (iii) recorrência estrutural onde mesmas atletas dominam consecutivamente. Não há evidência de erro de dados: valores conferidos manualmente contra registros olímpicos oficiais.
@@ -506,11 +506,11 @@ A Figura~\ref{fig:outliers_density_clustering} confirma que outliers ocupam posi
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{figuras/outliers_density_vs_clustering.pdf}
-    \caption{Densidade versus clustering com rótulos individuais das 12 redes. Boxing Feminino (densidade 0.417) posiciona-se como outlier extremo à direita, mas mantém relação estrutural contínua com outras redes de alta densidade (Judô, Basketball Feminino). Futebol Masculino posiciona-se no extremo inferior esquerdo (densidade mínima), mas sem descontinuidade topológica.}
+    \caption{Densidade versus \textit{clustering} com rótulos individuais das 12 redes. Boxing Feminino (densidade 0.417) posiciona-se como outlier extremo à direita, mas mantém relação estrutural contínua com outras redes de alta densidade (Judô, Basketball Feminino). Futebol Masculino posiciona-se no extremo inferior esquerdo (densidade mínima), mas sem descontinuidade topológica.}
     \label{fig:outliers_density_clustering}
 \end{figure}
 
-\textbf{Conclusão da validação:} Todos os outliers identificados são estruturalmente justificados e consistentes com características conhecidas das modalidades olímpicas. Não há evidência de erros de medição, inconsistências metodológicas, ou artefatos computacionais. A heterogeneidade extrema observada (densidade variando 31×, atletas variando 319×) reflete \textbf{diversidade genuína} de topologias competitivas entre esportes individuais vs coletivos, categorias recentes vs históricas, e campos competitivos restritos vs globais. Esta validação fundamenta a modelagem per-event: agregar estas 12 redes mascararia heterogeneidade legítima crítica para compreensão de dinâmicas competitivas específicas.
+\textbf{Conclusão da validação:} Todos os outliers identificados são estruturalmente justificados e consistentes com características conhecidas das modalidades olímpicas. Não há evidência de erros de medição, inconsistências metodológicas, ou artefatos computacionais. A heterogeneidade extrema observada (densidade variando 31×, atletas variando 319×) reflete \textbf{diversidade genuína} de topologias competitivas entre esportes individuais vs coletivos, categorias recentes vs históricas, e campos competitivos restritos vs globais. Esta validação fundamenta a modelagem \textit{per-event}: agregar estas 12 redes mascararia heterogeneidade legítima crítica para compreensão de dinâmicas competitivas específicas.
 
 \section{Descobertas Contra-Intuitivas}
 
@@ -545,7 +545,7 @@ Contrariando narrativa de democratização competitiva crescente, a Era Contempo
 
 \section{Síntese dos Resultados}
 
-A análise dos 12 casos de estudo através de modelagem per-event revelou:
+A análise dos 12 casos de estudo através de modelagem \textit{per-event} revelou:
 
 \textbf{Heterogeneidade Estrutural:} Redes variam de 22 a 1.275 atletas, com densidade variando 5.5×, evidenciando que tipologia esportiva e gênero moldam estruturas topológicas radicalmente distintas.
 
@@ -557,4 +557,4 @@ A análise dos 12 casos de estudo através de modelagem per-event revelou:
 
 \textbf{Vulnerabilidade Assimétrica:} Redes exibem robustez a falhas aleatórias mas vulnerabilidade severa a ataques direcionados, característica de topologia \textit{scale-free}.
 
-Estes resultados demonstram que modelagem per-event captura dinâmicas competitivas específicas invisíveis em agregações tradicionais por esporte, validando escolha metodológica fundamental e revelando padrões estruturais de relevância teórica para análise de redes competitivas.
+Estes resultados demonstram que modelagem \textit{per-event} captura dinâmicas competitivas específicas invisíveis em agregações tradicionais por esporte, validando escolha metodológica fundamental e revelando padrões estruturais de relevância teórica para análise de redes competitivas.
