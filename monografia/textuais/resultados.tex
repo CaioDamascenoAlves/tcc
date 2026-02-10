@@ -157,6 +157,12 @@ O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese 
 
 Intervalo de confiança bootstrap (95\%, 10.000 amostras) \cite{VanderPlas2016Python} para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
 
+A Tabela~\ref{tab:confidence_intervals} apresenta métricas agregadas com intervalos de confiança para as 12 redes, estratificadas por gênero:
+
+\input{./tabelas/tab_confidence_intervals.tex}
+
+Os intervalos de confiança validam as diferenças observadas: densidade feminina (0.108 IC95\% [0.032, 0.236]) é substancialmente superior à masculina (0.019 IC95\% [0.015, 0.023]), com intervalos não sobrepostos confirmando diferença estatisticamente robusta. O coeficiente de agrupamento médio também apresenta tendência superior em redes femininas (0.349 IC95\% [0.219, 0.478]) versus masculinas (0.296 IC95\% [0.202, 0.390]), embora com sobreposição parcial dos intervalos indicando diferença menos pronunciada que densidade.
+
 Esta validação estatística formal fundamenta quantitativamente afirmações descritivas sobre diferenças de gênero, demonstrando que padrão observado não é artefato amostral, mas propriedade estrutural robusta das redes competitivas olímpicas.
 
 \subsection{Análise de Confounders: Controlando Variáveis Estruturais}
