@@ -476,6 +476,42 @@ A análise geográfica granular das 12 redes individuais revela três descoberta
 
 Estes padrões fundamentam a importância de análise granular: agregação cross-esporte mascararia especializações regionais críticas, enquanto tratamento de 12 redes individuais revela mosaico complexo de hegemonias específicas, distribuições equitativas, e dinâmicas evolutivas heterogêneas.
 
+\subsection{Validação Estatística: Análise Formal de Outliers}
+
+A heterogeneidade estrutural pronunciada entre as 12 redes — com densidade variando 31× (0.013 a 0.417) e número de atletas variando 319× (4 a 1275) — demanda validação estatística formal para distinguir valores extremos legítimos de possíveis erros de medição ou artefatos metodológicos. Conduzimos análise de outliers sistemática empregando três métodos complementares: (i) IQR (Interquartile Range), (ii) Z-score, e (iii) análise de percentis (P5-P95).
+
+A Tabela~\ref{tab:outliers_iqr} identifica outliers detectados via método IQR para métricas estruturais fundamentais:
+
+\input{./tabelas/tab_outliers_iqr.tex}
+
+A Figura~\ref{fig:outliers_boxplots} apresenta distribuições completas via boxplots, evidenciando posições relativas de cada rede:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figuras/outliers_boxplots.pdf}
+    \caption{Distribuições de métricas estruturais com identificação de outliers via IQR. Redes masculinas (azul) e femininas (vermelho) exibem dispersão assimétrica: densidade feminina concentra-se em valores mais altos, enquanto número de nós apresenta distribuição log-normal com Futebol Masculino como outlier extremo superior.}
+    \label{fig:outliers_boxplots}
+\end{figure}
+
+Apenas 3 valores outlier foram identificados via IQR (threshold conservador), todos em 2 redes específicas:
+
+\begin{enumerate}
+    \item \textbf{Boxing Feminino Middleweight — Densidade elevada (0.417):} Z-score de 3.26 confirma outlier extremo. Esta densidade — 31× superior ao mínimo observado (Futebol Masculino: 0.013) — é \textbf{legítima} e reflete (i) introdução recente (2012, apenas 3 edições olímpicas), (ii) campo competitivo mínimo (4 atletas medalhistas únicos), (iii) recorrência estrutural onde mesmas atletas dominam consecutivamente. Não há evidência de erro de dados: valores conferidos manualmente contra registros olímpicos oficiais.
+
+    \item \textbf{Futebol Masculino — Número de atletas (1.275) e arestas (21.620):} Z-scores de 2.93-2.94 confirmam outliers moderados. Futebol Masculino é a maior rede individual do estudo, refletindo (i) longevidade histórica extrema (1900-2021, 121 anos), (ii) natureza de esporte coletivo (22 atletas por equipe × múltiplas equipes por edição), (iii) torneio de eliminação que gera múltiplos confrontos por edição. Valores são \textbf{legítimos} e consistentes com estrutura do evento.
+\end{enumerate}
+
+A Figura~\ref{fig:outliers_density_clustering} confirma que outliers ocupam posições extremas mas contínuas no espaço de métricas multivariadas, sem descontinuidades abruptas que sugeririam erros:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figuras/outliers_density_vs_clustering.pdf}
+    \caption{Densidade versus clustering com rótulos individuais das 12 redes. Boxing Feminino (densidade 0.417) posiciona-se como outlier extremo à direita, mas mantém relação estrutural contínua com outras redes de alta densidade (Judô, Basketball Feminino). Futebol Masculino posiciona-se no extremo inferior esquerdo (densidade mínima), mas sem descontinuidade topológica.}
+    \label{fig:outliers_density_clustering}
+\end{figure}
+
+\textbf{Conclusão da validação:} Todos os outliers identificados são estruturalmente justificados e consistentes com características conhecidas das modalidades olímpicas. Não há evidência de erros de medição, inconsistências metodológicas, ou artefatos computacionais. A heterogeneidade extrema observada (densidade variando 31×, atletas variando 319×) reflete \textbf{diversidade genuína} de topologias competitivas entre esportes individuais vs coletivos, categorias recentes vs históricas, e campos competitivos restritos vs globais. Esta validação fundamenta a modelagem per-event: agregar estas 12 redes mascararia heterogeneidade legítima crítica para compreensão de dinâmicas competitivas específicas.
+
 \section{Descobertas Contra-Intuitivas}
 
 A análise das 12 redes revelou padrões estruturais que contradizem hipóteses tradicionais sobre competição olímpica.
