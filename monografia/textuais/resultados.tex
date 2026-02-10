@@ -399,6 +399,83 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \textbf{Comparação M vs F:} Boxe feminino apresenta o razão de densidade F/M mais extremo de todos os esportes (25.65×), explicado pela combinação de (i) introdução recente (apenas 3 edições vs ~20 edições masculinas), (ii) campo competitivo inicial reduzido, e (iii) dominância estrutural de pouquíssimas atletas-chave que participaram das três edições consecutivas.
 
+\section{Distribuição Geográfica e Padrões de Dominância}
+
+A análise geográfica das 12 redes individuais revela heterogeneidade pronunciada em padrões de dominância regional e diversidade de participação. Enquanto algumas modalidades apresentam distribuição dispersa de medalhas entre dezenas de países, outras concentram dominância em poucos blocos geográficos. A Tabela~\ref{tab:geographic_summary} sintetiza métricas de concentração e diversidade para cada rede:
+
+\input{./tabelas/tab_geographic_summary.tex}
+
+\subsection{Diversidade Geográfica: Entropia e Número de Países}
+
+Futebol Masculino e Boxing Masculino Welterweight lideram em diversidade geográfica: 34-35 países conquistaram medalhas ao longo de suas histórias olímpicas, resultando em entropias elevadas (4.81-4.82), próximas ao máximo teórico para distribuições uniformes. Este padrão reflete (i) longevidade histórica destas modalidades (1900-2021), permitindo emergência de múltiplas gerações competitivas de diferentes regiões; (ii) natureza de esportes coletivos (Futebol) ou individuais com múltiplas categorias de peso (Boxing), favorecendo especialização regional; (iii) democratização progressiva pós-Guerra Fria, com expansão de infraestrutura esportiva em nações previamente periféricas.
+
+Em contraste, Boxing Feminino Middleweight apresenta diversidade mínima: apenas 5 países conquistaram medalhas desde introdução em 2012, gerando entropia de 2.25. Esta restrição geográfica reflete (i) introdução recente com apenas 3 edições olímpicas; (ii) categorias femininas de combate ainda concentradas em nações com programas estabelecidos (China, Rússia, Reino Unido); (iii) barreiras institucionais e culturais à participação feminina em esportes de combate, persistentes em múltiplas regiões globais.
+
+\subsection{Concentração de Medalhas: Top 3 Dominância}
+
+A Figura~\ref{fig:geographic_diversity} apresenta relação inversa entre diversidade geográfica (entropia) e concentração de medalhas nos top 3 países:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figuras/geographic_diversity_vs_dominance.pdf}
+    \caption{Diversidade geográfica (entropia) versus concentração de medalhas nos top 3 países. Redes masculinas (azul) e femininas (vermelho) segregam espacialmente: redes femininas concentram-se no quadrante inferior esquerdo (baixa diversidade, alta concentração), enquanto redes masculinas dispersam-se amplamente. Exceção: Futebol Feminino apresenta entropia intermediária apesar de dominância elevada de USA.}
+    \label{fig:geographic_diversity}
+\end{figure}
+
+Três regimes de dominância emergem:
+
+\begin{enumerate}
+    \item \textbf{Dominância extrema (Top 3 > 60\%):} Boxing Feminino (75.0\%), Athletics 100m Masculino (64.8\%), Swimming Feminino (61.6\%), e Futebol Feminino (61.7\%) apresentam concentração estrutural onde 2-3 países controlam dois terços das medalhas históricas. No caso de Athletics 100m Masculino, USA sozinho conquista 46.6\% de todas as medalhas, evidenciando hegemonia histórica que transcende eras olímpicas (1896-2021).
+
+    \item \textbf{Dominância moderada (Top 3: 40-60\%):} Basketball (M: 55.9\%, F: 52.9\%), Athletics 100m Feminino (58.7\%), e Swimming Masculino (59.3\%) apresentam concentração intermediária. USA domina sistematicamente Basketball e Swimming, mas emergência de potências alternativas (União Soviética, Austrália, China) fragmenta parcialmente hegemonia.
+
+    \item \textbf{Distribuição dispersa (Top 3 < 40\%):} Futebol Masculino (21.6\%), Boxing Masculino (22.5\%), e Judô Masculino (36.5\%) exibem distribuição geograficamente fragmentada. Brasil lidera Futebol Masculino com apenas 9.2\% das medalhas, refletindo equilíbrio competitivo entre múltiplas regiões (Europa Ocidental, América Latina, Europa Oriental, África).
+\end{enumerate}
+
+\subsection{Hegemonia Regional Específica por Esporte}
+
+A Figura~\ref{fig:geographic_top5} identifica país dominante em cada uma das 12 redes:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figuras/geographic_top5_countries.pdf}
+    \caption{Top 5 países por número de medalhas em cada uma das 12 redes individuais. USA domina 7 de 12 modalidades (Basketball M/F, Athletics M/F, Swimming M/F, Boxing M). Brasil lidera Futebol Masculino, Japão lidera Judô Masculino, França lidera Judô Feminino, e China lidera Boxing Feminino. Redes masculinas (azul) apresentam distribuição mais balanceada entre top 5 países comparado a redes femininas (vermelho).}
+    \label{fig:geographic_top5}
+\end{figure}
+
+\textbf{Hegemonia estadounidense}: USA domina estruturalmente 7 de 12 redes analisadas, conquistando 30-46\% de medalhas em Basketball (M/F), Athletics 100m (M/F), Swimming 100m Freestyle (M/F), e Boxing Welterweight Masculino. Esta dominância multi-esporte reflete investimento sistêmico de longo prazo em infraestrutura atlética, programas universitários de elite (NCAA), e cultura esportiva estabelecida desde Era Pioneira olímpica.
+
+\textbf{Especializações regionais}: Três redes apresentam liderança não-estadounidense: (i) Brasil em Futebol Masculino (9.2\%), refletindo tradição futebolística nacional e múltiplas gerações de atletas-elite; (ii) Japão em Judô Masculino (17.3\%), evidenciando vantagem histórica em esporte de origem japonesa; (iii) França em Judô Feminino (17.9\%), indicando investimento institucional específico em categorias femininas de combate pós-1990.
+
+\subsection{Desigualdade Estrutural: Coeficiente de Gini}
+
+A Figura~\ref{fig:geographic_gini} quantifica desigualdade na distribuição de medalhas entre países participantes:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figuras/geographic_gini_coefficient.pdf}
+    \caption{Coeficiente de Gini por rede individual, ordenado por magnitude. Athletics 100m Masculino apresenta maior desigualdade (Gini = 0.626), onde USA concentra quase metade de todas as medalhas históricas. Judô Feminino -70kg apresenta menor desigualdade (Gini = 0.150), com distribuição mais equitativa entre 12 países participantes. Linha tracejada indica threshold de desigualdade moderada (Gini = 0.50).}
+    \label{fig:geographic_gini}
+\end{figure}
+
+Athletics 100m Masculino apresenta máxima desigualdade (Gini = 0.626): USA domina com 46.6\% das medalhas, seguido por Reino Unido (9.1\%) e Jamaica (8.0\%), enquanto 15 países adicionais compartilham os 36.3\% restantes. Este padrão evidencia estrutura piramidal onde topo da hierarquia concentra medalhas desproporcionalmente.
+
+Em contraste, Judô Feminino -70kg apresenta mínima desigualdade (Gini = 0.150): 12 países conquistaram medalhas em distribuição relativamente equitativa, refletindo (i) introdução recente (1992) com campo competitivo ainda em expansão; (ii) investimento institucional disperso geograficamente em categorias femininas de combate; (iii) ausência de hegemonia histórica estabelecida, permitindo competição balanceada entre múltiplas nações.
+
+\subsection{Síntese da Análise Geográfica}
+
+A análise geográfica granular das 12 redes individuais revela três descobertas principais:
+
+\begin{enumerate}
+    \item \textbf{Heterogeneidade de padrões de dominância:} Não existe padrão universal de concentração geográfica. Futebol Masculino distribui-se equitativamente entre 34 países, enquanto Athletics 100m Masculino concentra-se hegemonicamente em USA. Esta heterogeneidade indica que fatores esporte-específicos (tradição nacional, infraestrutura, especialização técnica) moldam dominância mais fortemente que processos globais genéricos.
+
+    \item \textbf{Hegemonia estadounidense multi-esporte persistente:} USA lidera 7 de 12 modalidades, evidenciando vantagem estrutural sistemática que transcende especificidades esportivas. Esta dominância não é artefato de dados agregados — emerge robustamente em análise granular rede-por-rede.
+
+    \item \textbf{Redes femininas iniciam concentradas e democratizam progressivamente:} Modalidades femininas introduzidas recentemente (Boxing, Judô) apresentam concentração geográfica elevada (poucos países participantes), mas análise temporal sugere que democratização ocorre gradualmente conforme programas nacionais expandem investimento em categorias femininas.
+\end{enumerate}
+
+Estes padrões fundamentam a importância de análise granular: agregação cross-esporte mascararia especializações regionais críticas, enquanto tratamento de 12 redes individuais revela mosaico complexo de hegemonias específicas, distribuições equitativas, e dinâmicas evolutivas heterogêneas.
+
 \section{Descobertas Contra-Intuitivas}
 
 A análise das 12 redes revelou padrões estruturais que contradizem hipóteses tradicionais sobre competição olímpica.
