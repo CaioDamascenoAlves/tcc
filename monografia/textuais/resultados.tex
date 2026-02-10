@@ -107,7 +107,7 @@ A Tabela~\ref{tab:weight_sensitivity} apresenta concordância média agregada na
 
 \input{./tabelas/tab_weight_sensitivity.tex}
 
-Os resultados evidenciam concordância quase perfeita ($\tau \approx 1.0$, $\rho \approx 1.0$, $J = 1.0$) entre todos os sistemas testados, superando amplamente o threshold de validação ($\tau > 0.70$) estabelecido por \citeonline{Shiue2025ApplyingPageRank}. A concordância perfeita no Jaccard top-10 ($J = 1.00$) demonstra que a elite competitiva identificada permanece idêntica independentemente da ponderação adotada: os mesmos atletas ocupam as primeiras posições sob qualquer sistema, com variações ordinais mínimas.
+Os resultados evidenciam concordância quase perfeita ($\tau \approx 1.0$, $\rho \approx 1.0$, $J = 1.0$) entre todos os sistemas testados, superando amplamente o \textit{threshold} de validação ($\tau > 0.70$) estabelecido por \citeonline{Shiue2025ApplyingPageRank}. A concordância perfeita no Jaccard top-10 ($J = 1.00$) demonstra que a elite competitiva identificada permanece idêntica independentemente da ponderação adotada: os mesmos atletas ocupam as primeiras posições sob qualquer sistema, com variações ordinais mínimas.
 
 Mesmo o sistema uniforme (1-1-1), que remove completamente diferenciação entre medalhas, produz rankings estruturalmente idênticos ($\tau = 1.0$). Esta robustez evidencia que a hierarquia competitiva emerge da topologia da rede (quem derrotou quem) ao invés de pesos numéricos específicos atribuídos às arestas. O algoritmo de \textit{PageRank}{} captura importância recursiva através da estrutura de conexões, tornando rankings resilientes a variações na quantificação de gap competitivo entre posições de pódio.
 
@@ -127,7 +127,7 @@ Esta robustez fortalece confiança nos resultados apresentados nas seções subs
 
 \section{Análise Comparativa Cross-Esporte}
 
-A comparação sistemática entre os 12 casos de estudo revela padrões estruturais que transcendem fronteiras esportivas, evidenciando princípios universais de organização competitiva e descobertas contra-intuitivas sobre diferenças de gênero.
+Validadas as escolhas metodológicas fundamentais --- algoritmo de detecção de comunidades (\textit{Louvain} vs Infomap, Seção~\ref{sec:resultados_validacao_louvain}) e sistema de ponderação de arestas (5-3-2, Seção~\ref{sec:weight_sensitivity}) --- a análise pode proceder com confiança sobre bases técnicas sólidas. Esta seção explora padrões estruturais através de comparações sistemáticas entre os 12 casos de estudo, revelando princípios universais de organização competitiva e descobertas contra-intuitivas sobre diferenças de gênero que transcendem fronteiras esportivas específicas.
 
 \subsection{Diferenças de Densidade por Gênero}
 
@@ -275,17 +275,17 @@ A análise de resiliência quantifica vulnerabilidade das redes à remoção de 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figuras/05_resilience_removal_impact.pdf}
-    \caption{Impacto de remoção de 10\% dos nós: comparação entre remoção aleatória e remoção direcionada por \textit{PageRank}{}. Remoção aleatória causa fragmentação mínima (+0.2 componentes em média), enquanto remoção direcionada fragmenta severamente (+7.9 componentes), evidenciando vulnerabilidade assimétrica típica de redes scale-free com hubs críticos.}
+    \caption{Impacto de remoção de 10\% dos nós: comparação entre remoção aleatória e remoção direcionada por \textit{PageRank}{}. Remoção aleatória causa fragmentação mínima (+0.2 componentes em média), enquanto remoção direcionada fragmenta severamente (+7.9 componentes), evidenciando vulnerabilidade assimétrica típica de redes \textit{scale-free} com hubs críticos.}
     \label{fig:resilience}
 \end{figure}
 
 Remoção aleatória de 10\% dos atletas causa impacto estrutural mínimo: aumento médio de apenas 0.2 componentes fracamente conexos, indicando robustez a falhas randômicas. Em contraste, remoção direcionada — eliminando top 10\% atletas por \textit{PageRank}{} — fragmenta severamente as redes: aumento médio de 7.9 componentes, incremento 39.5× superior à remoção aleatória.
 
-Esta vulnerabilidade assimétrica caracteriza redes scale-free: poucos hubs concentram conectividade, e sua remoção desintegra estrutura global. No contexto olímpico, isto evidencia que atletas dominantes (alto \textit{PageRank}{}) atuam como pontes temporais: conectam gerações competitivas ao enfrentar tanto veteranos quanto novatos ao longo de carreiras estendidas. Sua ausência fragmenta a rede em componentes temporalmente isolados.
+Esta vulnerabilidade assimétrica caracteriza redes \textit{scale-free}: poucos hubs concentram conectividade, e sua remoção desintegra estrutura global. No contexto olímpico, isto evidencia que atletas dominantes (alto \textit{PageRank}{}) atuam como pontes temporais: conectam gerações competitivas ao enfrentar tanto veteranos quanto novatos ao longo de carreiras estendidas. Sua ausência fragmenta a rede em componentes temporalmente isolados.
 
 \section{Análise Intra-Esporte: Comparações por Evento Específico}
 
-A modelagem per-event permite análise comparativa dentro de cada esporte, revelando como gênero, estrutura de torneio e características técnicas moldam dinâmicas competitivas específicas. As subseções seguintes apresentam análise detalhada par-a-par (masculino vs feminino) para cada um dos 6 esportes.
+As seções anteriores revelaram padrões estruturais gerais através de comparações cross-esporte (Seção~\ref{sec:resultados_confounders}) e análises de robustez metodológica. Complementarmente, a modelagem per-event permite análise comparativa detalhada \textit{dentro} de cada modalidade, revelando como gênero, estrutura de torneio e características técnicas específicas moldam dinâmicas competitivas de forma distinta em cada contexto esportivo. As subseções seguintes apresentam análise par-a-par (masculino vs feminino) para cada um dos 6 esportes, evidenciando heterogeneidade de padrões que seria invisível em agregações cross-modalidade.
 
 \subsection{Futebol (Futebol)}
 
@@ -378,6 +378,6 @@ A análise dos 12 casos de estudo através de modelagem per-event revelou:
 
 \textbf{Evolução Temporal Não-Monotônica:} Concentração geográfica reduz até Era Moderna, depois reverte na Era Contemporânea, evidenciando re-centralização competitiva.
 
-\textbf{Vulnerabilidade Assimétrica:} Redes exibem robustez a falhas aleatórias mas vulnerabilidade severa a ataques direcionados, característica de topologia scale-free.
+\textbf{Vulnerabilidade Assimétrica:} Redes exibem robustez a falhas aleatórias mas vulnerabilidade severa a ataques direcionados, característica de topologia \textit{scale-free}.
 
 Estes resultados demonstram que modelagem per-event captura dinâmicas competitivas específicas invisíveis em agregações tradicionais por esporte, validando escolha metodológica fundamental e revelando padrões estruturais de relevância teórica para análise de redes competitivas.
