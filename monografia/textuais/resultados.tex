@@ -289,6 +289,64 @@ Remoção aleatória de 10\% dos atletas causa impacto estrutural mínimo: aumen
 
 Esta vulnerabilidade assimétrica caracteriza redes \textit{scale-free}: poucos hubs concentram conectividade, e sua remoção desintegra estrutura global. No contexto olímpico, isto evidencia que atletas dominantes (alto \textit{PageRank}{}) atuam como pontes temporais: conectam gerações competitivas ao enfrentar tanto veteranos quanto novatos ao longo de carreiras estendidas. Sua ausência fragmenta a rede em componentes temporalmente isolados.
 
+\subsection{Dinâmica Temporal: Evolução Estrutural por Década}
+
+As análises anteriores trataram as 12 redes como estruturas estáticas agregadas ao longo de toda sua história olímpica. Contudo, redes competitivas são intrinsecamente dinâmicas: expandem-se conforme novos atletas ingressam, densificam-se ou rarefazem-se conforme padrões de dominância evoluem, e sofrem mudanças estruturais em resposta a reformas institucionais (inclusão de novas categorias, mudanças em formato de torneio). Para revelar estes processos evolutivos, conduzimos análise temporal dinâmica construindo \textit{snapshots} cumulativos por década para cada uma das 12 redes individuais, calculando métricas estruturais em cada janela temporal.
+
+A Tabela~\ref{tab:temporal_change_points} identifica os sete pontos de mudança estrutural mais pronunciados, definidos como variações superiores a 50\% em densidade entre décadas consecutivas:
+
+\input{./tabelas/tab_temporal_change_points.tex}
+
+Todos os pontos de mudança estrutural identificados correspondem a \textbf{quedas acentuadas de densidade}, não aumentos, revelando padrão universal: à medida que eventos olímpicos amadurecem e expandem participação, o campo competitivo dilui-se estruturalmente. Este fenômeno manifesta-se com particular intensidade em modalidades femininas nas primeiras décadas após introdução olímpica: Basquete Feminino perdeu 70\% de densidade na década de 1980 (primeira década após introdução em 1976), e Natação Feminina 100m Livre perdeu 82\% na década de 1920.
+
+\subsubsection{Padrões de Evolução por Rede Individual}
+
+A Figura~\ref{fig:temporal_density} apresenta trajetórias de densidade para as 12 redes ao longo de suas respectivas histórias olímpicas:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figuras/temporal_evolution_density.pdf}
+    \caption{Evolução temporal da densidade para as 12 redes olímpicas. Redes masculinas (azul) apresentam trajetórias monotonicamente decrescentes ao longo de períodos históricos extensos (1896-2021). Redes femininas (vermelho) iniciam com densidades elevadas (>40\%) e decaem rapidamente nas primeiras décadas, convergindo assintoticamente para níveis similares aos masculinos após 3-4 décadas.}
+    \label{fig:temporal_density}
+\end{figure}
+
+Três padrões evolutivos emergem:
+
+\begin{enumerate}
+    \item \textbf{Declínio monotônico prolongado (redes masculinas de longa duração):} Futebol Masculino, Athletics 100m Masculino e Swimming 100m Masculino apresentam quedas graduais de densidade ao longo de 100+ anos olímpicos, iniciando em densidades moderadas (10-20\%) e convergindo assintoticamente para valores abaixo de 2\%. Este padrão reflete expansão contínua do campo competitivo global.
+
+    \item \textbf{Declínio abrupto inicial seguido de estabilização (redes femininas):} Futebol Feminino iniciou em 1996 com densidade de 66\%, decaindo para 14\% em apenas 25 anos — taxa de declínio 10× superior à observada em Futebol Masculino. Basquete Feminino seguiu trajetória similar: 66\% (1976) → 9\% (2021). Este padrão sugere que eventos femininos atravessam fase inicial de campo competitivo restrito (poucas nações participantes) seguida de rápida democratização.
+
+    \item \textbf{Densidade persistentemente elevada (redes pequenas recentes):} Judô -70kg Feminino (introduzido em 1992) mantém densidade acima de 8\% em 2021, e Boxing Feminino (2012) permanece em 33\%. Estas modalidades ainda não completaram ciclo de expansão global, operando em regime de campo competitivo limitado.
+\end{enumerate}
+
+\subsubsection{Modularidade e Clustering: Resiliência Estrutural}
+
+A Figura~\ref{fig:temporal_modularity} revela que modularidade — capacidade de formação de comunidades coesas — mantém-se elevada (Q > 0.60) em todas as 12 redes ao longo de suas respectivas histórias, independentemente de declínio de densidade:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figuras/temporal_evolution_modularity.pdf}
+    \caption{Evolução temporal da modularidade (Louvain) para as 12 redes. Apesar de declínio sistemático de densidade, modularidade permanece elevada (Q > 0.60 em 95\% dos snapshots temporais), evidenciando que estrutura comunitária persiste mesmo em redes crescentemente esparsas. Este padrão indica que competição olímpica organiza-se em clusters temporais/geográficos robustos.}
+    \label{fig:temporal_modularity}
+\end{figure}
+
+Esta dissociação entre densidade decrescente e modularidade persistentemente alta evidencia propriedade fundamental das redes competitivas olímpicas: \textbf{organização comunitária estrutural é resiliente à expansão de campo}. Mesmo quando densidade cai de 50\% para 5\%, comunidades coesas — tipicamente correspondendo a eras temporais ou blocos geográficos — continuam emergindo robustamente. Este fenômeno contrasta com redes aleatórias, onde declínio de densidade implica colapso de estrutura modular.
+
+\subsubsection{Síntese da Análise Temporal}
+
+A análise temporal dinâmica das 12 redes individuais revela três descobertas principais:
+
+\begin{enumerate}
+    \item \textbf{Universalidade do declínio de densidade:} Todas as redes experimentam rarefação estrutural ao longo de suas histórias olímpicas, com taxas de declínio inversamente proporcionais ao tempo desde introdução.
+
+    \item \textbf{Trajetórias diferenciadas por gênero:} Redes femininas atravessam fase de densificação inicial (primeiras 1-2 décadas) seguida de declínio abrupto, enquanto redes masculinas apresentam declínio gradual desde origem. Esta diferença reflete democratização acelerada de competição feminina pós-1990.
+
+    \item \textbf{Persistência de estrutura comunitária:} Modularidade mantém-se elevada independentemente de densidade, indicando que organização temporal/geográfica da competição olímpica é propriedade emergente robusta, não artefato de redes densas.
+\end{enumerate}
+
+Estes padrões fundamentam a modelagem per-event adotada: agregação temporal mascararia dinâmicas evolutivas críticas, enquanto análise granular por rede individual revela processos estruturais universais que transcendem especificidades esportivas.
+
 \section{Análise Intra-Esporte: Comparações por Evento Específico}
 
 As seções anteriores revelaram padrões estruturais gerais através de comparações cross-esporte (Seção~\ref{sec:resultados_confounders}) e análises de robustez metodológica. Complementarmente, a modelagem per-event permite análise comparativa detalhada \textit{dentro} de cada modalidade, revelando como gênero, estrutura de torneio e características técnicas específicas moldam dinâmicas competitivas de forma distinta em cada contexto esportivo. As subseções seguintes apresentam análise par-a-par (masculino vs feminino) para cada um dos 6 esportes, evidenciando heterogeneidade de padrões que seria invisível em agregações cross-modalidade.
