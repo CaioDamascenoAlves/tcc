@@ -239,7 +239,8 @@ def render_sidebar(data):
     with col2:
         num_communities = len(data.get('communities', [])) if 'communities' in data and data['communities'] is not None else 0
         st.metric("Comunidades", f"{num_communities:,}")
-        st.metric("Rivalidades", f"{len(data['rivalries']):,}")
+        num_rivalries = len(data['rivalries']) if data.get('rivalries') is not None else 0
+        st.metric("Rivalidades", f"{num_rivalries:,}")
 
     st.sidebar.markdown("---")
 
@@ -446,7 +447,7 @@ def filter_data(data, filters):
         filtered['athletes'] = df
 
         # Medal profile (com fallback se não existir)
-        if 'medal_profile' in data:
+        if 'medal_profile' in data and data['medal_profile'] is not None:
             df = data['medal_profile'].copy()
             if filters['sports']:
                 df = df[df['sport'].isin(filters['sports'])]
@@ -458,7 +459,7 @@ def filter_data(data, filters):
 
         # Communities
         # Nota: communities tem network_id mas pode não ter sport/sex direto
-        if 'communities' in data:
+        if 'communities' in data and data['communities'] is not None:
             df = data['communities'].copy()
             # Filtrar por network_id baseado nos atletas filtrados
             if 'network_id' in df.columns and 'network_id' in filtered['athletes'].columns and len(filtered['athletes']) > 0:
@@ -472,31 +473,40 @@ def filter_data(data, filters):
         # Hierarchy
         # Nota: hierarchy tem network_id mas não tem sport/sex
         # Filtrar por network_id baseado nos atletas filtrados
-        df = data['hierarchy'].copy()
-        if 'network_id' in df.columns and 'network_id' in filtered['athletes'].columns:
-            valid_network_ids = filtered['athletes']['network_id'].unique()
-            df = df[df['network_id'].isin(valid_network_ids)]
-        filtered['hierarchy'] = df
+        if data.get('hierarchy') is not None:
+            df = data['hierarchy'].copy()
+            if 'network_id' in df.columns and 'network_id' in filtered['athletes'].columns:
+                valid_network_ids = filtered['athletes']['network_id'].unique()
+                df = df[df['network_id'].isin(valid_network_ids)]
+            filtered['hierarchy'] = df
+        else:
+            filtered['hierarchy'] = pd.DataFrame()
 
         # Connectivity
-        df = data['connectivity'].copy()
-        if filters['sports'] and 'sport' in df.columns:
-            df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex'] and 'sex' in df.columns:
-            df = df[df['sex'].isin(filters['sex'])]
-        filtered['connectivity'] = df
+        if data.get('connectivity') is not None:
+            df = data['connectivity'].copy()
+            if filters['sports'] and 'sport' in df.columns:
+                df = df[df['sport'].isin(filters['sports'])]
+            if filters['sex'] and 'sex' in df.columns:
+                df = df[df['sex'].isin(filters['sex'])]
+            filtered['connectivity'] = df
+        else:
+            filtered['connectivity'] = pd.DataFrame()
 
         # Rivalries (ATUALIZADO: agora per-event com network_id)
-        df = data['rivalries'].copy()
-        if filters['sports'] and 'sport' in df.columns:
-            df = df[df['sport'].isin(filters['sports'])]
-        if filters['sex'] and 'sex' in df.columns:
-            df = df[df['sex'].isin(filters['sex'])]
-        # NOVO: Filtrar por network_id (per-event)
-        if 'network_id' in df.columns:
-            valid_network_ids = filtered['athletes']['network_id'].unique()
-            df = df[df['network_id'].isin(valid_network_ids)]
-        filtered['rivalries'] = df
+        if data.get('rivalries') is not None:
+            df = data['rivalries'].copy()
+            if filters['sports'] and 'sport' in df.columns:
+                df = df[df['sport'].isin(filters['sports'])]
+            if filters['sex'] and 'sex' in df.columns:
+                df = df[df['sex'].isin(filters['sex'])]
+            # NOVO: Filtrar por network_id (per-event)
+            if 'network_id' in df.columns:
+                valid_network_ids = filtered['athletes']['network_id'].unique()
+                df = df[df['network_id'].isin(valid_network_ids)]
+            filtered['rivalries'] = df
+        else:
+            filtered['rivalries'] = pd.DataFrame()
 
         # Metadata (IMPORTANTE: necessário para tab Network)
         if 'metadata' in data:
@@ -687,8 +697,11 @@ def render_communities_tab(data):
                        "Comunidades de esportes diferentes não são diretamente comparáveis. "
                        "Use os filtros da sidebar para analisar esportes separadamente.")
 
-        fig = scatter_size_vs_pagerank(data['hierarchy'], interactive=True)
-        st.plotly_chart(fig, use_container_width=True, key="communities_hierarchy_scatter")
+        if data.get('hierarchy') is None or len(data['hierarchy']) == 0:
+            st.warning("Dados de hierarquia de comunidades não disponíveis. Execute scripts de análise para gerar esses dados.")
+        else:
+            fig = scatter_size_vs_pagerank(data['hierarchy'], interactive=True)
+            st.plotly_chart(fig, use_container_width=True, key="communities_hierarchy_scatter")
 
         st.markdown("---")
 

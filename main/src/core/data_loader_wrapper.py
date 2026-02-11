@@ -141,33 +141,45 @@ class DataLoader:
         """Carrega dados do grafo híbrido de natação."""
         return self._load_csv('swimming_hybrid_network.csv', 'swimming_hybrid')
 
-    def load_community_profiles(self) -> pd.DataFrame:
-        """Carrega perfis enriquecidos de comunidades."""
-        return self._load_csv('community_profiles_enriched.csv', 'community_profiles')
-
     def load_community_members(self) -> pd.DataFrame:
         """Carrega membros detalhados de comunidades."""
-        return self._load_csv('community_members_detailed.csv', 'community_members')
+        try:
+            return self._load_csv('community_members_detailed.csv', 'community_members')
+        except FileNotFoundError:
+            print("⚠️  Arquivo community_members_detailed.csv não encontrado (opcional)")
+            return None
 
     def load_community_typology(self) -> pd.DataFrame:
         """Carrega classificação tipológica de comunidades."""
-        return self._load_csv('community_typology_classification.csv', 'community_typology')
+        try:
+            return self._load_csv('community_typology_classification.csv', 'community_typology')
+        except FileNotFoundError:
+            print("⚠️  Arquivo community_typology_classification.csv não encontrado (opcional)")
+            return None
 
     def load_medal_profile(self) -> pd.DataFrame:
         """Carrega perfil de medalhas por comunidade."""
-        return self._load_csv('additional_analyses/medal_profile_by_community.csv', 'medal_profile')
+        try:
+            return self._load_csv('additional_analyses/medal_profile_by_community.csv', 'medal_profile')
+        except FileNotFoundError:
+            print("⚠️  Arquivo medal_profile_by_community.csv não encontrado (opcional)")
+            return None
 
     def load_rivalry_pairs(self, event_type: str = 'all') -> pd.DataFrame:
         """
         Carrega pares de rivalidade PER-EVENT.
-        
+
         ATUALIZADO: Agora usa rivalries_per_event.csv (por network_id),
         substituindo o arquivo agregado por esporte.
 
         Args:
             event_type: Ignorado (mantido por compatibilidade)
         """
-        return self._load_csv('../results_all_mining/rivalries_per_event.csv', 'rivalry_pairs_per_event')
+        try:
+            return self._load_csv('../results_all_mining/rivalries_per_event.csv', 'rivalry_pairs_per_event')
+        except FileNotFoundError:
+            print("⚠️  Arquivo rivalries_per_event.csv não encontrado (opcional)")
+            return None
 
     def load_top_rivalries(self, event_type: str = 'all') -> pd.DataFrame:
         """Alias para load_rivalry_pairs (compatibilidade)."""
@@ -176,19 +188,27 @@ class DataLoader:
     def load_community_hierarchy(self) -> pd.DataFrame:
         """
         Carrega dados de hierarquia entre comunidades.
-        
+
         Prioriza dados novos (149 redes per-event), faz fallback para dados antigos.
         """
         try:
             # Tentar carregar hierarquia nova (149 redes)
             return self.auto_loader.load_csv('../results_all_mining/community_hierarchy_per_event.csv')
         except:
-            # Fallback para dados antigos (12 casos)
-            return self._load_csv('additional_analyses/community_hierarchy.csv', 'community_hierarchy')
+            try:
+                # Fallback para dados antigos (12 casos)
+                return self._load_csv('additional_analyses/community_hierarchy.csv', 'community_hierarchy')
+            except FileNotFoundError:
+                print("⚠️  Arquivo community_hierarchy não encontrado (opcional)")
+                return None
 
     def load_inter_community_connectivity(self) -> pd.DataFrame:
         """Carrega conectividade entre comunidades."""
-        return self._load_csv('additional_analyses/inter_community_connectivity.csv', 'inter_community')
+        try:
+            return self._load_csv('additional_analyses/inter_community_connectivity.csv', 'inter_community')
+        except FileNotFoundError:
+            print("⚠️  Arquivo inter_community_connectivity.csv não encontrado (opcional)")
+            return None
     
     def load_inter_connectivity(self) -> pd.DataFrame:
         """Alias para load_inter_community_connectivity (compatibilidade)."""
@@ -196,11 +216,19 @@ class DataLoader:
 
     def load_community_profiles(self) -> pd.DataFrame:
         """Carrega perfis completos de comunidades com métricas de entropia."""
-        return self._load_csv('community_profiles_enriched.csv', 'community_profiles')
+        try:
+            return self._load_csv('community_profiles_enriched.csv', 'community_profiles')
+        except FileNotFoundError:
+            print("⚠️  Arquivo community_profiles_enriched.csv não encontrado (opcional)")
+            return None
 
     def load_consolidated_analysis(self) -> pd.DataFrame:
         """Carrega análise consolidada de redes esportivas."""
-        return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_analysis')
+        try:
+            return self._load_csv('consolidated_sports_network_analysis.csv', 'consolidated_analysis')
+        except FileNotFoundError:
+            print("⚠️  Arquivo consolidated_sports_network_analysis.csv não encontrado (opcional)")
+            return None
 
     def load_sport_network(self, sport: str, sex: str, event_type: str = 'individual') -> Dict:
         """
