@@ -40,8 +40,8 @@ PATHS = {
     'top_rivalries': MAIN_ROOT / 'results' / 'additional_analyses' / 'top_rivalry_pairs.csv',
     'community_profiles': MAIN_ROOT / 'results' / 'community_profiles_enriched.csv',
 
-    # Dados base
-    'athlete_events': MAIN_ROOT / 'data' / 'athlete_events.csv',
+    # Dados base (LIMPO: 1896-2016, SEM Tokyo 2020/2021)
+    'athlete_events': MAIN_ROOT / 'data' / 'athlete_events_clean.csv',
 
     # ========================================================================
     # SAÍDAS - MONOGRAFIA

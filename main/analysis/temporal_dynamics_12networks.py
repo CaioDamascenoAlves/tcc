@@ -45,10 +45,10 @@ NETWORKS_CONFIG = [
     {'sport': 'Boxing', 'event': "Boxing Women's Middleweight", 'gender': 'F', 'name': 'F Middle (69-75kg)'},
 ]
 
-# Janelas temporais (décadas)
+# Janelas temporais (décadas) - ATÉ RIO 2016 (SEM Tokyo 2020)
 DECADES = [(1890, 1909), (1910, 1919), (1920, 1929), (1930, 1939), (1940, 1949),
            (1950, 1959), (1960, 1969), (1970, 1979), (1980, 1989), (1990, 1999),
-           (2000, 2009), (2010, 2021)]
+           (2000, 2009), (2010, 2016)]
 
 # ====================
 # 2. CARREGAR DADOS
@@ -57,14 +57,14 @@ DECADES = [(1890, 1909), (1910, 1919), (1920, 1929), (1930, 1939), (1940, 1949),
 print("\n📂 Carregando dados originais...")
 
 try:
-    # Tentar carregar dataset limpo
-    df = pd.read_csv('../data/athlete_events_cleaned.csv')
+    # Tentar carregar dataset limpo (SEM Tokyo 2020)
+    df = pd.read_csv('../data/athlete_events_clean.csv')
     print(f"✓ Dataset carregado: {len(df)} registros")
 except FileNotFoundError:
-    print("❌ Arquivo athlete_events_cleaned.csv não encontrado")
+    print("❌ Arquivo athlete_events_clean.csv não encontrado")
     print("   Tentando carregar do diretório principal...")
     try:
-        df = pd.read_csv('../../data/athlete_events_cleaned.csv')
+        df = pd.read_csv('data/athlete_events_clean.csv')
         print(f"✓ Dataset carregado: {len(df)} registros")
     except FileNotFoundError:
         print("❌ Dataset não encontrado em nenhum local esperado")

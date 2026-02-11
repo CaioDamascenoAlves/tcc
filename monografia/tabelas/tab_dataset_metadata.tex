@@ -1,14 +1,14 @@
 % Tabela de Metadados do Dataset Olímpico
 \begin{table}[htbp]
 \centering
-\caption{Estrutura de metadados do dataset olímpico histórico (1896-2021)}
+\caption{Estrutura de metadados do dataset olímpico histórico (1896-2016)}
 \label{tab:dataset_metadata}
 \footnotesize
 \begin{tabular}{lp{2.5cm}p{8cm}}
 \toprule
 \textbf{Coluna} & \textbf{Tipo} & \textbf{Descrição} \\
 \midrule
-ID & Inteiro & Identificador único do atleta. Permite rastreamento longitudinal de participações em múltiplas edições olímpicas (137.745 atletas únicos). \\
+ID & Inteiro & Identificador único do atleta. Permite rastreamento longitudinal de participações em múltiplas edições olímpicas (135.571 atletas únicos). \\
 \midrule
 Name & String & Nome completo do atleta conforme registrado nos arquivos olímpicos oficiais. \\
 \midrule
@@ -24,20 +24,20 @@ Team & String & Nome completo da equipe/país representado pelo atleta (ex: "Uni
 \midrule
 NOC & String (3 letras) & Código do Comitê Olímpico Nacional em formato padrão ISO (ex: "USA", "BRA", "CHN"). Campo mais confiável que Team para análises por país (231 NOCs). \\
 \midrule
-Games & String & Identificador da edição olímpica no formato "Ano Temporada" (ex: "2016 Summer", "2014 Winter", "2020 Summer"). \\
+Games & String & Identificador da edição olímpica no formato "Ano Temporada" (ex: "2016 Summer", "2012 Summer", "2008 Summer"). \\
 \midrule
-Year & Inteiro & Ano de realização dos jogos olímpicos. Período coberto: 1896 a 2021 (52 edições). \\
+Year & Inteiro & Ano de realização dos jogos olímpicos. Período coberto: 1896 a 2016 (51 edições de verão). \\
 \midrule
 Season & Categórico & Temporada da competição: Verão (Summer) ou Inverno (Winter). Análise restrita a jogos de verão. \\
 \midrule
-City & String & Cidade sede dos jogos olímpicos (ex: "Athens", "Rio de Janeiro", "Beijing", "Tokyo"). \\
+City & String & Cidade sede dos jogos olímpicos (ex: "Athens", "Rio de Janeiro", "Beijing", "London"). \\
 \midrule
 Sport & String & Modalidade esportiva. Dataset contém 84 modalidades; análise focada em Swimming, Basketball e Football. \\
 \midrule
-Event & String & Evento específico dentro da modalidade (ex: "Swimming Men's 100 metres Freestyle"). Total de 1.063 eventos distintos no dataset completo. \\
+Event & String & Evento específico dentro da modalidade (ex: "Swimming Men's 100 metres Freestyle"). Total de 765 eventos distintos no dataset completo. \\
 \midrule
-Medal & Categórico & Tipo de medalha conquistada: Gold, Silver, Bronze, ou NA para participações sem pódio. Total de 42.173 medalhas (15,4\% dos registros). \\
+Medal & Categórico & Tipo de medalha conquistada: Gold, Silver, Bronze, ou NA para participações sem pódio. Total de 39.772 medalhas (14,7\% dos registros). \\
 \bottomrule
 \end{tabular}
-\fonte{\citeonline{Griffin2018OlympicDataset} e \citeonline{Piterfm2021TokyoOlympics}}
+\fonte{\citeonline{Griffin2018OlympicDataset}}
 \end{table}

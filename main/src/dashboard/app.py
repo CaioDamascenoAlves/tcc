@@ -1417,14 +1417,15 @@ def render_network_tab(filtered_data):
     node_size_by = "PageRank"
     color_by = "Comunidade"
     color_scheme = "Padrão (UFOP)"  # Corrigido para match do dicionário
-    show_labels = False
-    edge_opacity = 0.3
+    show_labels = True  # Mostrar nomes dos atletas por padrão
+    edge_opacity = 0.4  # Aumentado para melhor visualização das setas
     node_scale_range = (5, 30)
-    physics_enabled = False
+    physics_enabled = True  # Ativar física Force Atlas por padrão
+    show_arrows = True  # Mostrar setas direcionais por padrão
     height = 800
-    gravitational_constant = -800
-    spring_length = 150
-    spring_constant = 0.04
+    gravitational_constant = -1200  # Mais repulsão = mais espalhamento
+    spring_length = 200  # Distância maior entre nós conectados
+    spring_constant = 0.02  # Molas mais fracas = layout mais solto
     
     # ========================================================================
     # PREPARAR DADOS DOS NÓS
@@ -1741,6 +1742,7 @@ def render_network_tab(filtered_data):
         spring_length=spring_length,
         spring_constant=spring_constant,
         color_by=color_by,
+        show_arrows=show_arrows,
         key="network_interactive"
     )
 

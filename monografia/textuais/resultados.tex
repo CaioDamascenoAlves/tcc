@@ -5,7 +5,7 @@
 \label{cap:resultados}
 % ---
 
-A aplicação da metodologia \textit{per-event} aos dados olímpicos históricos (1896-2021) gerou 149 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — totalizam 2.826 atletas medalhistas distribuídos em 142 comunidades detectadas. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
+A aplicação da metodologia \textit{per-event} aos dados olímpicos históricos (1896-2016) gerou 123 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — constituem o foco central da análise. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
 
 \section{Validação Empírica de Algoritmos: Louvain vs Infomap}
 \label{sec:resultados_validacao_louvain}
@@ -266,13 +266,13 @@ A análise temporal da concentração de medalhas nos Top 3 países por era olí
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{figuras/04_noc_concentration_evolution.pdf}
-    \caption{Evolução do percentual de medalhas dos Top 3 países por era olímpica. Era Pioneira (1896-1936) apresenta concentração de 74.0\%, seguida de democratização na Era Moderna (59.6\% em 1984-2000). Era Contemporânea (2004-2021) reverte o padrão, elevando concentração para 64.4\%, evidenciando re-centralização competitiva apesar de globalização crescente.}
+    \caption{Evolução do percentual de medalhas dos Top 3 países por era olímpica. Era Pioneira (1896-1936) apresenta concentração de 74.0\%, seguida de democratização na Era Moderna (59.6\% em 1984-2000). Era Contemporânea (2004-2016) reverte o padrão, elevando concentração para 64.4\%, evidenciando re-centralização competitiva apesar de globalização crescente.}
     \label{fig:noc_evolution}
 \end{figure}
 
 A Era Pioneira (1896-1936) caracteriza-se por concentração extrema: Top 3 países controlavam 74.0\% das medalhas em média, refletindo participação limitada de nações nos Jogos iniciais. A Era Pós-Guerra (1948-1980) mantém concentração similar (72.8\%), influenciada por dominância soviética e estadounidense durante Guerra Fria.
 
-A Era Moderna (1984-2000) marca inflexão histórica: concentração cai para 59.6\%, mínimo observado, evidenciando democratização competitiva pós-Guerra Fria com emergência de novas potências olímpicas. Surpreendentemente, a Era Contemporânea (2004-2021) reverte esta tendência: concentração eleva-se para 64.4\%, sugerindo que globalização crescente não impediu re-centralização estrutural, possivelmente devido a investimentos assimétricos em programas olímpicos nacionais.
+A Era Moderna (1984-2000) marca inflexão histórica: concentração cai para 59.6\%, mínimo observado, evidenciando democratização competitiva pós-Guerra Fria com emergência de novas potências olímpicas. Surpreendentemente, a Era Contemporânea (2004-2016) reverte esta tendência: concentração eleva-se para 64.4\%, sugerindo que globalização crescente não impediu re-centralização estrutural, possivelmente devido a investimentos assimétricos em programas olímpicos nacionais.
 
 \subsection{Resiliência e Robustez Estrutural}
 
@@ -306,7 +306,7 @@ A Figura~\ref{fig:temporal_density} apresenta trajetórias de densidade para as 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figuras/temporal_evolution_density.pdf}
-    \caption{Evolução temporal da densidade para as 12 redes olímpicas. Redes masculinas (azul) apresentam trajetórias monotonicamente decrescentes ao longo de períodos históricos extensos (1896-2021). Redes femininas (vermelho) iniciam com densidades elevadas (>40\%) e decaem rapidamente nas primeiras décadas, convergindo assintoticamente para níveis similares aos masculinos após 3-4 décadas.}
+    \caption{Evolução temporal da densidade para as 12 redes olímpicas. Redes masculinas (azul) apresentam trajetórias monotonicamente decrescentes ao longo de períodos históricos extensos (1896-2016). Redes femininas (vermelho) iniciam com densidades elevadas (>40\%) e decaem rapidamente nas primeiras décadas, convergindo assintoticamente para níveis similares aos masculinos após 3-4 décadas.}
     \label{fig:temporal_density}
 \end{figure}
 
@@ -315,9 +315,9 @@ Três padrões evolutivos emergem:
 \begin{enumerate}
     \item \textbf{Declínio monotônico prolongado (redes masculinas de longa duração):} Futebol Masculino, Athletics 100m Masculino e Swimming 100m Masculino apresentam quedas graduais de densidade ao longo de 100+ anos olímpicos, iniciando em densidades moderadas (10-20\%) e convergindo assintoticamente para valores abaixo de 2\%. Este padrão reflete expansão contínua do campo competitivo global.
 
-    \item \textbf{Declínio abrupto inicial seguido de estabilização (redes femininas):} Futebol Feminino iniciou em 1996 com densidade de 66\%, decaindo para 14\% em apenas 25 anos — taxa de declínio 10× superior à observada em Futebol Masculino. Basquete Feminino seguiu trajetória similar: 66\% (1976) → 9\% (2021). Este padrão sugere que eventos femininos atravessam fase inicial de campo competitivo restrito (poucas nações participantes) seguida de rápida democratização.
+    \item \textbf{Declínio abrupto inicial seguido de estabilização (redes femininas):} Futebol Feminino iniciou em 1996 com densidade de 66\%, decaindo para 14\% em apenas 20 anos — taxa de declínio 10× superior à observada em Futebol Masculino. Basquete Feminino seguiu trajetória similar: 66\% (1976) → 9\% (2016). Este padrão sugere que eventos femininos atravessam fase inicial de campo competitivo restrito (poucas nações participantes) seguida de rápida democratização.
 
-    \item \textbf{Densidade persistentemente elevada (redes pequenas recentes):} Judô -70kg Feminino (introduzido em 1992) mantém densidade acima de 8\% em 2021, e Boxing Feminino (2012) permanece em 33\%. Estas modalidades ainda não completaram ciclo de expansão global, operando em regime de campo competitivo limitado.
+    \item \textbf{Densidade persistentemente elevada (redes pequenas recentes):} Judô -70kg Feminino (introduzido em 1992) mantém densidade acima de 8\% em 2016, e Boxing Feminino (2012) permanece em 33\%. Estas modalidades ainda não completaram ciclo de expansão global, operando em regime de campo competitivo limitado.
 \end{enumerate}
 
 \subsubsection{Modularidade e \textit{Clustering}: Resiliência Estrutural}
@@ -353,7 +353,7 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \subsection{Futebol (Futebol)}
 
-\textbf{Futebol Masculino Masculino:} 1.275 atletas, 21.620 arestas, densidade 1.33\%, segregação 15.77. Rede de longa duração histórica (1900-2021) caracterizada por alta fragmentação temporal: múltiplas gerações de atletas sem sobreposição competitiva, refletindo natureza de esporte coletivo com turnover de elencos a cada ciclo olímpico.
+\textbf{Futebol Masculino Masculino:} 1.275 atletas, 21.620 arestas, densidade 1.33\%, segregação 15.77. Rede de longa duração histórica (1900-2016) caracterizada por alta fragmentação temporal: múltiplas gerações de atletas sem sobreposição competitiva, refletindo natureza de esporte coletivo com turnover de elencos a cada ciclo olímpico.
 
 \textbf{Futebol Feminino Feminino:} 293 atletas, 6.285 arestas, densidade 7.35\%, segregação 8.59. Introduzido em 1996, apresenta densidade 5.52× superior à versão masculina, evidenciando campo competitivo menor com recorrência intensa entre mesmas equipes nacionais.
 
@@ -407,7 +407,7 @@ A análise geográfica das 12 redes individuais revela heterogeneidade pronuncia
 
 \subsection{Diversidade Geográfica: Entropia e Número de Países}
 
-Futebol Masculino e Boxing Masculino Welterweight lideram em diversidade geográfica: 34-35 países conquistaram medalhas ao longo de suas histórias olímpicas, resultando em entropias elevadas (4.81-4.82), próximas ao máximo teórico para distribuições uniformes. Este padrão reflete (i) longevidade histórica destas modalidades (1900-2021), permitindo emergência de múltiplas gerações competitivas de diferentes regiões; (ii) natureza de esportes coletivos (Futebol) ou individuais com múltiplas categorias de peso (Boxing), favorecendo especialização regional; (iii) democratização progressiva pós-Guerra Fria, com expansão de infraestrutura esportiva em nações previamente periféricas.
+Futebol Masculino e Boxing Masculino Welterweight lideram em diversidade geográfica: 34-35 países conquistaram medalhas ao longo de suas histórias olímpicas, resultando em entropias elevadas (4.81-4.82), próximas ao máximo teórico para distribuições uniformes. Este padrão reflete (i) longevidade histórica destas modalidades (1900-2016), permitindo emergência de múltiplas gerações competitivas de diferentes regiões; (ii) natureza de esportes coletivos (Futebol) ou individuais com múltiplas categorias de peso (Boxing), favorecendo especialização regional; (iii) democratização progressiva pós-Guerra Fria, com expansão de infraestrutura esportiva em nações previamente periféricas.
 
 Em contraste, Boxing Feminino Middleweight apresenta diversidade mínima: apenas 5 países conquistaram medalhas desde introdução em 2012, gerando entropia de 2.25. Esta restrição geográfica reflete (i) introdução recente com apenas 3 edições olímpicas; (ii) categorias femininas de combate ainda concentradas em nações com programas estabelecidos (China, Rússia, Reino Unido); (iii) barreiras institucionais e culturais à participação feminina em esportes de combate, persistentes em múltiplas regiões globais.
 
@@ -425,7 +425,7 @@ A Figura~\ref{fig:geographic_diversity} apresenta relação inversa entre divers
 Três regimes de dominância emergem:
 
 \begin{enumerate}
-    \item \textbf{Dominância extrema (Top 3 > 60\%):} Boxing Feminino (75.0\%), Athletics 100m Masculino (64.8\%), Swimming Feminino (61.6\%), e Futebol Feminino (61.7\%) apresentam concentração estrutural onde 2-3 países controlam dois terços das medalhas históricas. No caso de Athletics 100m Masculino, USA sozinho conquista 46.6\% de todas as medalhas, evidenciando hegemonia histórica que transcende eras olímpicas (1896-2021).
+    \item \textbf{Dominância extrema (Top 3 > 60\%):} Boxing Feminino (75.0\%), Athletics 100m Masculino (64.8\%), Swimming Feminino (61.6\%), e Futebol Feminino (61.7\%) apresentam concentração estrutural onde 2-3 países controlam dois terços das medalhas históricas. No caso de Athletics 100m Masculino, USA sozinho conquista 46.6\% de todas as medalhas, evidenciando hegemonia histórica que transcende eras olímpicas (1896-2016).
 
     \item \textbf{Dominância moderada (Top 3: 40-60\%):} Basketball (M: 55.9\%, F: 52.9\%), Athletics 100m Feminino (58.7\%), e Swimming Masculino (59.3\%) apresentam concentração intermediária. USA domina sistematicamente Basketball e Swimming, mas emergência de potências alternativas (União Soviética, Austrália, China) fragmenta parcialmente hegemonia.
 
@@ -498,7 +498,7 @@ Apenas 3 valores outlier foram identificados via IQR (\textit{threshold} conserv
 \begin{enumerate}
     \item \textbf{Boxing Feminino Middleweight — Densidade elevada (0.417):} Z-score de 3.26 confirma outlier extremo. Esta densidade — 31× superior ao mínimo observado (Futebol Masculino: 0.013) — é \textbf{legítima} e reflete (i) introdução recente (2012, apenas 3 edições olímpicas), (ii) campo competitivo mínimo (4 atletas medalhistas únicos), (iii) recorrência estrutural onde mesmas atletas dominam consecutivamente. Não há evidência de erro de dados: valores conferidos manualmente contra registros olímpicos oficiais.
 
-    \item \textbf{Futebol Masculino — Número de atletas (1.275) e arestas (21.620):} Z-scores de 2.93-2.94 confirmam outliers moderados. Futebol Masculino é a maior rede individual do estudo, refletindo (i) longevidade histórica extrema (1900-2021, 121 anos), (ii) natureza de esporte coletivo (22 atletas por equipe × múltiplas equipes por edição), (iii) torneio de eliminação que gera múltiplos confrontos por edição. Valores são \textbf{legítimos} e consistentes com estrutura do evento.
+    \item \textbf{Futebol Masculino — Número de atletas (1.275) e arestas (21.620):} Z-scores de 2.93-2.94 confirmam outliers moderados. Futebol Masculino é a maior rede individual do estudo, refletindo (i) longevidade histórica extrema (1900-2016, 116 anos), (ii) natureza de esporte coletivo (22 atletas por equipe × múltiplas equipes por edição), (iii) torneio de eliminação que gera múltiplos confrontos por edição. Valores são \textbf{legítimos} e consistentes com estrutura do evento.
 \end{enumerate}
 
 A Figura~\ref{fig:outliers_density_clustering} confirma que outliers ocupam posições extremas mas contínuas no espaço de métricas multivariadas, sem descontinuidades abruptas que sugeririam erros:
@@ -541,7 +541,7 @@ A explicação reside em efeito de campo competitivo comprimido: esportes femini
 
 \subsection{Re-Concentração Geográfica Contemporânea}
 
-Contrariando narrativa de democratização competitiva crescente, a Era Contemporânea (2004-2021) apresenta re-concentração de medalhas nos Top 3 países (64.4\%), revertendo tendência de democratização observada na Era Moderna (59.6\%). Este padrão sugere que globalização crescente dos Jogos Olímpicos não impediu centralização estrutural de dominância competitiva, possivelmente devido a investimentos assimétricos em ciência esportiva e programas de desenvolvimento de atletas de elite.
+Contrariando narrativa de democratização competitiva crescente, a Era Contemporânea (2004-2016) apresenta re-concentração de medalhas nos Top 3 países (64.4\%), revertendo tendência de democratização observada na Era Moderna (59.6\%). Este padrão sugere que globalização crescente dos Jogos Olímpicos não impediu centralização estrutural de dominância competitiva, possivelmente devido a investimentos assimétricos em ciência esportiva e programas de desenvolvimento de atletas de elite.
 
 \section{Síntese dos Resultados}
 

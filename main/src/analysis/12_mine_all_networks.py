@@ -234,7 +234,7 @@ class UniversalNetworkMiner:
                     'sport': net_info['sport'],
                     'gender': net_info['gender'],
                     'event_name': net_info['event_name'],
-                    'athlete_name': node_data.get('label', node),
+                    'athlete_name': node_data.get('name', node),  # FIX: usar 'name' ao invés de 'label'
                     'noc': node_data.get('noc', 'UNK'),
                     'year': year,
                     'pagerank': pagerank.get(node, 0.0),
@@ -261,8 +261,8 @@ class UniversalNetworkMiner:
                     'sport': net_info['sport'],
                     'gender': net_info['gender'],
                     'event_name': net_info['event_name'],
-                    'source_name': source_node.get('label', source),
-                    'target_name': target_node.get('label', target),
+                    'source_name': source_node.get('name', source),  # FIX: usar 'name' ao invés de 'label'
+                    'target_name': target_node.get('name', target),  # FIX: usar 'name' ao invés de 'label'
                     'source_noc': source_node.get('noc', 'UNK'),
                     'target_noc': target_node.get('noc', 'UNK'),
                     'weight': data.get('weight', 1.0)

@@ -259,10 +259,18 @@ class SportsNetworkAnalyzerPerEvent:
 
 
 if __name__ == "__main__":
+    from pathlib import Path
+
+    # Caminhos absolutos a partir do script
+    script_dir = Path(__file__).parent  # main/src/pipeline/
+    main_dir = script_dir.parent.parent  # main/
+    data_path = main_dir / 'data' / 'athlete_events_clean.csv'  # Base limpa 1896-2016 (SEM Tokyo)
+    results_dir = main_dir / 'results'
+
     analyzer = SportsNetworkAnalyzerPerEvent(
-        data_path='../../data/athlete_events.csv',
+        data_path=str(data_path),
         selected_sports=['Swimming', 'Basketball', 'Football', 'Athletics', 'Judo', 'Boxing'],
-        base_dir='../../results'
+        base_dir=str(results_dir)
     )
 
     summary = analyzer.run_analysis_per_event()
