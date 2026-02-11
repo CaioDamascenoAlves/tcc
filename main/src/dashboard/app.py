@@ -1053,6 +1053,11 @@ def render_rivalries_tab(filtered_data):
 
     st.markdown("---")
 
+    # Verificar se há dados de rivalries
+    if rivalries_filtered.empty or 'num_confronts' not in rivalries_filtered.columns:
+        st.warning("⚠️ Dados de rivalidades não disponíveis. Execute o script de análise de rivalidades para gerar esses dados.")
+        return
+
     # Métricas
     render_subsection("Indicadores")
     col1, col2, col3 = st.columns(3)
