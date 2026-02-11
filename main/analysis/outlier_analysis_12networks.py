@@ -29,7 +29,11 @@ print("=" * 80)
 
 print("\n📂 Carregando métricas globais...")
 
-df = pd.read_csv('../results_complete_mining/data/global_metrics.csv')
+# Usar network_metadata.csv ao invés de global_metrics.csv
+try:
+    df = pd.read_csv('results_all_mining/network_metadata.csv')
+except FileNotFoundError:
+    df = pd.read_csv('../results_all_mining/network_metadata.csv')
 print(f"✓ Dados carregados: {len(df)} redes")
 
 # Verificar colunas disponíveis

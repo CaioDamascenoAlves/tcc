@@ -49,11 +49,11 @@ NETWORKS_CONFIG = [
 print("\n📂 Carregando dados originais...")
 
 try:
-    df = pd.read_csv('../data/athlete_events_cleaned.csv')
+    df = pd.read_csv('../data/athlete_events_clean.csv')
     print(f"✓ Dataset carregado: {len(df)} registros")
 except FileNotFoundError:
     try:
-        df = pd.read_csv('../../data/athlete_events_cleaned.csv')
+        df = pd.read_csv('data/athlete_events_clean.csv')
         print(f"✓ Dataset carregado: {len(df)} registros")
     except FileNotFoundError:
         print("❌ Dataset não encontrado")
