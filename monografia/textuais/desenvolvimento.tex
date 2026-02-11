@@ -203,7 +203,7 @@ Para controlar simultaneamente os três confounders, especificou-se modelo de re
 
 \noindent onde: $\text{gênero}_i$ é variável binária (M=0, F=1), $\log(\text{nodes}_i)$ é logaritmo natural do número de atletas, $\log(\text{anos}_i)$ é logaritmo natural dos anos de atividade olímpica, $\text{tipo}_i$ é variável binária de tipologia (individual=0, coletivo=1), e $\epsilon_i$ é o termo de erro aleatório.
 
-A transformação logarítmica de nodes e anos fundamenta-se em: (i) linearização de relações multiplicativas; (ii) estabilização de variância heteroscedástica em variáveis de contagem.
+A transformação logarítmica de nodes e anos serve para: (i) linearizar relações multiplicativas; (ii) estabilizar a variância em variáveis de contagem que têm distribuição assimétrica.
 
 O coeficiente $\beta_1$ (gênero) representa diferença esperada em densidade entre redes femininas e masculinas, mantendo constantes tamanho, longevidade e tipologia. Se $\beta_1$ significativo ($p < 0.05$), conclui-se efeito genuíno de gênero após controle de confounders.
 
