@@ -1,0 +1,191 @@
+% Slide 19: Detecção de Comunidades
+\begin{frame}{Detecção de Comunidades}
+    \begin{block}{Comunidades Revelam Eras Históricas}
+        \footnotesize
+        \begin{itemize}
+            \item Algoritmo Louvain identifica agrupamentos naturais
+            \item \textbf{Eras da Guerra Fria:} USA vs USSR (Basketball M)
+            \item \textbf{Pós-colapso USSR:} redistribuição de atletas (1992+)
+            \item \textbf{Hegemonias regionais:} Brasil (Futebol), Japão (Judô), Jamaica (Athletics)
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Hierarquia de Perfis}
+        \footnotesize
+        \begin{description}
+            \item[\textbf{Núcleo:}] Atletas com múltiplas medalhas, alta centralidade, conectados entre si
+            \item[\textbf{Intermediária:}] Atletas com 2-3 medalhas, ponte entre núcleo e periferia
+            \item[\textbf{Periferia:}] Atletas com 1-2 medalhas, baixa conectividade
+        \end{description}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Métricas de Diversidade}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Entropia Temporal:} mede distribuição de atletas ao longo do tempo
+            \item \textbf{Entropia Geográfica:} mede diversidade de países em comunidade
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 20: Evolução Temporal
+\begin{frame}{Evolução Temporal das Redes}
+    \begin{block}{Densidade Decrescente ao Longo do Tempo}
+        \footnotesize
+        \begin{itemize}
+            \item Primeiras Olimpíadas: alta densidade (poucos competidores, muitas conexões)
+            \item Olimpíadas modernas: densidade decrescente (mais atletas, especialização)
+            \item Tendência consistente em esportes individuais
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Modularidade Resiliente}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Q $>$ 0.60} mantido ao longo de 120 anos
+            \item Comunidades persistem apesar de mudanças geopolíticas
+            \item Estrutura competitiva é estável
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Implicação}
+        \footnotesize
+        \centering
+        Padrões estruturais são robustos -- refletem dinâmicas competitivas fundamentais
+    \end{alertblock}
+\end{frame}
+
+% Slide 21: Descoberta Contra-Intuitiva: Especialização em Ouro
+\begin{frame}{Descoberta: Especialização em Ouro na Periferia}
+    \begin{block}{Padrão Contra-Intuitivo}
+        \Large
+        \centering
+        Atletas periféricos têm \textbf{maior \% de ouros}
+    \end{block}
+
+    \vspace{0.5cm}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Núcleo}
+                \footnotesize
+                \begin{itemize}
+                    \item Múltiplas medalhas
+                    \item Balanceamento: ouros, pratas, bronzes
+                    \item Exemplos: Phelps, Bolt
+                    \item Carreira longa
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Periferia}
+                \footnotesize
+                \begin{itemize}
+                    \item 1-2 medalhas apenas
+                    \item \textbf{Alta \% de ouros}
+                    \item Especialização extrema
+                    \item "One-hit wonders"
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+
+    \begin{center}
+        \footnotesize
+        \textit{Interpretação:} Atletas periféricos se especializam em evento único -- tudo ou nada
+    \end{center}
+\end{frame}
+
+% Slide 22: Dashboard Web
+\begin{frame}{Dashboard Interativo}
+    \begin{block}{Tecnologia: vis-network v9.1.6}
+        \footnotesize
+        \begin{itemize}
+            \item Visualização interativa de redes com física simulada
+            \item Componentes: toast, control panel, search, minimap
+            \item 123 redes, 9.378 atletas navegáveis
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Funcionalidades}
+        \footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \textbf{Interatividade:}
+                \begin{itemize}
+                    \item Zoom, pan, drag nodes
+                    \item Filtros por esporte, gênero, ano
+                    \item Busca por atleta
+                    \item Destaque de comunidades
+                \end{itemize}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \textbf{Métricas:}
+                \begin{itemize}
+                    \item Rankings de PageRank
+                    \item Betweenness centrality
+                    \item Distribuições de grau
+                    \item Estatísticas de comunidades
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{center}
+        \footnotesize
+        Interface acessível para exploração dos resultados sem conhecimento técnico
+    \end{center}
+\end{frame}
+
+% Slide 23: Arquitetura de Publicação
+\begin{frame}{Arquitetura de Publicação}
+    \begin{block}{Desafio: Limite de 1GB RAM no Streamlit Cloud}
+        \footnotesize
+        NetworkX com 9.378 nós excede memória gratuita disponível
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Solução: Google Drive + Streamlit Cloud}
+        \footnotesize
+        \begin{enumerate}
+            \item \textbf{Pré-processamento:} Grafos calculados localmente
+            \item \textbf{Serialização:} JSON/CSV para Google Drive (público)
+            \item \textbf{Fetch on-demand:} Streamlit baixa dados via HTTP
+            \item \textbf{Renderização:} vis-network no navegador (cliente)
+        \end{enumerate}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Trade-off}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Latência:} +2-3s para carregar rede (aceitável)
+            \item \textbf{Acessibilidade:} Gratuito, sem servidor próprio
+            \item \textbf{Escalabilidade:} Google Drive CDN global
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{URL}
+        \footnotesize
+        \centering
+        \textbf{dashboard-tcc.streamlit.app}
+    \end{alertblock}
+\end{frame}

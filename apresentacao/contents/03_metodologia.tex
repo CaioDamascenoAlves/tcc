@@ -1,165 +1,139 @@
-\begin{frame}{Seleção dos Esportes para Análise}
-    \framesubtitle{Critérios Metodológicos}
-    \begin{block}{Três Critérios Fundamentais}
+% Slide 5: Dados e Hierarquia
+\begin{frame}{Dados e Hierarquia}
+    \begin{block}{Dataset Griffin (2018)}
         \begin{itemize}
-            \item \textbf{Densidade competitiva:} Número suficiente de atletas medalhistas para análise robusta
-            \item \textbf{Representatividade estrutural:} Cobertura de tipos distintos de interdependência competitiva
-            \item \textbf{Objetividade de resultados:} Resultados objetivos (pódio) sem avaliação subjetiva
+            \item \textbf{Período:} Atenas 1896 até Rio 2016 (120 anos)
+            \item \textbf{Fonte:} Kaggle -- "120 years of Olympic history"
+            \item \textbf{Registros:} 269.718 linhas, 18 colunas
         \end{itemize}
     \end{block}
 
     \vspace{0.3cm}
-    \begin{block}{Modalidades Selecionadas}
-        \begin{itemize}
-            \item \textbf{Swimming:} Esporte misto (individual + revezamentos) -- 1.781 atletas
-            \item \textbf{Basketball:} Esporte coletivo genuíno -- 915 atletas
-            \item \textbf{Football:} Esporte coletivo genuíno -- 1.568 atletas
-        \end{itemize}
-    \end{block}
+
+    \begin{table}
+    \centering
+    \scriptsize
+    \begin{tabular}{p{3cm}p{5cm}r}
+    \toprule
+    \textbf{Nível} & \textbf{Descrição} & \textbf{Atletas} \\
+    \midrule
+    Dataset completo & Todos os atletas, 66 modalidades & 135.571 \\
+    Dataset filtrado & 6 modalidades selecionadas & 48.949 \\
+    \textbf{Medalhistas} & \textbf{123 redes per-event} & \textbf{9.378} \\
+    12 casos de estudo & Seleção via \textit{Iconic Score} & 2.826 \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
 \end{frame}
 
-\begin{frame}{Modelagem de Redes Competitivas}
-    \framesubtitle{Construção de Grafos Direcionados e Ponderados}
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Componentes do Grafo}
-                \small
-                \textbf{Nós (Vértices):}
-                \begin{itemize}
-                    \footnotesize
-                    \item Atletas medalhistas
-                    \item Atributos: nome, país, esporte, medalhas
-                \end{itemize}
-
-                \vspace{0.2cm}
-                \textbf{Arestas (Conexões):}
-                \begin{itemize}
-                    \footnotesize
-                    \item Direcionadas: perdedor $\rightarrow$ vencedor
-                    \item \textcolor{red}{\textbf{Conectam atletas do mesmo pódio na mesma olimpíada}}
-                    \item Agrupamento: (Ano, Evento, Sexo)
-                    \item Previnem arestas fantasmas entre atletas que nunca competiram juntos
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Sistema de Ponderação}
-                \small
-                \textbf{Pesos das Arestas:}
-                \begin{itemize}
-                    \footnotesize
-                    \item Ouro $\leftarrow$ Prata: peso \textbf{3}
-                    \item Ouro $\leftarrow$ Bronze: peso \textbf{5}
-                    \item Prata $\leftarrow$ Bronze: peso \textbf{2}
-                \end{itemize}
-
-                \vspace{0.2cm}
-                \textbf{Justificativa:}
-                \begin{itemize}
-                    \footnotesize
-                    \item Maior diferença $=$ maior peso
-                    \item Reflete hierarquia de performance
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
-
-    \vspace{0.2cm}
-    \begin{alertblock}{Modelagem de Rivalidades Diretas}
-        \footnotesize
-        \centering
-        Cada pódio é único: apenas atletas que \textbf{realmente competiram juntos} são conectados
-    \end{alertblock}
-\end{frame}
-
-\begin{frame}{Tratamento de Casos Especiais}
-    \framesubtitle{Atletismo, Judo e Boxe}
-    \begin{block}{Desafio: Modalidades Heterogêneas}
+% Slide 6: Modelagem Per-Event
+\begin{frame}{Modelagem Per-Event}
+    \begin{block}{Chave Composta: (Year, Event\_Normalized)}
         \begin{itemize}
-            \item \textbf{Atletismo:} Velocista 100m $\neq$ Saltador em vara
-            \item \textbf{Judo/Boxe:} Categoria 60kg $\neq$ Categoria 100kg
+            \item \textbf{123 redes independentes} preservando homogeneidade competitiva
+            \item Exemplo: \texttt{Basketball Men's Basketball (1936, 1948, ..., 2016)}
+            \item Evita misturar eventos incomparáveis (100m vs Maratona)
         \end{itemize}
     \end{block}
 
     \vspace{0.3cm}
-    \begin{block}{Solução Natural}
-        \small
-        O agrupamento \textbf{(Ano, Evento, Sexo)} já resolve automaticamente:
+
+    \begin{block}{Sistema de Ponderação de Arestas}
         \begin{itemize}
-            \footnotesize
-            \item Cada evento olímpico é específico: \textit{"Athletics Men's 100m"}, \textit{"Judo Men's -73kg"}
-            \item Atletas de modalidades/categorias diferentes \textbf{nunca} competem no mesmo pódio
-            \item Redes naturalmente separadas por especialidade
+            \item \textbf{Ouro:} 5 pontos
+            \item \textbf{Prata:} 3 pontos
+            \item \textbf{Bronze:} 2 pontos
+            \item Arestas bidirecionais somando pesos entre pares de atletas
         \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 7: 6 Modalidades Analisadas
+\begin{frame}{6 Modalidades Analisadas}
+    \begin{block}{Tipologias Esportivas}
+        \begin{description}
+            \item[\textbf{Esportes Individuais (Performance):}] Athletics, Swimming
+            \begin{itemize}
+                \item Corridas, saltos, lançamentos, natação
+                \item Competição direta por tempo/distância
+            \end{itemize}
+
+            \item[\textbf{Esportes Coletivos:}] Basketball, Football
+            \begin{itemize}
+                \item Times inteiros no pódio
+                \item Alta densidade de conexões esperada
+            \end{itemize}
+
+            \item[\textbf{Esportes Individuais (Combate):}] Judo, Boxing
+            \begin{itemize}
+                \item Confronto direto 1v1
+                \item Categorias de peso segregando competições
+            \end{itemize}
+        \end{description}
     \end{block}
 
     \vspace{0.2cm}
-    \begin{alertblock}{Vantagem}
-        \footnotesize
-        \centering
-        Modelagem preserva \textbf{rivalidades reais} sem necessidade de tratamento especial
-    \end{alertblock}
+    \begin{center}
+        \textbf{Iconic Score} selecionou 12 redes para análise detalhada (2 por esporte, M/F)
+    \end{center}
 \end{frame}
 
-\begin{frame}{Segmentação de Redes}
-    \framesubtitle{Refinamento Analítico}
-    \begin{block}{Esportes Mistos (Swimming, Athletics)}
+% Slide 8: Métricas de Rede
+\begin{frame}{Métricas de Rede}
+    \begin{block}{Centralidades}
+        \begin{description}
+            \item[\textbf{PageRank:}] Importância recursiva -- atletas conectados a outros importantes
+            \item[\textbf{Betweenness:}] Atletas-ponte entre comunidades
+            \item[\textbf{Degree Centrality:}] Número direto de conexões competitivas
+        \end{description}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Detecção de Comunidades}
         \begin{itemize}
-            \small
-            \item \textbf{Rede Individual:} Provas individuais (100m livre, salto em distância)
-            \item \textbf{Rede Coletiva:} Revezamentos (4x100m, 4x400m)
-            \item Análise separada permite identificar padrões distintos
+            \item \textbf{Algoritmo Louvain} -- maximiza modularidade
+            \item Revela agrupamentos naturais (eras históricas, hegemonias regionais)
+            \item \textbf{Modularidade (Q):} mede separação entre comunidades
         \end{itemize}
     \end{block}
 
     \vspace{0.3cm}
-    \begin{block}{Esportes Exclusivos}
+
+    \begin{block}{Estrutura de Rede}
         \begin{itemize}
-            \small
-            \item \textbf{Individual Only:} Judo, Boxing -- apenas competições individuais
-            \item \textbf{Team Only:} Basketball, Football -- apenas competições coletivas
+            \item \textbf{Densidade:} proporção de conexões realizadas vs possíveis
+            \item \textbf{Gini Coefficient:} desigualdade de distribuição de medalhas
         \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{Dashboard Interativo}
-    \framesubtitle{Ferramenta de Visualização e Exploração}
-    \begin{block}{Objetivo}
-        Interface web interativa (Streamlit) para exploração visual dos resultados de análise.
+% Slide 9: Validações Metodológicas
+\begin{frame}{Validações Metodológicas}
+    \begin{block}{1. Louvain vs Infomap}
+        \begin{itemize}
+            \item Comparação em 12 redes de estudo
+            \item \textbf{NMI médio = 0.97} (concordância quase perfeita)
+            \item Decisão: Louvain (eficiência + interpretabilidade)
+        \end{itemize}
     \end{block}
 
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-            \textbf{Funcionalidades:}
-            \begin{itemize}
-                \footnotesize
-                \item Visualização de redes interativas
-                \item Rankings customizáveis
-                \item Filtros por esporte, gênero, período
-                \item Gráficos de distribuições
-                \item Análise de comunidades
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \textbf{Tecnologias:}
-            \begin{itemize}
-                \footnotesize
-                \item Python + Streamlit
-                \item NetworkX para análise de redes
-                \item Plotly para visualizações
-                \item Cosmograph para grafos
-                \item HTML/CSS/JavaScript
-                \item Integração CSV/JSON
-            \end{itemize}
-        \end{column}
-    \end{columns}
+    \vspace{0.3cm}
+
+    \begin{block}{2. Análise de Sensibilidade de Pesos}
+        \begin{itemize}
+            \item Testados 6 sistemas de ponderação (3-2-1, 4-3-2, 5-3-2, etc.)
+            \item \textbf{Kendall $\tau \approx 1.0$} -- rankings de PageRank estáveis
+            \item Sistema 5-3-2 é robusto
+        \end{itemize}
+    \end{block}
 
     \vspace{0.3cm}
-    \begin{alertblock}{Acesso}
-        \footnotesize
-        \centering
-        Dashboard disponível em: \textbf{dashboard-tcc.streamlit.app}
 
-        Exploração completa dos 4.659 atletas e 36 comunidades.
-    \end{alertblock}
+    \begin{block}{3. Testes Estatísticos}
+        \begin{itemize}
+            \item Wilcoxon signed-rank test para densidade F vs M
+            \item \textbf{p = 0.031} (efeito significativo)
+        \end{itemize}
+    \end{block}
 \end{frame}

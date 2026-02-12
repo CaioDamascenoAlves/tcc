@@ -1,0 +1,153 @@
+% Slide 16: Padrões de Dominância
+\begin{frame}{Padrões de Dominância Geográfica}
+    \begin{block}{USA: Hegemonia em 7 de 12 redes}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Basketball M/F:} 1º em PageRank e Degree
+            \item \textbf{Swimming M/F:} 1º em todas as métricas
+            \item \textbf{Athletics 100m M:} 1º lugar (Gini = 0.626)
+            \item \textbf{Boxing Fly M:} 1º lugar
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Especializações Regionais}
+        \footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \textbf{Brasil:}
+                \begin{itemize}
+                    \item Futebol M (1º)
+                    \item 6 medalhas até 2016
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{Japão:}
+                \begin{itemize}
+                    \item Judo M -90kg (1º)
+                    \item 8 ouros Athens 2004
+                \end{itemize}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \textbf{Jamaica:}
+                \begin{itemize}
+                    \item Athletics 100m F (alta)
+                    \item Bolt, Fraser dominância
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{USSR:}
+                \begin{itemize}
+                    \item Basketball M (2º histórico)
+                    \item Guerra Fria competitiva
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+
+    \vspace{0.2cm}
+    \begin{center}
+        \footnotesize
+        Rankings de PageRank capturam hegemonias históricas automaticamente
+    \end{center}
+\end{frame}
+
+% Slide 17: Desigualdade Estrutural (Gini)
+\begin{frame}{Desigualdade Estrutural: Coeficiente de Gini}
+    \begin{block}{Gini: Concentração de Medalhas por País}
+        Mede desigualdade na distribuição de medalhas (0 = perfeita igualdade, 1 = total concentração)
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Alta Concentração}
+                \footnotesize
+                \textbf{Athletics 100m M:}
+                \begin{itemize}
+                    \item Gini = \textbf{0.626}
+                    \item USA: 46.6\% das medalhas
+                    \item 5 países dominam
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{Swimming M:}
+                \begin{itemize}
+                    \item Gini = 0.571
+                    \item USA + AUS dominam
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Baixa Concentração}
+                \footnotesize
+                \textbf{Judo -70kg F:}
+                \begin{itemize}
+                    \item Gini = \textbf{0.150}
+                    \item Distribuição equitativa
+                    \item 15 países diferentes
+                \end{itemize}
+
+                \vspace{0.2cm}
+                \textbf{Boxing Fly F:}
+                \begin{itemize}
+                    \item Gini = 0.200
+                    \item Competição aberta
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+    \begin{center}
+        \footnotesize
+        Esportes individuais de performance tendem a ter maior concentração geográfica
+    \end{center}
+\end{frame}
+
+% Slide 18: Validação com Estatísticas Históricas
+\begin{frame}{Validação com Estatísticas Históricas}
+    \begin{block}{Rankings Coincidem com Campeões Históricos}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Brasil Futebol:} 6 medalhas até 2016 (\#1 em total de medalhas) \checkmark
+            \item \textbf{USA Basketball M:} 16 de 20 ouros (80\%!) \checkmark
+            \item \textbf{USA Athletics 100m:} 55\% dos ouros históricos \checkmark
+            \item \textbf{Japão Judô:} 8 ouros em Athens 2004 (recorde) \checkmark
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Top PageRank: Atletas Icônicos}
+        \footnotesize
+        \begin{columns}[T]
+            \begin{column}{0.48\textwidth}
+                \textbf{Athletics 100m M:}
+                \begin{itemize}
+                    \item Usain Bolt (JAM)
+                    \item Carl Lewis (USA)
+                    \item Jesse Owens (USA)
+                \end{itemize}
+            \end{column}
+            \begin{column}{0.48\textwidth}
+                \textbf{Swimming F:}
+                \begin{itemize}
+                    \item Dawn Fraser (AUS)
+                    \item Jenny Thompson (USA)
+                    \item Kornelia Ender (GDR)
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{Validação Externa}
+        \footnotesize
+        \centering
+        PageRank captura importância histórica -- não apenas contagem de medalhas
+    \end{alertblock}
+\end{frame}

@@ -116,11 +116,12 @@
 }
 
 % Put the logo in each slide's top left area
-\setbeamertemplate{headline}{\hspace{0.063\textwidth}\pgfuseimage{\@logo}}
+% DISABLED: More space for content
+\setbeamertemplate{headline}{}
 
 % Define frame title and subtitle layout
 \setbeamertemplate{frametitle}{%
-  \vspace*{-4ex}
+  \vspace*{-1.5ex}
   \begin{beamercolorbox}[leftskip=1.5cm]{frametitle}%
     \usebeamerfont{frametitle}\insertframetitle\\
     \usebeamerfont{framesubtitle}\insertframesubtitle
@@ -272,15 +273,16 @@
 }
 
 % Define sectioning and table of contents
-\AtBeginSection[]
-{
-    \begingroup
-    \themecolor{main}
-    \begin{frame}{Sumário}
-        \tableofcontents[currentsection]
-    \end{frame}
-    \endgroup
-}
+% DISABLED: Auto sumário removed to save space and time
+% \AtBeginSection[]
+% {
+%     \begingroup
+%     \themecolor{main}
+%     \begin{frame}{Sumário}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+%     \endgroup
+% }
 
 % style of section presented in the table of contents
 \setbeamertemplate{section in toc}{%
@@ -294,9 +296,10 @@
   }
 
 % automate subtitle of each frame
-\makeatletter
-    \pretocmd\beamer@checkframetitle{\framesubtitle{\thesection \, \secname}}
-\makeatother
+% DISABLED: Framesubtitle automation removed for manual control
+% \makeatletter
+%     \pretocmd\beamer@checkframetitle{\framesubtitle{\thesection \, \secname}}
+% \makeatother
 
 % avoid numbering of frames that are breaked into multiply slides
 \setbeamertemplate{frametitle continuation}{}

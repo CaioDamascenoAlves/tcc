@@ -1,167 +1,99 @@
-\begin{frame}{Conclusões}
-    \framesubtitle{Síntese dos Achados Principais}
-    \begin{block}{Hipótese Confirmada}
-        Análise de redes complexas revela estruturas competitivas latentes não capturadas por métricas tradicionais de contagem de medalhas.
+% Slide 24: Principais Descobertas
+\begin{frame}{Principais Descobertas}
+    \begin{block}{1. Heterogeneidade Estrutural entre Modalidades}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Modularidade:} Swimming (0.89) vs Basketball (0.003) -- diferença de 300×
+            \item \textbf{Densidade:} Coletivos 7× mais densos que individuais
+            \item Estrutura de rede reflete natureza da competição
+        \end{itemize}
     \end{block}
 
     \vspace{0.3cm}
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-            \textbf{Diferenças Estruturais:}
+
+    \begin{block}{2. Densidade Feminina $>$ Masculina (Validada Estatisticamente)}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{5.66× maior densidade} em competições femininas
+            \item \textbf{p = 0.031} (Wilcoxon test) -- efeito significativo
+            \item Controlados confounders (tamanho, longevidade, tipologia)
+            \item \textbf{Efeito genuíno}, não artefato metodológico
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{3. Validação com Estatísticas Históricas}
+        \footnotesize
+        \begin{itemize}
+            \item Rankings de PageRank coincidem com campeões conhecidos
+            \item Brasil (Futebol), USA (Basketball/Swimming), Japão (Judô)
+            \item Redes revelam hierarquias invisíveis em análises tradicionais
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 25: Contribuições
+\begin{frame}{Contribuições}
+    \begin{block}{1. Modelagem Per-Event}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{123 redes independentes} preservando homogeneidade competitiva
+            \item Chave (Year, Event\_Normalized) evita comparações incomparáveis
+            \item Sistema de ponderação 5-3-2 validado (Kendall $\tau \approx 1.0$)
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{2. Caracterização Multidimensional de Comunidades}
+        \footnotesize
+        \begin{itemize}
+            \item Hierarquia de perfis (Núcleo, Intermediária, Periferia)
+            \item Entropia temporal e geográfica
+            \item Descoberta: especialização em ouro na periferia
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{3. Análise Cross-Esporte}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{6 modalidades, 120 anos} de história olímpica
+            \item 3 tipologias (Performance, Coletivo, Combate)
+            \item Dashboard interativo acessível (9.378 atletas navegáveis)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 26: Limitações e Trabalhos Futuros
+\begin{frame}{Limitações e Trabalhos Futuros}
+    \begin{block}{Limitações}
+        \footnotesize
+        \begin{itemize}
+            \item \textbf{Dados até 2016} -- Paris 2024 não incluído
+            \item \textbf{Apenas medalhistas} -- não-medalhistas excluídos
+            \item \textbf{12 casos detalhados} -- 123 redes construídas, análise aprofundada em 12
+        \end{itemize}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Trabalhos Futuros}
+        \footnotesize
+        \begin{enumerate}
+            \item \textbf{Expandir modalidades:} Incluir esportes artísticos (Ginástica, Patinação)
+            \item \textbf{Incluir não-medalhistas:} Redes mais completas de competição
+            \item \textbf{Análise multicamada:} Combinar dimensões socioeconômicas
             \begin{itemize}
                 \footnotesize
-                \item Esportes individuais: alta modularidade (0.73)
-                \item Esportes coletivos: baixa modularidade (0.003)
-                \item Comunidades refletem múltiplos fatores combinados
+                \item Camada 1: Competição direta (atual)
+                \item Camada 2: PIB/investimento esportivo por país
+                \item Camada 3: Idade, altura, peso (atributos físicos)
             \end{itemize}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \textbf{Métricas de Rede:}
-            \begin{itemize}
-                \footnotesize
-                \item PageRank captura qualidade de competidores
-                \item Atletas-ponte conectam comunidades
-                \item Estrutura por gênero é diferenciada
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Contribuições do Trabalho}
-    \framesubtitle{Avanços Metodológicos e Analíticos}
-    \begin{enumerate}
-        \item \textbf{Metodologia Validada}
-        \begin{itemize}
-            \footnotesize
-            \item Construção de redes competitivas direcionadas ponderadas
-            \item CDF dos pesos e PageRank confirmam premissas da modelagem
-            \item 0 nós isolados garantidos através de filtragem
-        \end{itemize}
-
-        \item \textbf{Caracterização Multidimensional}
-        \begin{itemize}
-            \footnotesize
-            \item 36 comunidades detectadas em 4.659 atletas
-            \item Distribuição equilibrada de medalhas (31.8\%/33.4\%/34.8\%)
-            \item Análise temporal via Entropia de Shannon
-        \end{itemize}
-
-        \item \textbf{Insights Estruturais}
-        \begin{itemize}
-            \footnotesize
-            \item Comunidades emergem de fatores complexos
-            \item Diversidade temporal varia por tipo de esporte
-            \item Diferenças estruturais entre modalidades quantificadas
-        \end{itemize}
-    \end{enumerate}
-\end{frame}
-
-\begin{frame}{Limitações e Escolhas Metodológicas}
-    \framesubtitle{Considerações para Interpretação}
-    \begin{itemize}
-        \item \textbf{Modelagem de Rivalidades Diretas}
-        \begin{itemize}
-            \footnotesize
-            \item Agrupamento (Ano, Evento) captura \textbf{competições reais} no mesmo pódio
-            \item Comparação cross-geracional (ex: Phelps vs Spitz) requer modelagem alternativa
-            \item Trade-off: precisão histórica vs. riqueza relacional
-        \end{itemize}
-
-        \item \textbf{Amostra de Esportes}
-        \begin{itemize}
-            \footnotesize
-            \item Análise expandida para 6 esportes (Swimming, Basketball, Football, Athletics, Judo, Boxing)
-            \item Cobertura de tipos estruturais: individual, coletivo e misto
-        \end{itemize}
-
-        \item \textbf{Dados até 2021}
-        \begin{itemize}
-            \footnotesize
-            \item Dataset exclui Paris 2024
-            \item 125 anos de cobertura olímpica
-        \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Trabalhos Futuros}
-    \framesubtitle{Direções de Pesquisa}
-    \begin{enumerate}
-        \item \textbf{Expansão para Mais Modalidades}
-        \begin{itemize}
-            \footnotesize
-            \item Esportes de combate, eventos cronometrados, modalidades artísticas
-            \item Validação de propriedades estruturais gerais
-        \end{itemize}
-
-        \item \textbf{Análise de Evolução Topológica}
-        \begin{itemize}
-            \footnotesize
-            \item Snapshots temporais de redes por década
-            \item Estabilidade de comunidades e persistência de hierarquias
-        \end{itemize}
-
-        \item \textbf{Comparação com Rankings Oficiais}
-        \begin{itemize}
-            \footnotesize
-            \item Validação de PageRank contra sistemas de classificação estabelecidos
-            \item Identificação de discrepâncias estruturais
-        \end{itemize}
-
-        \item \textbf{Análise de Gênero Sistematizada}
-        \begin{itemize}
-            \footnotesize
-            \item Comparação sistemática de propriedades estruturais
-            \item Padrões de equidade e disparidade ao longo da história
-        \end{itemize}
-    \end{enumerate}
-\end{frame}
-
-\begin{frame}{Possibilidades de Modelagem Alternativa}
-    \framesubtitle{Explorando Múltiplas Perspectivas}
-    \begin{block}{Redes Bipartidas (Atletas $\leftrightarrow$ Eventos)}
-        \footnotesize
-        \begin{itemize}
-            \item Atletas conectados a eventos onde conquistaram medalhas
-            \item Projeção em atletas: rivalidade indireta (competiram nos mesmos eventos)
-            \item Métrica de versatilidade: atletas que dominam múltiplos eventos
-        \end{itemize}
+            \item \textbf{Evolução temporal:} Snapshots por década (1896--1920, 1920--1940, etc.)
+            \item \textbf{Redes bipartidas:} Atletas $\leftrightarrow$ Eventos (versatilidade)
+        \end{enumerate}
     \end{block}
-
-    \vspace{0.2cm}
-    \begin{block}{Redes Multiplex (Múltiplas Camadas)}
-        \footnotesize
-        \begin{itemize}
-            \item Camada 1: Competição direta (Year+Event) -- rivalidades reais
-            \item Camada 2: Domínio histórico (Event apenas) -- comparação cross-geracional
-            \item Camada 3: Mesma nacionalidade -- estrutura de times olímpicos
-            \item Análise inter-camadas: múltiplas dimensões de rivalidade
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.2cm}
-    \begin{alertblock}{Métricas Alternativas}
-        \footnotesize
-        \centering
-        Hub \& Authority (HITS), Dominance Score, Temporal PageRank
-    \end{alertblock}
-\end{frame}
-
-\begin{frame}{Mensagem Final}
-    \framesubtitle{Aplicação de Redes Complexas ao Esporte Olímpico}
-    \begin{center}
-        \Large
-        \textbf{Análise de Redes Complexas revela estruturas competitivas latentes e padrões evolutivos invisíveis em abordagens tradicionais.}
-    \end{center}
-
-    \vspace{0.5cm}
-    \begin{block}{}
-        \centering
-        Este trabalho estabelece fundamentos metodológicos sólidos para aplicação de ciência de redes ao contexto esportivo, com potencial para avanço teórico e aplicações práticas em gestão e desenvolvimento atlético.
-    \end{block}
-
-    \vspace{0.5cm}
-    \begin{center}
-        \Large
-        \textbf{Obrigado!}
-    \end{center}
 \end{frame}

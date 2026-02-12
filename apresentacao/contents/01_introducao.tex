@@ -1,92 +1,52 @@
-
-\begin{frame}{Proposta TCC: Modelagem de Redes Complexas no Esporte Olímpico}
-
-    \vspace{0.5cm}
-    \begin{block}{Área de Pesquisa}
-        \textbf{Análise de Dados} \\
-        \textit{(De acordo com a tabela CAPES/CNPQ: 1.02.02.08-0)}
+% Slide 2: Motivação e Contexto
+\begin{frame}{Motivação e Contexto}
+    \begin{block}{120 anos de história olímpica (1896--2016)}
+        \begin{itemize}
+            \item \textbf{135.571 atletas} competindo em \textbf{66 modalidades}
+            \item Análises tradicionais focam em \textit{contagens de medalhas}
+            \item \textbf{Por trás dos resultados:} redes complexas de relações competitivas
+        \end{itemize}
     \end{block}
+
     \vspace{0.5cm}
-    
+
+    \begin{block}{Hipótese}
+        Padrões de dominância, hierarquias e comunidades podem ser revelados através da \textbf{teoria de redes complexas}
+    \end{block}
 \end{frame}
 
-\begin{frame}{Tema}
-    \begin{block}{Tema}
-            \textbf{Aplicação de redes complexas para modelar e analisar interações competitivas entre atletas olímpicos.}
-            \vspace{0.3cm}
-            \textit{Motivação: Revelar padrões e conexões entre atletas que análises tradicionais não conseguem identificar, oferecendo novos insights sobre desempenho e competição.}
-            \begin{itemize}
-                \item Utilização de dados históricos de medalhas, categorias esportivas e eventos.
-                \item Identificação de padrões estruturais e dinâmicas de colaboração/competição.
-                \item Métodos de redes complexas para análise de sistemas interconectados.
-            \end{itemize}
-        \end{block}
+% Slide 3: Questão de Pesquisa
+\begin{frame}{Questão de Pesquisa}
+    \begin{center}
+        \Large
+        \textbf{Como a estrutura de redes competitivas difere entre esportes olímpicos?}
+    \end{center}
+
+    \vspace{0.8cm}
+
+    \begin{itemize}
+        \item Existem padrões de dominância consistentes ao longo de 120 anos?
+        \item Esportes individuais vs coletivos formam estruturas diferentes?
+        \item Comunidades de atletas refletem hegemonias históricas?
+        \item Diferenças entre competições masculinas e femininas?
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Objetivos da Modelagem}
-    \framesubtitle{Caracterização das Interações Competitivas}
+% Slide 4: Objetivos
+\begin{frame}{Objetivos}
     \begin{block}{Objetivo Geral}
-        \textbf{Caracterizar as interações competitivas entre atletas olímpicos através de métricas de redes complexas.}
-        \begin{itemize}
-            \item Foco na identificação de padrões de conectividade.
-            \item Identificação de fatores determinantes de sucesso.
-            \item Análise de dinâmicas colaborativas.
-        \end{itemize}
+        Caracterizar interações competitivas entre atletas olímpicos através de métricas de redes complexas
     \end{block}
-    \vspace{0.3cm}
-    
-\end{frame}
 
-\begin{frame}{Objetivos da Modelagem}
-\begin{block}{Objetivos Secundários}
+    \vspace{0.5cm}
+
+    \begin{block}{Objetivos Específicos}
         \begin{itemize}
-            \item \textbf{Modelagem de Grafos:} Direcionados e ponderados, representando conexões de pódios compartilhados.
-            \item \textbf{Aplicação de Métricas:} Centralidade, modularidade e coeficiente de agrupamento.
-            \item \textbf{Exploração de Diferenças Estruturais:} Entre esportes individuais e coletivos, análise de comunidades.
-            \item \textbf{Visualizações Interativas:} Facilitação da compreensão dos resultados.
+            \item Construir \textbf{123 redes per-event} representando 6 esportes
+            \item Aplicar métricas de \textbf{centralidade} (PageRank, Betweenness, Degree)
+            \item Detectar \textbf{comunidades} e analisar modularidade
+            \item Analisar diferenças estruturais entre modalidades e gêneros
+            \item Validar descobertas com estatísticas históricas conhecidas
         \end{itemize}
     \end{block}
 \end{frame}
-
-
-\begin{frame}{Base de Dados}
-\begin{block}{Dataset Principal - Griffin (2018)}
-    \begin{itemize}
-        \item \textbf{Nome:} "120 years of Olympic history: athletes and results"
-        \item \textbf{Autor:} Randi H. Griffin, PhD
-        \item \textbf{Período original:} Atenas 1896 até Rio 2016
-        \item \textbf{Fonte:} Kaggle
-    \end{itemize}
-\end{block}
-
-\vspace{0.2cm}
-\begin{block}{Atualização - Tokyo 2020}
-    \begin{itemize}
-        \item \textbf{Merge} com dados do repositório GitHub "olympic-history"
-        \item \textbf{Período final:} 1896 até Tokyo 2021 (125 anos)
-        \item \textbf{Dados atualizados:} Medalhas e participantes Tokyo 2020
-    \end{itemize}
-\end{block}
-\end{frame}
-
-\begin{frame}{Características da Base de Dados}
-\begin{block}{Estrutura do Dataset}
-    \begin{itemize}
-        \item \textbf{Período:} Atenas 1896 até Rio 2016 (125 anos)
-        \item \textbf{271.117 registros} com 18 colunas
-        \item \textbf{Campos principais:} ID, Name, Sex, Age, Height, Weight, Team, NOC, Games, Year, Season, City, Sport, Event, Medal
-    \end{itemize}
-\end{block}
-
-\vspace{0.3cm}
-\begin{block}{Limpeza e Filtragem}
-    \begin{itemize}
-        \item \textbf{Foco:} Apenas medalhistas (ouro, prata, bronze)
-        \item \textbf{Esportes selecionados:} Swimming, Basketball, Football
-        \item \textbf{Remoção de duplicatas:} 2 registros removidos
-        \item \textbf{Filtragem de pódios:} Apenas pódios com $\geq$ 2 atletas
-        \item \textbf{Resultado:} 4.659 atletas únicos, 0 nós isolados garantidos
-    \end{itemize}
-\end{block}
-\end{frame}
-

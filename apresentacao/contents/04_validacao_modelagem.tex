@@ -1,102 +1,79 @@
-
-\begin{frame}{Análise da Distribuição dos Pesos das Arestas}
-    \begin{block}{Distribuição dos Pesos}
-        \begin{itemize}
-            \item \textbf{Distribuição dos Pesos das Arestas:} 
-            \begin{itemize}
-                \item Foco na análise de como os pesos das arestas (hierarquia das \textit{medalhas}) estão distribuídos na rede de atletas.
-            \end{itemize}
-            \item \textbf{Função de Distribuição Cumulativa (CDF):}
-            \begin{itemize}
-                \item Mostra a \textit{probabilidade acumulada} de um peso de aresta ser \textbf{menor ou igual} a um valor.
-                \item Eixo X: Peso da Aresta; Eixo Y: Probabilidade Acumulada.
-                \item Curva ascendente: indica a proporção de arestas com pesos menores que um dado valor.
-            \end{itemize}
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}{Distribuição Cumulativa dos Pesos: Comparação Masculino vs Feminino}
-    \framesubtitle{Análise Consolidada por Esporte e Gênero}
+% Slide 10: Validação Louvain vs Infomap
+\begin{frame}{Validação: Louvain vs Infomap}
     \begin{center}
-        \includegraphics[width=0.95\textwidth]{figures/fig_edge_weight_cdf_comparison_mf.png}
+    \scriptsize
+    \begin{tabular}{llrrcc}
+    \toprule
+    \textbf{Esporte} & \textbf{G} & \textbf{N} & \textbf{E} & \textbf{NMI} & \textbf{ARI} \\
+    \midrule
+    Athletics 100m & M & 78 & 91 & 0.976 & 0.874 \\
+    Athletics 100m & F & 55 & 64 & 0.972 & 0.884 \\
+    Swimming 100m Free & M & 68 & 81 & 0.985 & 0.935 \\
+    Swimming 100m Free & F & 69 & 75 & 0.986 & 0.918 \\
+    Basketball & M & 592 & 8515 & 0.957 & 0.916 \\
+    Basketball & F & 323 & 4793 & 0.991 & 0.991 \\
+    Football & M & 1275 & 21620 & 0.983 & 0.936 \\
+    Football & F & 293 & 6285 & 1.000 & 1.000 \\
+    Judo -90kg & M & 49 & 65 & 0.953 & 0.816 \\
+    Judo -70kg & F & 22 & 34 & 0.875 & 0.742 \\
+    Boxing Fly & M & 130 & 297 & 0.946 & 0.783 \\
+    Boxing Fly & F & 10 & 14 & 1.000 & 1.000 \\
+    \midrule
+    \textbf{MÉDIA} &  & 247 & 3494 & \textbf{0.969} & \textbf{0.900} \\
+    \bottomrule
+    \end{tabular}
     \end{center}
 
-    \vspace{-0.3cm}
-    \begin{block}{Observações Principais}
-        \footnotesize
+    \vspace{0.3cm}
+
+    \begin{block}{Interpretação}
         \begin{itemize}
-            \item \textbf{Distribuição similar} entre gêneros na maioria dos esportes
-            \item \textbf{Maioria dos pesos $\leq$ 5}: concentração em diferenças pequenas de performance
-            \item \textbf{Basketball F}: maior proporção de pesos baixos (39\% $\leq$ 2) vs M (24\%)
-            \item Validação da modelagem: reflete proximidade competitiva esperada
+            \item \textbf{NMI = 0.969} -- concordância quase perfeita (>0.90)
+            \item \textbf{Decisão:} usar Louvain (eficiência computacional + interpretabilidade)
         \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{Resumo da Análise das CDFs e Validação da Modelagem}
-    \begin{block}{Validação da Modelagem de Pódio Esportivo}
-        \begin{itemize}
-            \item As CDFs revelam que a maioria das arestas possui pesos baixos, refletindo pequenas diferenças de desempenho entre os atletas, o que é consistente com a proximidade competitiva esperada.
-        \end{itemize}
+% Slide 11: Análise de Sensibilidade de Pesos
+\begin{frame}{Análise de Sensibilidade de Pesos}
+    \begin{block}{Robustez do Sistema 5-3-2}
+        Testados 6 sistemas de ponderação nos rankings de PageRank:
     \end{block}
-\end{frame}
 
-\begin{frame}{Descoberta Estrutural: Fragmentação de Redes}
-    \framesubtitle{Diferença Fundamental entre Tipos de Esportes}
+    \vspace{0.3cm}
 
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
-            \begin{block}{Esportes Individuais}
+            \begin{block}{Sistemas Testados}
                 \footnotesize
-                \textbf{Alta Fragmentação:}
                 \begin{itemize}
-                    \footnotesize
-                    \item Athletics M: 269 componentes
-                    \item Boxing M: 177 componentes
-                    \item Swimming M: 66 componentes
-                    \item Judo M: 45 componentes
-                \end{itemize}
-
-                \vspace{0.2cm}
-                \textbf{Causa:}
-                \begin{itemize}
-                    \footnotesize
-                    \item Especialização por modalidade
-                    \item Categorias de peso isoladas
-                    \item Velocistas $\neq$ Saltadores
+                    \item 3-2-1 (uniforme)
+                    \item 4-3-2
+                    \item \textbf{5-3-2} (escolhido)
+                    \item 6-4-2
+                    \item 7-5-3
+                    \item 10-6-3 (extremo)
                 \end{itemize}
             \end{block}
         \end{column}
-
         \begin{column}{0.48\textwidth}
-            \begin{block}{Esportes Coletivos}
+            \begin{block}{Kendall $\tau$ médio}
                 \footnotesize
-                \textbf{Baixa Fragmentação:}
                 \begin{itemize}
-                    \footnotesize
-                    \item Football F: 2 componentes
-                    \item Basketball M: 3 componentes
-                    \item Football M: 11 componentes
-                \end{itemize}
-
-                \vspace{0.2cm}
-                \textbf{Causa:}
-                \begin{itemize}
-                    \footnotesize
-                    \item Mesmos times ao longo do tempo
-                    \item Rivalidades históricas
-                    \item USA vs USSR, Brasil vs Argentina
+                    \item \textbf{$\tau \approx 1.0$} em todas as redes
+                    \item Rankings praticamente idênticos
+                    \item Top-20 PageRank estável
+                    \item Sistema 5-3-2 é robusto
                 \end{itemize}
             \end{block}
         \end{column}
     \end{columns}
 
     \vspace{0.3cm}
-    \begin{alertblock}{Contribuição Metodológica}
+
+    \begin{alertblock}{Conclusão}
         \footnotesize
         \centering
-        A estrutura da rede reflete a natureza da competição: individual = especialização, coletivo = continuidade
+        Resultados não dependem da escolha específica de pesos -- estrutura competitiva é robusta
     \end{alertblock}
 \end{frame}
-
