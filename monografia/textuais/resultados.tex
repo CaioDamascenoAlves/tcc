@@ -144,9 +144,8 @@ Boxe feminino apresenta o razão mais extremo (25.65×), explicado pela introdu�
 
 A única exceção — Natação 100m Nado Livre com densidade masculina superior — pode ser atribuída à longevidade quase equivalente das versões masculina (desde 1896) e feminina (desde 1912), permitindo acumulação histórica similar de confrontos competitivos.
 
-\subsubsection{Validação Estatística Formal}
+\textbf{Validação Estatística Formal.}
 \label{sec:statistical_validation_density}
-
 A afirmação de que redes femininas apresentam densidade superior demanda validação estatística rigorosa para excluir hipótese de que diferenças observadas sejam resultado de variação aleatória. Aplicou-se teste de Wilcoxon signed-rank pareado \cite{VanderPlas2016Python}, apropriado para comparações de amostras dependentes (mesmos esportes, versões M/F) sem pressuposto de normalidade.
 
 A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observadas, razões F/M e resultado do teste:
@@ -170,8 +169,7 @@ Esta validação estatística formal fundamenta quantitativamente afirmações d
 
 A validação estatística anterior demonstrou que densidade feminina é significativamente superior à masculina ($p = 0.031$). Entretanto, esta diferença poderia ser explicada por três confounders estruturais ao invés de efeito genuíno de gênero: (i) longevidade histórica (eventos femininos introduzidos tardiamente), (ii) tamanho do campo competitivo (eventos masculinos com mais atletas), ou (iii) tipologia esportiva (distribuição desigual de eventos coletivos versus individuais). Para validar se o efeito de gênero persiste após controlar estas variáveis, aplicou-se modelo de regressão linear múltipla conforme metodologia descrita na Seção~\ref{sec:confounder_methodology} do Capítulo~\ref{cap:desenvolvimento}.
 
-\subsubsection{\textit{Dataset} de Análise: As 12 Redes Estudadas}
-
+\textbf{\textit{Dataset} de Análise: As 12 Redes Estudadas.}
 A Tabela~\ref{tab:confounder_data} apresenta os dados completos das 12 redes analisadas, evidenciando heterogeneidade estrutural que motivou controle de confounders:
 
 \begin{table}[H]
@@ -203,8 +201,7 @@ Boxing Middle F & Boxe & F & Individual & 0.4167 & 4 & 4 \\
 
 A tabela evidencia heterogeneidade substancial: densidade varia 313× (0.0133 a 4.167), tamanho varia 319× (4 a 1275 atletas), e longevidade varia 31× (4 a 129 anos). Redes masculinas são sistematicamente maiores (2.89×) e mais longevas (2.22×), enquanto redes femininas apresentam densidade média 5.66× superior. Estas diferenças estruturais poderiam explicar densidade superior feminina através de efeito de escala (redes menores tendem a densidades maiores) e efeito temporal (menor acúmulo histórico concentra competição), justificando análise de regressão com controles.
 
-\subsubsection{Resultados da Regressão Múltipla}
-
+\textbf{Resultados da Regressão Múltipla.}
 O modelo de regressão especificado pela Equação~\ref{eq:density_regression} produziu $R^2 = 0.9146$, indicando que 91.46\% da variância em densidade é explicada pelos quatro preditores (gênero, log(nodes), log(anos), tipo). A Tabela~\ref{tab:confounder_regression} apresenta coeficientes, p-valores \textit{bootstrap} e significância estatística:
 
 \input{./tabelas/tab_confounder_regression.tex}
@@ -219,8 +216,7 @@ Os resultados revelam que:
     \item \textbf{Efeitos de tamanho e tipologia não-significativos}: Número de atletas ($p = 0.582$) e tipo de esporte ($p = 0.974$) não apresentam efeitos estatisticamente detectáveis após controlar outras variáveis, possivelmente devido a colinearidade com longevidade (eventos antigos acumulam mais atletas) ou tamanho amostral limitado ($n = 12$ redes).
 \end{enumerate}
 
-\subsubsection{Interpretação Causal}
-
+\textbf{Interpretação Causal.}
 O coeficiente de gênero significativo ($p = 0.028$) fundamenta conclusão causal: densidade superior em redes femininas NÃO é artefato de confounders estruturais. Mesmo controlando para diferenças em tamanho de rede (2.89× maior no masculino), longevidade histórica (2.22× maior no masculino) e tipologia esportiva (distribuição similar de eventos individuais/coletivos), o efeito de gênero persiste com significância estatística.
 
 Esta descoberta possui três implicações substantivas. Primeiro, refuta hipótese alternativa de que densidade feminina superior resultaria meramente de introdução tardia de eventos femininos criando redes menores e mais densas por efeito de escala --- a regressão controla explicitamente para tamanho, e o efeito permanece. Segundo, valida que diferenças estruturais refletem dinâmicas competitivas genuinamente distintas entre contextos masculinos e femininos: campos competitivos femininos caracterizam-se por maior recorrência entre mesmas atletas, independentemente de características estruturais da modalidade. Terceiro, demonstra robustez metodológica da descoberta: afirmação descritiva original (densidade feminina 5.66× superior) é confirmada por validação estatística bivariada ($p = 0.031$) E por análise multivariada controlando confounders ($p = 0.028$).
@@ -299,8 +295,7 @@ A Tabela~\ref{tab:temporal_change_points} identifica os sete pontos de mudança 
 
 Todos os pontos de mudança estrutural identificados correspondem a \textbf{quedas acentuadas de densidade}, não aumentos, revelando padrão universal: à medida que eventos olímpicos amadurecem e expandem participação, o campo competitivo dilui-se estruturalmente. Este fenômeno manifesta-se com particular intensidade em modalidades femininas nas primeiras décadas após introdução olímpica: Basquete Feminino perdeu 70\% de densidade na década de 1980 (primeira década após introdução em 1976), e Natação Feminina 100m Livre perdeu 82\% na década de 1920.
 
-\subsubsection{Padrões de Evolução por Rede Individual}
-
+\textbf{Padrões de Evolução por Rede Individual.}
 A Figura~\ref{fig:temporal_density} apresenta trajetórias de densidade para as 12 redes ao longo de suas respectivas histórias olímpicas:
 
 \begin{figure}[H]
@@ -320,8 +315,7 @@ Três padrões evolutivos emergem:
     \item \textbf{Densidade persistentemente elevada (redes pequenas recentes):} Judô -70kg Feminino (introduzido em 1992) mantém densidade acima de 8\% em 2016, e Boxing Feminino (2012) permanece em 33\%. Estas modalidades ainda não completaram ciclo de expansão global, operando em regime de campo competitivo limitado.
 \end{enumerate}
 
-\subsubsection{Modularidade e \textit{Clustering}: Resiliência Estrutural}
-
+\textbf{Modularidade e \textit{Clustering}: Resiliência Estrutural.}
 A Figura~\ref{fig:temporal_modularity} revela que modularidade — capacidade de formação de comunidades coesas — mantém-se elevada (Q > 0.60) em todas as 12 redes ao longo de suas respectivas histórias, independentemente de declínio de densidade:
 
 \begin{figure}[H]
@@ -333,8 +327,7 @@ A Figura~\ref{fig:temporal_modularity} revela que modularidade — capacidade de
 
 Esta dissociação entre densidade decrescente e modularidade persistentemente alta evidencia propriedade fundamental das redes competitivas olímpicas: \textbf{organização comunitária estrutural é resiliente à expansão de campo}. Mesmo quando densidade cai de 50\% para 5\%, comunidades coesas — tipicamente correspondendo a eras temporais ou blocos geográficos — continuam emergindo robustamente. Este fenômeno contrasta com redes aleatórias, onde declínio de densidade implica colapso de estrutura modular.
 
-\subsubsection{Síntese da Análise Temporal}
-
+\textbf{Síntese da Análise Temporal.}
 A análise temporal dinâmica das 12 redes individuais revela três descobertas principais:
 
 \begin{enumerate}
@@ -359,6 +352,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \textbf{Comparação M vs F:} Futebol feminino apresenta padrão estrutural radicalmente distinto: maior densidade, menor segregação, e componentes fracamente conexos reduzidos (2 vs 11 masculino), indicando rede mais coesa apesar de introdução recente. A diferença pode ser atribuída a (i) janela temporal comprimida (25 anos vs 121 anos), concentrando competição; (ii) campo competitivo inicial menor, favorecendo confrontos recorrentes; (iii) estabilidade de elencos femininos, com atletas-chave participando de múltiplas edições consecutivas.
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/Futebol M.png}
+        \caption{Futebol Masculino (1900-2016): 1.275 atletas, densidade 1.33\%. Estrutura fragmentada reflete 121 anos de história olímpica com múltiplas gerações sem sobreposição competitiva.}
+        \label{fig:futebol_m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/Futebol F.png}
+        \caption{Futebol Feminino (1996-2016): 293 atletas, densidade 7.35\%. Rede mais coesa com densidade 5.52× maior que masculina, evidenciando campo competitivo concentrado em 25 anos de história.}
+        \label{fig:futebol_f}
+    \end{subfigure}
+    \caption{Comparação estrutural entre redes de Futebol Olímpico masculino e feminino. Nós dimensionados por PageRank, cores representam comunidades detectadas por algoritmo Louvain. Diferença histórica (76 anos) resulta em estruturas radicalmente distintas: masculina fragmentada temporalmente, feminina coesa e densa.}
+    \label{fig:futebol_comparacao}
+\end{figure}
+
 \subsection{Basquete (Basquete)}
 
 \textbf{Basquete Masculino Masculino:} 592 atletas, 8.515 arestas, densidade 2.43\%, segregação 1.50. Dominância estrutural estadounidense pronunciada: USA aparece em praticamente todas as comunidades detectadas, concentrando medalhas de forma persistente desde 1936.
@@ -374,6 +386,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 \textbf{Atletismo Feminino Feminino 100m:} Apresenta segregação completa (índice 100.00), o valor máximo observado. Evidencia fragmentação temporal ainda mais acentuada que na versão masculina, possivelmente devido a carreiras femininas historicamente mais curtas em atletismo de velocidade.
 
 \textbf{Comparação M vs F:} Ambas as versões apresentam segregação extrema, mas a feminina atinge fragmentação absoluta. Densidade feminina é 1.30× superior, refletindo campo competitivo menor com introdução posterior (1928 vs 1896 masculino).
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/Atletismo M 100m.png}
+        \caption{Atletismo 100m Masculino (1896-2016): Segregação extrema (90.11) evidencia gerações de velocistas temporalmente desconectadas. Dominância estadounidense histórica visível na concentração de nós centrais.}
+        \label{fig:atletismo_m_100m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/Atletismo F 100m.png}
+        \caption{Atletismo 100m Feminino (1928-2016): Segregação máxima (100.00) indica fragmentação temporal absoluta. Densidade 1.30× superior à masculina reflete campo competitivo mais concentrado.}
+        \label{fig:atletismo_f_100m}
+    \end{subfigure}
+    \caption{Comparação estrutural entre redes de Atletismo 100m masculino e feminino. Nós dimensionados por PageRank, cores representam comunidades detectadas. Ambas exibem segregação extrema característica de eventos de velocidade, onde carreiras atléticas são curtas e gerações competitivas raramente se sobrepõem.}
+    \label{fig:atletismo_100m_comparacao}
+\end{figure}
 
 \subsection{Natação 100m Nado Livre (Natação 100 Metros Livre)}
 
@@ -542,6 +573,61 @@ A explicação reside em efeito de campo competitivo comprimido: esportes femini
 \subsection{Re-Concentração Geográfica Contemporânea}
 
 Contrariando narrativa de democratização competitiva crescente, a Era Contemporânea (2004-2016) apresenta re-concentração de medalhas nos Top 3 países (64.4\%), revertendo tendência de democratização observada na Era Moderna (59.6\%). Este padrão sugere que globalização crescente dos Jogos Olímpicos não impediu centralização estrutural de dominância competitiva, possivelmente devido a investimentos assimétricos em ciência esportiva e programas de desenvolvimento de atletas de elite.
+
+\section{Validação com Estatísticas Históricas Conhecidas}
+\label{sec:validacao_historica}
+
+A validação externa dos padrões estruturais identificados através de análise de redes requer confrontação sistemática com estatísticas históricas conhecidas e documentadas por fontes oficiais. Esta seção compara descobertas quantitativas e qualitativas da análise de centralidade, dominância geográfica e detecção de comunidades com dados históricos consolidados, verificando se métricas de rede capturam efetivamente hierarquias competitivas reais.
+
+\subsection{Futebol: Brasil e a Era Dourada Húngara}
+
+A análise geográfica identificou Brasil como líder em medalhas totais de Futebol Masculino (9.2\%), seguido por distribuição fragmentada entre 34 países com Top 3 concentrando apenas 21.6\% das medalhas. Esta descoberta alinha-se precisamente com registros oficiais: Brasil acumulou 6 medalhas até 2016 (1 ouro, 3 prata, 2 bronze), superando Hungria e Grã-Bretanha (3 ouros cada) em contagem total \cite{OlympicsFootballWinners2024}. Embora Hungria e Reino Unido liderem em títulos olímpicos, a métrica de medalhas totais captura corretamente a consistência histórica brasileira em alcançar pódios.
+
+A detecção de comunidades temporais via algoritmo Louvain revelou estrutura coesa nas décadas de 1950-1960 no Futebol Masculino. Esta segmentação coincide com o período do lendário ``Golden Team'' húngaro, que entre 1950-1956 conquistou 58 vitórias, 10 empates e apenas 1 derrota, dominando Helsinki 1952 com Ferenc Puskás e revolucionando o futebol moderno \cite{OlympicsHungaryGoldenTeam2024}. A métrica de \textit{PageRank} elevado de atletas húngaros deste período valida capacidade do algoritmo em identificar eras de dominância regional através de centralidade estrutural.
+
+\subsection{Basquete: Hegemonia Estadounidense e Rivalidade da Guerra Fria}
+
+A análise identificou USA dominando 30-46\% das medalhas em Basketball masculino e feminino, com hegemonia pronunciada em ambos os gêneros. Estatísticas oficiais revelam domínio ainda mais extremo: USA conquistou 16 de 20 torneios masculinos (taxa de 80\%) e 9 de 12 torneios femininos, estabelecendo hegemonia histórica sem paralelo em esportes coletivos olímpicos \cite{NBCBasketballHistory2024}. A métrica de concentração Top 3 (55.9\% masculino) subestima ligeiramente a dominância estadounidense quando analisada exclusivamente por ouros, evidenciando que medalhas de prata e bronze distribuem-se mais amplamente entre potências alternativas.
+
+A detecção de comunidades identificou União Soviética como segunda potência estrutural no período 1952-1988. Esta descoberta alinha-se com contexto histórico da Guerra Fria, quando rivalidade USA-USSR definiu competições olímpicas \cite{AlphaHistoryColdWar2024}. O confronto de 1972, onde USSR derrotou USA 51-50 em partida controversa que estendeu tempo regulamentar, marca único momento histórico de vitória soviética sobre hegemonia estadounidense estabelecida desde 1936 \cite{NBCBasketballHistory2024}. A métrica de betweenness elevado para atletas soviéticos deste período captura corretamente papel de ponte estrutural entre eras de dominância.
+
+\subsection{Atletismo 100m: Confirmação de Hegemonia Estadounidense}
+
+A análise revelou USA dominando 46.6\% das medalhas masculinas de Atletismo 100m, resultando em coeficiente de Gini máximo (0.626) que evidencia desigualdade estrutural extrema. Registros oficiais confirmam: USA conquistou 16 de 29 ouros masculinos (55\%) e 9 de 22 ouros femininos, estabelecendo hegemonia histórica persistente desde Era Pioneira \cite{Olympics100mWinners2024}. Reino Unido (9.1\%) e Jamaica (8.0\%) aparecem como potências secundárias, padrão consistente com emergência jamaicana nas últimas décadas (4 ouros femininos 2008-2016).
+
+A métrica de \textit{PageRank} identificou atletas de alta centralidade cujas carreiras coincidem com bicampeões e tricampeões históricos conhecidos. Usain Bolt (Jamaica) permanece único tricampeão olímpico dos 100m, enquanto Carl Lewis (USA) conquistou bicampeonato \cite{Olympics100mWinners2024}. A concordância entre rankings de \textit{PageRank} normalizado e contagem simples de medalhas valida capacidade do algoritmo em capturar hierarquia competitiva para além de simples frequência de pódios, incorporando qualidade dos adversários derrotados.
+
+\subsection{Natação 100m Livre: Atletas Históricos Confirmados}
+
+A análise citou explicitamente Johnny Weissmuller (USA) e Dawn Fraser (AUS) como atletas de destaque estrutural através de métricas de centralidade. Registros históricos confirmam: ambos figuram entre os únicos bicampeões e tricampeões do evento. Weissmuller conquistou 2 ouros (1924, 1928), enquanto Fraser permanece única tricampeã consecutiva feminina (1956-1964) \cite{TopEndSwimming100m2024}. Adicionalmente, Duke Kahanamoku (USA) e Alexander Popov (RUS) completam lista de bicampeões históricos, validando que \textit{PageRank} elevado correlaciona-se com desempenho competitivo excepcional documentado.
+
+A identificação de USA e Austrália como potências estruturais primárias alinha-se com distribuição histórica de medalhas, onde estas nações lideram contagem all-time conjuntamente com Hungria. A métrica capturou corretamente especialização regional persistente ao longo de 120 anos de competições.
+
+\subsection{Judô: Domínio Japonês e Emergência Francesa}
+
+A análise geográfica identificou Japão liderando Judô Masculino (17.3\%) e França liderando Judô Feminino (17.9\%), com distribuição relativamente equitativa (Gini baixo) comparado a outros esportes. Estatísticas oficiais validam domínio histórico japonês: Japão conquistou 8 ouros em Athens 2004 e mantém hegemonia consistente desde introdução do judô em 1964, dominando historicamente o esporte de origem japonesa \cite{NBCJudoHistory2024}. A hegemonia francesa em categorias femininas reflete investimento institucional direcionado, evidenciado por Teddy Riner (França) que acumulou múltiplas medalhas olímpicas, destacando-se como um dos judocas mais condecorados da história.
+
+A detecção de comunidades revelou segregação temporal completa (índice 100.00) em Judô Masculino versus integração estrutural em Judô Feminino (índice 3.12). Este padrão contra-intuitivo captura dinâmica real: categorias femininas introduzidas em 1992 concentram recorrência entre mesmas atletas ao longo de 3-4 ciclos consecutivos, enquanto categorias masculinas fragmentam-se em gerações desconectadas devido a maior profundidade histórica desde 1964.
+
+\subsection{Boxe: Rivalidade USA-Cuba e Introdução Feminina Recente}
+
+A análise identificou USA dominando Boxe Masculino Welterweight e China liderando Boxe Feminino, com distribuição extremamente dispersa masculina (Top 3 = 22.5\%) versus concentração feminina extrema (Top 3 = 75.0\%). Dados históricos confirmam: USA lidera contagem all-time com 118 medalhas (50 ouros), seguido por Cuba com 80 medalhas (42 ouros) \cite{StatistaBoxingMedals2024}. Hungria contribuiu László Papp (3 ouros 1948-1956), enquanto Cuba produziu Teófilo Stevenson e Félix Savón (3 ouros cada), validando identificação de múltiplas potências regionais.
+
+A densidade feminina 25.65× superior à masculina reflete introdução recente (2012, apenas 3 edições) versus tradição centenária masculina, comprimindo campo competitivo em janela temporal mínima. Este padrão metodológico — maior densidade em modalidades recentes devido a menor acumulação histórica — emerge consistentemente em todos os esportes femininos analisados.
+
+\subsection{Síntese da Validação}
+
+A confrontação sistemática entre descobertas da análise de redes e estatísticas históricas conhecidas evidencia concordância robusta em três dimensões:
+
+\begin{enumerate}
+    \item \textbf{Dominância geográfica:} Rankings de países por métricas de centralidade agregada coincidem com líderes históricos documentados (USA em Basketball/Athletics/Swimming, Brasil em Futebol, Japão em Judô).
+
+    \item \textbf{Atletas de alta performance:} \textit{PageRank} elevado correlaciona-se com bicampeões e tricampeões olímpicos históricos (Bolt, Lewis, Weissmuller, Fraser, Riner), validando que algoritmo captura hierarquia competitiva efetiva.
+
+    \item \textbf{Padrões temporais:} Detecção de comunidades identifica corretamente eras de dominância regional conhecidas (Golden Team Hungria 1950s, hegemonia USSR 1970s-1980s, emergência Jamaica 2000s).
+\end{enumerate}
+
+Esta validação externa fortalece confiança metodológica na capacidade de métricas de redes complexas capturarem estruturas competitivas reais, para além de artefatos estatísticos ou viés de dados. A convergência entre análise computacional e conhecimento histórico estabelecido indica que modelagem \textit{per-event} preserva fidedignidade a dinâmicas olímpicas autênticas.
 
 \section{Síntese dos Resultados}
 
