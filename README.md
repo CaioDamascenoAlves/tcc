@@ -10,18 +10,18 @@ Universidade Federal de Ouro Preto (UFOP) - 2026
 
 ## Descrição
 
-Este trabalho aplica teoria de redes complexas para analisar competições olímpicas históricas (1896-2021). O projeto modela relações competitivas entre atletas através de grafos direcionados ponderados, utilizando algoritmos de PageRank, detecção de comunidades (Louvain) e métricas de centralidade.
+Este trabalho aplica teoria de redes complexas para analisar competições olímpicas históricas (1896-2016). O projeto modela relações competitivas entre atletas através de grafos direcionados ponderados, utilizando algoritmos de PageRank, detecção de comunidades (Louvain) e métricas de centralidade.
 
 ### 📊 Dados do Projeto
 
-**Dataset:** 120 years of Olympic history + Tokyo 2020
-**Período analisado:** Atenas 1896 até Tokyo 2020 (125 anos)
-**Atletas no dataset completo:** 137.745 atletas únicos
+**Dataset:** 120 years of Olympic history (Griffin 2018)
+**Período analisado:** Atenas 1896 até Rio 2016 (120 anos)
+**Atletas no dataset completo:** 135.571 atletas únicos
 **Modalidades analisadas:** 6 esportes (Athletics, Swimming, Basketball, Boxing, Football, Judo)
-**Atletas medalhistas:** 8.679 medalhistas nas 6 modalidades
-**Redes geradas:** 149 redes competitivas (modelagem per-event)
-**Casos de estudo:** 12 redes selecionadas via Iconic Score (2.826 atletas)
-**Comunidades detectadas:** 142 comunidades estruturais
+**Atletas medalhistas:** 9.378 medalhistas nas 6 modalidades
+**Redes geradas:** 123 redes competitivas (modelagem per-event)
+**Casos de estudo:** 12 redes selecionadas via Iconic Score
+**Comunidades detectadas:** Múltiplas comunidades estruturais detectadas
 
 ---
 
@@ -109,11 +109,10 @@ PDF pré-compilado disponível: [monografia-latest.pdf](monografia-latest.pdf)
 
 | Nível | Descrição | Atletas Únicos |
 |-------|-----------|----------------|
-| Dataset completo | Todos os atletas olímpicos (1896-2020), 84 modalidades | 137.745 |
-| Dataset filtrado | Atletas nas 6 modalidades selecionadas | 48.949 |
-| Medalhistas | Atletas que conquistaram medalhas nas 6 modalidades | 8.679 |
-| 149 redes | Redes per-event (Year × Event × Gender) | 8.679 |
-| 12 casos de estudo | Redes selecionadas via Iconic Score | 2.826 |
+| Dataset completo | Todos os atletas olímpicos (1896-2016), 66 modalidades | 135.571 |
+| Dataset filtrado | Medalhistas nas 6 modalidades selecionadas | 9.378 |
+| 123 redes | Redes per-event (Year × Event × Gender) | 9.378 |
+| 12 casos de estudo | Redes selecionadas via Iconic Score | Foco central de análise |
 
 ### Construção das Redes
 

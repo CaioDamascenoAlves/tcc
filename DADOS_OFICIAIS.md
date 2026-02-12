@@ -1,35 +1,27 @@
 # DADOS OFICIAIS DA ANÁLISE DE REDES - FONTE ÚNICA DE VERDADE
 
-**Data da Última Atualização**: 08/02/2026
-**Dataset Base**: `main/data/athlete_events.csv` (merge de 2 datasets)
+**Data da Última Atualização**: 12/02/2026
+**Dataset Base**: `main/data/athlete_events.csv` (Griffin 2018)
 **Dataset Filtrado**: `main/data/athlete_events_cleaned.csv` (6 esportes)
-**Período Coberto**: 126 anos de história olímpica (Atenas 1896 - Tokyo 2021)
+**Período Coberto**: 120 anos de história olímpica (Atenas 1896 - Rio 2016)
 **Defesa Prevista**: 2026
 
 ---
 
 ## COMPOSIÇÃO DOS DATASETS
 
-### Datasets Originais
+### Dataset Original
 
-1. **Dataset Histórico (1896-2016)**
-   - **Fonte**: Kaggle - Griffin (2018)
-   - **Registros originais**: 271.116 participações
-   - **Link**: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
+**Dataset Histórico (1896-2016)**
+- **Fonte**: Kaggle - Griffin (2018)
+- **Registros originais**: 271.116 participações
+- **Link**: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
 
-2. **Dataset Tokyo 2020**
-   - **Fonte**: Kaggle - Piterfm (2021)
-   - **Registros originais**: 2.411 participações medalhistas
-   - **Jogos realizados**: 2021 (olimpíada adiada)
-   - **Link**: https://www.kaggle.com/datasets/piterfm/tokyo-2020-olympics
-
-### Dataset Consolidado
+### Dataset Limpo
 
 **Arquivo**: `athlete_events.csv`
-**Merge realizado em**: `main/_archived/olympics_update/convert_to_athlete_events.py`
-**Total após merge**: 273.527 registros
-**Duplicatas removidas**: 2 registros (atletas em múltiplos eventos duplicados)
-**Total final limpo**: 273.525 registros (arredondado para 273.527 na documentação)
+**Limpeza**: Remoção de duplicatas e registros inválidos
+**Total final limpo**: 269.718 registros
 
 ---
 
@@ -37,22 +29,18 @@
 
 ### Nível 1: Dataset Completo
 **Arquivo**: `athlete_events.csv`
-- **Total de registros olímpicos**: 272.119 (após limpeza)
-- **Atletas únicos**: 137.745
-- **Período**: Atenas 1896 até Tokyo 2020 (126 anos, 1896-2021)
-- **Edições dos jogos**: 52
-- **Modalidades esportivas**: 84
-- **Eventos distintos**: 1.063
-- **Comitês Olímpicos Nacionais (NOCs)**: 231
-- **Temporada**:
-  - Jogos de Verão: ~224.000 registros (82%)
-  - Jogos de Inverno: ~48.000 registros (18%)
+- **Total de registros olímpicos**: 269.718 (após limpeza)
+- **Atletas únicos**: 135.571
+- **Período**: Atenas 1896 até Rio 2016 (120 anos)
+- **Edições dos jogos**: 51
+- **Modalidades esportivas**: 66
+- **Eventos distintos**: 765
+- **Comitês Olímpicos Nacionais (NOCs)**: 230
+- **Temporada**: Apenas Jogos de Verão
 
 **Medalhas no Dataset Completo**:
-- **Total de conquistas de medalhas**: 42.173 (15,5% do dataset)
-- **Medalhas de Ouro**: 14.150
-- **Medalhas de Prata**: 13.878
-- **Medalhas de Bronze**: 14.145
+- **Total de conquistas de medalhas**: 39.772 (14,7% do dataset)
+- **Medalhas distribuídas**: Ouro, Prata e Bronze ao longo de 120 anos
 
 ---
 
@@ -71,44 +59,42 @@
    - Judo (Judô)
 
 **Resultado após filtros**:
-- **Registros medalhistas**: 83.497 participações
-- **Atletas únicos (todos)**: 48.949
-- **Atletas medalhistas únicos**: 8.679
+- **Atletas medalhistas únicos**: 9.378
 
 **Detalhamento por Modalidade (Medalhistas)**:
 
-| Modalidade | Tipo | Atletas Medalhistas | Eventos |
-|------------|------|---------------------|---------|
-| Athletics | Individual (Performance) | 3.026 | 93 eventos |
-| Swimming | Individual (Performance) | 1.731 | 90 eventos |
-| Football | Coletivo | 1.568 | 2 eventos |
-| Basketball | Coletivo | 915 | 2 eventos |
-| Boxing | Individual (Combate) | 912 | 22 eventos |
-| Judo | Individual (Combate) | 528 | 14 eventos |
-| **TOTAL** | - | **8.679** | **223 eventos** |
+| Modalidade | Tipo | Atletas Medalhistas | Descrição |
+|------------|------|---------------------|-----------|
+| Athletics | Individual (Performance) | ~3.000 | Corrida, saltos, arremessos |
+| Swimming | Individual (Performance) | ~1.700 | Diversos estilos e distâncias |
+| Football | Coletivo | ~1.600 | Futebol masculino e feminino |
+| Basketball | Coletivo | ~900 | Basquete masculino e feminino |
+| Boxing | Individual (Combate) | ~900 | Diversas categorias de peso |
+| Judo | Individual (Combate) | ~500 | Categorias de peso por gênero |
+| **TOTAL** | - | **9.378** | Seis modalidades selecionadas |
 
 ---
 
-### Nível 3: Modelagem Per-Event (149 Redes)
-**Diretório**: `main/results_per_event_cleaned/`
+### Nível 3: Modelagem Per-Event (123 Redes)
+**Diretório**: `main/results_all_mining/`
 
 **Estratégia de Modelagem**:
-- **Chave composta**: (Year, Event_Normalized, Gender)
+- **Chave composta**: (Year, Event_Normalized)
 - **Objetivo**: Preservar homogeneidade competitiva intra-rede
 - **Evita**: Agregação artificial de eventos heterogêneos (ex: 100m + maratona)
 
 **Resultado**:
-- **Total de redes geradas**: 149 redes GEXF
-- **Atletas medalhistas únicos**: 8.679 (distribuídos nas 149 redes)
-- **Formato**: Grafos direcionados ponderados (.gexf)
+- **Total de redes geradas**: 123 redes competitivas
+- **Atletas medalhistas únicos**: 9.378 (distribuídos nas 123 redes)
+- **Formato**: Grafos direcionados ponderados
 
 **Distribuição por Esporte**:
-- Athletics: 93 redes
-- Swimming: 50 redes
-- Boxing: 22 redes
-- Judo: 14 redes
-- Basketball: 2 redes
-- Football: 2 redes
+- Athletics: Múltiplas redes por evento específico
+- Swimming: Múltiplas redes por estilo/distância
+- Boxing: Redes por categoria de peso
+- Judo: Redes por categoria de peso
+- Basketball: 2 redes (M/F)
+- Football: 2 redes (M/F)
 
 ---
 
@@ -133,28 +119,27 @@ IS_e = w_L · L_norm(e) + w_G · G_norm(e) + w_V · V_norm(e) + w_B · B(e)
 
 **12 Casos Selecionados**:
 
-| # | Rede | Esporte | Tipo | Atletas |
-|---|------|---------|------|---------|
-| 1 | athletics_M_100m | Athletics | Individual | 78 |
-| 2 | athletics_F_100m | Athletics | Individual | 55 |
-| 3 | swimming_M_100m_Freestyle | Swimming | Individual | 68 |
-| 4 | swimming_F_100m_Freestyle | Swimming | Individual | 69 |
-| 5 | basketball_M_Basketball_Mens_Basketball | Basketball | Coletivo | 592 |
-| 6 | basketball_F_Basketball_Womens_Basketball | Basketball | Coletivo | 323 |
-| 7 | boxing_M_Heavy_81-91kg | Boxing | Combate | 4 |
-| 8 | boxing_F_Middle_69-75kg | Boxing | Combate | 4 |
-| 9 | football_M_Football_Mens_Football | Football | Coletivo | 1.275 |
-| 10 | football_F_Football_Womens_Football | Football | Coletivo | 293 |
-| 11 | judo_M_-81kg | Judo | Combate | 43 |
-| 12 | judo_F_-70kg | Judo | Combate | 22 |
-| **TOTAL** | - | - | - | **2.826** |
+| # | Rede | Esporte | Tipo |
+|---|------|---------|------|
+| 1 | Athletics 100m M | Athletics | Individual (Performance) |
+| 2 | Athletics 100m F | Athletics | Individual (Performance) |
+| 3 | Swimming 100m Freestyle M | Swimming | Individual (Performance) |
+| 4 | Swimming 100m Freestyle F | Swimming | Individual (Performance) |
+| 5 | Basketball M | Basketball | Coletivo |
+| 6 | Basketball F | Basketball | Coletivo |
+| 7 | Boxing Welterweight M | Boxing | Individual (Combate) |
+| 8 | Boxing Middleweight F | Boxing | Individual (Combate) |
+| 9 | Football M | Football | Coletivo |
+| 10 | Football F | Football | Coletivo |
+| 11 | Judo -90kg M | Judo | Individual (Combate) |
+| 12 | Judo -70kg F | Judo | Individual (Combate) |
 
 **Distribuição por Tipologia**:
-- Esportes Individuais (Performance): 4 redes (270 atletas)
-- Esportes Coletivos: 4 redes (2.483 atletas)
-- Esportes Individuais (Combate): 4 redes (73 atletas)
+- Esportes Individuais (Performance): 4 redes
+- Esportes Coletivos: 4 redes
+- Esportes Individuais (Combate): 4 redes
 
-**Comunidades Detectadas**: 142 comunidades estruturais (algoritmo de Louvain)
+**Comunidades Detectadas**: Múltiplas comunidades estruturais (algoritmo de Louvain)
 
 ---
 
@@ -348,21 +333,6 @@ As arestas direcionadas conectam atletas que competiram no mesmo pódio:
 
 ---
 
-## TOP 10 ATLETAS POR PAGERANK (Consolidado Global)
-
-1. **Michael Fred Phelps, II** - Swimming M - PageRank: 0.025510
-2. **LEDECKY Kathleen** - Swimming F - PageRank: 0.022203
-3. **TITMUS Ariarne** - Swimming F - PageRank: 0.021930
-4. **Christie Patricia Pearce-Rampone** - Football F - PageRank: 0.012291
-5. **Suzanne Brigit "Sue" Bird** - Basketball F - PageRank: 0.012281
-6. **Tamika Devonne Catchings** - Basketball F - PageRank: 0.012281
-7. **Teresa Edwards** - Basketball F - PageRank: 0.012281
-8. **Lisa Deshawn Leslie (-Lockwood)** - Basketball F - PageRank: 0.012281
-9. **Diana Lurena Taurasi** - Basketball F - PageRank: 0.012281
-10. **Shannon Leigh Boxx** - Football F - PageRank: 0.011863
-
----
-
 ## OBSERVAÇÕES IMPORTANTES
 
 1. **Nenhum nó isolado** foi encontrado em nenhuma rede (todos os atletas têm pelo menos 1 conexão)
@@ -387,7 +357,8 @@ Este documento é a **FONTE ÚNICA DE VERDADE** para todos os números citados e
 
 ---
 
-**Última atualização**: 08/02/2026
+**Última atualização**: 12/02/2026
 **Responsável**: Caio Damasceno Alves
 **Defesa prevista**: 2026
 **Instituição**: UFOP - Sistemas de Informação
+**Período dos dados**: 1896-2016 (120 anos - Atenas até Rio)
