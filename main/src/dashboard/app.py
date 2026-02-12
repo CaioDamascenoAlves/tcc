@@ -1541,16 +1541,23 @@ def render_network_tab(filtered_data):
         else:
             years_str = 'N/A'
 
+        # Graus (usar original_degree_centrality ou degree)
+        degree_total = int(row.get('original_degree_centrality', row.get('degree', 0)))
+        # NOTA: O CSV consolidado não tem in/out degree separados, apenas degree total
+        # Vamos usar metade como aproximação para in/out
+        degree_in = degree_total // 2
+        degree_out = degree_total - degree_in
+
         # Dados completos para tooltip (converter tudo para tipos Python nativos)
         tooltip_data = {
             'name': str(row.get('name', 'N/A')),
             'noc': str(row.get('noc', 'N/A')),
-            'team': str(row.get('team', 'N/A')),
+            'team': str(row.get('team', row.get('noc', 'N/A'))),  # Fallback: usar NOC como team
             'years': str(years_str),  # Todos os anos de participação
             'years_list': [],  # Lista vazia por enquanto (sem histórico completo)
-            'age': int(row.get('age', 0)) if pd.notna(row.get('age')) else 'N/A',
-            'height': int(row.get('height', 0)) if pd.notna(row.get('height')) else 'N/A',
-            'weight': int(row.get('weight_kg', 0)) if pd.notna(row.get('weight_kg')) else 'N/A',
+            'age': int(row.get('age', 0)) if pd.notna(row.get('age')) and row.get('age', 0) > 0 else 'N/A',
+            'height': int(row.get('height', 0)) if pd.notna(row.get('height')) and row.get('height', 0) > 0 else 'N/A',
+            'weight': int(row.get('weight_kg', 0)) if pd.notna(row.get('weight_kg')) and row.get('weight_kg', 0) > 0 else 'N/A',
             'medal_gold': int(medal_counts['Gold']),
             'medal_silver': int(medal_counts['Silver']),
             'medal_bronze': int(medal_counts['Bronze']),
@@ -1559,9 +1566,9 @@ def render_network_tab(filtered_data):
             'pagerank_percentile': str(f"{pagerank_percentile:.1f}"),
             'betweenness': str(f"{betweenness_val:.6f}"),
             'is_bridge': True if is_bridge else False,  # Converter para bool Python explicitamente
-            'degree_in': int(row.get('original_in_degree', 0)),
-            'degree_out': int(row.get('original_out_degree', 0)),
-            'degree_total': int(row.get('original_total_degree', 0)),
+            'degree_in': degree_in,
+            'degree_out': degree_out,
+            'degree_total': degree_total,
             'community': int(row.get('original_community', 0)),
         }
 

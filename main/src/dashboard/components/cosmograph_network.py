@@ -261,15 +261,15 @@ def render_cosmograph(nodes: list, links: list, height: int = 800,
                     <div class="toast-section-title">Medalhas Conquistadas</div>
                     <div class="toast-medals">
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon"></span>
+                            <span class="toast-medal-icon">🥇</span>
                             <span class="toast-medal-count" id="toast-gold">0</span>
                         </div>
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon"></span>
+                            <span class="toast-medal-icon">🥈</span>
                             <span class="toast-medal-count" id="toast-silver">0</span>
                         </div>
                         <div class="toast-medal-item">
-                            <span class="toast-medal-icon"></span>
+                            <span class="toast-medal-icon">🥉</span>
                             <span class="toast-medal-count" id="toast-bronze">0</span>
                         </div>
                     </div>
