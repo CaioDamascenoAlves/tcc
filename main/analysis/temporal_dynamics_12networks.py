@@ -31,18 +31,18 @@ print("=" * 80)
 
 # As 12 redes principais do estudo
 NETWORKS_CONFIG = [
-    {'sport': 'Football', 'event': "Men's Football", 'gender': 'M', 'name': 'M Football'},
-    {'sport': 'Football', 'event': "Women's Football", 'gender': 'F', 'name': 'F Football'},
-    {'sport': 'Basketball', 'event': "Men's Basketball", 'gender': 'M', 'name': 'M Basketball'},
-    {'sport': 'Basketball', 'event': "Women's Basketball", 'gender': 'F', 'name': 'F Basketball'},
-    {'sport': 'Athletics', 'event': "Athletics Men's 100 metres", 'gender': 'M', 'name': 'M 100m'},
-    {'sport': 'Athletics', 'event': "Athletics Women's 100 metres", 'gender': 'F', 'name': 'F 100m'},
-    {'sport': 'Swimming', 'event': "Swimming Men's 100 metres Freestyle", 'gender': 'M', 'name': 'M 100m Freestyle'},
-    {'sport': 'Swimming', 'event': "Swimming Women's 100 metres Freestyle", 'gender': 'F', 'name': 'F 100m Freestyle'},
-    {'sport': 'Judo', 'event': "Judo Men's Middleweight", 'gender': 'M', 'name': 'M -90kg'},
-    {'sport': 'Judo', 'event': "Judo Women's Half-Middleweight", 'gender': 'F', 'name': 'F -70kg'},
-    {'sport': 'Boxing', 'event': "Boxing Men's Welterweight", 'gender': 'M', 'name': 'M Welter (63-69kg)'},
-    {'sport': 'Boxing', 'event': "Boxing Women's Middleweight", 'gender': 'F', 'name': 'F Middle (69-75kg)'},
+    {'sport': 'Football', 'event': "Men's Football", 'gender': 'M', 'name': 'Futebol M'},
+    {'sport': 'Football', 'event': "Women's Football", 'gender': 'F', 'name': 'Futebol F'},
+    {'sport': 'Basketball', 'event': "Men's Basketball", 'gender': 'M', 'name': 'Basquete M'},
+    {'sport': 'Basketball', 'event': "Women's Basketball", 'gender': 'F', 'name': 'Basquete F'},
+    {'sport': 'Athletics', 'event': "Athletics Men's 100 metres", 'gender': 'M', 'name': 'Atletismo 100m M'},
+    {'sport': 'Athletics', 'event': "Athletics Women's 100 metres", 'gender': 'F', 'name': 'Atletismo 100m F'},
+    {'sport': 'Swimming', 'event': "Swimming Men's 100 metres Freestyle", 'gender': 'M', 'name': 'Natação 100m Livre M'},
+    {'sport': 'Swimming', 'event': "Swimming Women's 100 metres Freestyle", 'gender': 'F', 'name': 'Natação 100m Livre F'},
+    {'sport': 'Judo', 'event': "Judo Men's Middleweight", 'gender': 'M', 'name': 'Judô -90kg M'},
+    {'sport': 'Judo', 'event': "Judo Women's Half-Middleweight", 'gender': 'F', 'name': 'Judô -70kg F'},
+    {'sport': 'Boxing', 'event': "Boxing Men's Welterweight", 'gender': 'M', 'name': 'Boxe Welter M'},
+    {'sport': 'Boxing', 'event': "Boxing Women's Middleweight", 'gender': 'F', 'name': 'Boxe Médio F'},
 ]
 
 # Janelas temporais (décadas) - ATÉ RIO 2016 (SEM Tokyo 2020)

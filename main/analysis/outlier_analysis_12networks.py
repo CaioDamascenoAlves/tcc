@@ -39,6 +39,23 @@ print(f"✓ Dados carregados: {len(df)} redes")
 # Verificar colunas disponíveis
 print(f"\nColunas disponíveis: {list(df.columns)}")
 
+# Mapeamento de nomes em português para as 12 redes do estudo
+NAME_MAPPING = {
+    'Football_Mens_Football': 'Futebol M',
+    'Football_Womens_Football': 'Futebol F',
+    'Basketball_Mens_Basketball': 'Basquete M',
+    'Basketball_Womens_Basketball': 'Basquete F',
+    'Athletics_Mens_100_metres': 'Atletismo 100m M',
+    'Athletics_Womens_100_metres': 'Atletismo 100m F',
+    'Swimming_Mens_100_metres_Freestyle': 'Natação 100m Livre M',
+    'Swimming_Womens_100_metres_Freestyle': 'Natação 100m Livre F',
+    'Judo_Mens_Middleweight': 'Judô -90kg M',
+    'Judo_Womens_Half-Middleweight': 'Judô -70kg F',
+    'Boxing_Mens_Welterweight': 'Boxe Welter M',
+    'Boxing_Womens_Middleweight': 'Boxe Médio F',
+}
+df['name'] = df['event_name'].map(NAME_MAPPING).fillna(df['event_name'])
+
 # ====================
 # 2. FUNÇÕES DE DETECÇÃO DE OUTLIERS
 # ====================
@@ -82,8 +99,8 @@ def detect_outliers_percentile(data, column, lower_pct=5, upper_pct=95):
 # 3. ANÁLISE POR MÉTRICA
 # ====================
 
-# Métricas a analisar
-metrics_to_analyze = ['density', 'avg_clustering', 'nodes', 'edges', 'num_components']
+# Métricas a analisar (nomes das colunas reais no CSV)
+metrics_to_analyze = ['density', 'n_athletes', 'n_edges', 'n_communities', 'modularity']
 
 all_outliers = []
 
@@ -189,10 +206,10 @@ fig.suptitle('Distribuição de Métricas com Identificação de Outliers\n12 Re
 
 metrics_labels = {
     'density': 'Densidade',
-    'avg_clustering': 'Coef. Clustering',
-    'nodes': 'Número de Atletas',
-    'edges': 'Número de Arestas',
-    'num_components': 'Componentes Conexos'
+    'n_athletes': 'Número de Atletas',
+    'n_edges': 'Número de Arestas',
+    'n_communities': 'Comunidades',
+    'modularity': 'Modularidade'
 }
 
 for idx, metric in enumerate(metrics_to_analyze[:6]):
@@ -216,27 +233,33 @@ for idx, metric in enumerate(metrics_to_analyze[:6]):
     ax.set_ylabel(metrics_labels.get(metric, metric))
     ax.grid(axis='y', alpha=0.3)
 
+# Esconder subplot vazio (6º painel não utilizado)
+axes[1, 2].set_visible(False)
+
 plt.tight_layout()
 output_fig1 = '../results_complete_mining/figures/outliers_boxplots.pdf'
 plt.savefig(output_fig1, dpi=300, bbox_inches='tight')
 print(f"✓ Figura salva: {output_fig1}")
 plt.close()
 
-# 5.2 Scatter plot multivariado: Densidade vs Clustering
+# 5.2 Scatter plot multivariado: Densidade vs Modularidade (12 redes alvo)
 fig, ax = plt.subplots(figsize=(12, 8))
 
-for _, row in df.iterrows():
+# Filtrar apenas as 12 redes do estudo
+df_12 = df[df['event_name'].isin(NAME_MAPPING.keys())].copy()
+
+for _, row in df_12.iterrows():
     color = 'blue' if row['gender'] == 'M' else 'red'
     marker = 'o'
 
-    ax.scatter(row['density'], row['avg_clustering'],
+    ax.scatter(row['density'], row['modularity'],
                s=200, color=color, marker=marker, alpha=0.6, edgecolors='black', linewidth=1.5)
-    ax.annotate(row['name'], (row['density'], row['avg_clustering']),
+    ax.annotate(row['name'], (row['density'], row['modularity']),
                 xytext=(5, 5), textcoords='offset points', fontsize=9, alpha=0.8)
 
 ax.set_xlabel('Densidade', fontsize=12)
-ax.set_ylabel('Coeficiente de Clustering Médio', fontsize=12)
-ax.set_title('Densidade vs Clustering: Identificação Visual de Outliers\n12 Redes Individuais',
+ax.set_ylabel('Modularidade', fontsize=12)
+ax.set_title('Densidade vs Modularidade: Identificação Visual de Outliers\n12 Redes Individuais',
              fontsize=14, fontweight='bold')
 ax.grid(True, alpha=0.3)
 

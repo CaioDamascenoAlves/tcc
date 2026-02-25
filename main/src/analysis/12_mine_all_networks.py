@@ -45,8 +45,8 @@ class UniversalNetworkMiner:
     def __init__(self,
                  gexf_dir: Path,
                  output_dir: Path,
-                 min_athletes: int = 10,
-                 min_edges: int = 10):
+                 min_athletes: int = 4,
+                 min_edges: int = 4):
         """
         Inicializa minerador universal.
 
@@ -481,8 +481,8 @@ def main():
     miner = UniversalNetworkMiner(
         gexf_dir=GEXF_DIR,
         output_dir=OUTPUT_DIR,
-        min_athletes=10,
-        min_edges=10
+        min_athletes=4,
+        min_edges=4
     )
 
     # Executar mineração

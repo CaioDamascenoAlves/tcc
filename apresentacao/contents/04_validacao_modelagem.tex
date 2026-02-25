@@ -6,18 +6,18 @@
     \toprule
     \textbf{Esporte} & \textbf{G} & \textbf{N} & \textbf{E} & \textbf{NMI} & \textbf{ARI} \\
     \midrule
-    Athletics 100m & M & 78 & 91 & 0.976 & 0.874 \\
-    Athletics 100m & F & 55 & 64 & 0.972 & 0.884 \\
-    Swimming 100m Free & M & 68 & 81 & 0.985 & 0.935 \\
-    Swimming 100m Free & F & 69 & 75 & 0.986 & 0.918 \\
-    Basketball & M & 592 & 8515 & 0.957 & 0.916 \\
-    Basketball & F & 323 & 4793 & 0.991 & 0.991 \\
-    Football & M & 1275 & 21620 & 0.983 & 0.936 \\
-    Football & F & 293 & 6285 & 1.000 & 1.000 \\
-    Judo -90kg & M & 49 & 65 & 0.953 & 0.816 \\
-    Judo -70kg & F & 22 & 34 & 0.875 & 0.742 \\
-    Boxing Fly & M & 130 & 297 & 0.946 & 0.783 \\
-    Boxing Fly & F & 10 & 14 & 1.000 & 1.000 \\
+    Atletismo 100m & M & 78 & 91 & 0.976 & 0.874 \\
+    Atletismo 100m & F & 55 & 64 & 0.972 & 0.884 \\
+    Natação 100m Livre & M & 68 & 81 & 0.985 & 0.935 \\
+    Natação 100m Livre & F & 69 & 75 & 0.986 & 0.918 \\
+    Basquete & M & 592 & 8515 & 0.957 & 0.916 \\
+    Basquete & F & 323 & 4793 & 0.991 & 0.991 \\
+    Futebol & M & 1275 & 21620 & 0.983 & 0.936 \\
+    Futebol & F & 293 & 6285 & 1.000 & 1.000 \\
+    Judô -90kg & M & 49 & 65 & 0.953 & 0.816 \\
+    Judô -70kg & F & 22 & 34 & 0.875 & 0.742 \\
+    Boxe Mosca & M & 130 & 297 & 0.946 & 0.783 \\
+    Boxe Mosca & F & 10 & 14 & 1.000 & 1.000 \\
     \midrule
     \textbf{MÉDIA} &  & 247 & 3494 & \textbf{0.969} & \textbf{0.900} \\
     \bottomrule
@@ -27,9 +27,11 @@
     \vspace{0.3cm}
 
     \begin{block}{Interpretação}
+        \footnotesize
         \begin{itemize}
-            \item \textbf{NMI = 0.969} -- concordância quase perfeita (>0.90)
-            \item \textbf{Decisão:} usar Louvain (eficiência computacional + interpretabilidade)
+            \item \textbf{NMI} (Normalized Mutual Information): mede sobreposição de partições --- 1.0 = comunidades idênticas nos dois algoritmos
+            \item \textbf{NMI médio = 0.969} confirma concordância quase perfeita (limiar excelente: $>$0.90)
+            \item \textbf{Decisão:} usar Louvain --- eficiência computacional com resultados equivalentes
         \end{itemize}
     \end{block}
 \end{frame}

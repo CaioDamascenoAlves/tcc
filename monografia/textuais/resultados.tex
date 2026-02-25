@@ -5,7 +5,7 @@
 \label{cap:resultados}
 % ---
 
-A aplicação da metodologia \textit{per-event} aos dados olímpicos históricos (1896-2016) gerou 123 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — constituem o foco central da análise. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
+A aplicação da metodologia \textit{per-event} aos dados olímpicos históricos (1896-2016) gerou 143 redes competitivas independentes, das quais 12 casos de estudo representativos foram selecionados para análise aprofundada. Estes 12 eventos — cobrindo 6 esportes com equilíbrio de gênero — constituem o foco central da análise. Os resultados revelam padrões estruturais que transcendem categorização tradicional por esporte, evidenciando descobertas contra-intuitivas sobre diferenças de gênero, hierarquias competitivas e evolução temporal da dominância geográfica.
 
 \section{Validação Empírica de Algoritmos: Louvain vs Infomap}
 \label{sec:resultados_validacao_louvain}
@@ -148,11 +148,11 @@ A única exceção — Natação 100m Nado Livre com densidade masculina superio
 \label{sec:statistical_validation_density}
 A afirmação de que redes femininas apresentam densidade superior demanda validação estatística rigorosa para excluir hipótese de que diferenças observadas sejam resultado de variação aleatória. Aplicou-se teste de Wilcoxon signed-rank pareado \cite{VanderPlas2016Python}, apropriado para comparações de amostras dependentes (mesmos esportes, versões M/F) sem pressuposto de normalidade.
 
-A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observadas, razões F/M e resultado do teste:
+A Tabela~\ref{tab:statistical_validation_density} apresenta densidades observadas, razões F/M e a direção da diferença por esporte ($\uparrow$ indica densidade feminina superior; \textbf{ns} indica ausência da direção esperada):
 
 \input{./tabelas/tab_statistical_validation_density.tex}
 
-O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese nula ($H_0: \text{densidade}_F = \text{densidade}_M$) em favor da hipótese alternativa ($H_1: \text{densidade}_F > \text{densidade}_M$) com significância estatística ao nível $\alpha = 0.05$. Teste t pareado paramétrico corrobora conclusão ($p = 0.042 < 0.05$), validando robustez independente de pressupostos distribucionais.
+O teste de Wilcoxon signed-rank produz $p = 0.031 < 0.05$, rejeitando hipótese nula ($H_0: \text{densidade}_F = \text{densidade}_M$) em favor da hipótese alternativa ($H_1: \text{densidade}_F > \text{densidade}_M$) com significância estatística ao nível $\alpha = 0.05$. Em 5 dos 6 esportes a densidade feminina supera a masculina ($\uparrow$); a única exceção é Swimming 100m (razão 0.90×, marcado como \textbf{ns}), onde a rede masculina apresenta densidade ligeiramente superior --- resultado consistente com a longa tradição histórica desta prova que concentra maior número de atletas masculinos medalhistas. Teste t pareado paramétrico corrobora conclusão ($p = 0.042 < 0.05$), validando robustez independente de pressupostos distribucionais.
 
 Intervalo de confiança \textit{bootstrap} (95\%, 10.000 amostras) \cite{VanderPlas2016Python} para razão média F/M é $[1.54, 5.99]$, excluindo valor 1.0 (paridade), confirmando que densidade feminina é consistentemente superior à masculina na população de esportes analisados. A razão média de 3.53× indica que, em média, redes femininas apresentam densidade 253\% superior às masculinas correspondentes.
 
@@ -181,18 +181,18 @@ A Tabela~\ref{tab:confounder_data} apresenta os dados completos das 12 redes ana
 \hline
 \textbf{Rede} & \textbf{Esporte} & \textbf{Gên.} & \textbf{Tipo} & \textbf{Densidade} & \textbf{Atletas} & \textbf{Anos} \\
 \hline
-Football M & Futebol & M & Coletivo & 0.0133 & 1275 & 125 \\
-Football F & Futebol & F & Coletivo & 0.0735 & 293 & 29 \\
-Basketball M & Basquete & M & Coletivo & 0.0243 & 592 & 89 \\
-Basketball F & Basquete & F & Coletivo & 0.0461 & 323 & 49 \\
-100m M & Atletismo & M & Individual & 0.0152 & 78 & 129 \\
-100m F & Atletismo & F & Individual & 0.0215 & 55 & 97 \\
-100m Free M & Natação & M & Individual & 0.0178 & 68 & 129 \\
-100m Free F & Natação & F & Individual & 0.0160 & 69 & 113 \\
-Judo -90kg M & Judô & M & Individual & 0.0276 & 49 & 116 \\
-Judo -70kg F & Judô & F & Individual & 0.0736 & 22 & 28 \\
-Boxing Welter M & Boxe & M & Individual & 0.0162 & 150 & 121 \\
-Boxing Middle F & Boxe & F & Individual & 0.4167 & 4 & 4 \\
+Futebol M & Futebol & M & Coletivo & 0.0133 & 1275 & 125 \\
+Futebol F & Futebol & F & Coletivo & 0.0735 & 293 & 29 \\
+Basquete M & Basquete & M & Coletivo & 0.0243 & 592 & 89 \\
+Basquete F & Basquete & F & Coletivo & 0.0461 & 323 & 49 \\
+Atletismo 100m M & Atletismo & M & Individual & 0.0152 & 78 & 129 \\
+Atletismo 100m F & Atletismo & F & Individual & 0.0215 & 55 & 97 \\
+Natação 100m Livre M & Natação & M & Individual & 0.0178 & 68 & 129 \\
+Natação 100m Livre F & Natação & F & Individual & 0.0160 & 69 & 113 \\
+Judô -90kg M & Judô & M & Individual & 0.0276 & 49 & 116 \\
+Judô -70kg F & Judô & F & Individual & 0.0736 & 22 & 28 \\
+Boxe Welter M & Boxe & M & Individual & 0.0162 & 150 & 121 \\
+Boxe Médio F & Boxe & F & Individual & 0.4167 & 4 & 4 \\
 \hline
 \multicolumn{7}{l}{\footnotesize Densidade = arestas/(nós × (nós-1)/2); Anos = período de atividade olímpica} \\
 \multicolumn{7}{l}{\footnotesize Redes masculinas (6): média 369 atletas, 118 anos | Redes femininas (6): média 128 atletas, 53 anos} \\
@@ -246,7 +246,7 @@ O índice de segregação — razão entre conexões intra-comunidade e inter-co
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.92\textwidth]{figuras/03_segregation_index.pdf}
+    \includegraphics[width=0.75\textwidth]{figuras/03_segregation_index.pdf}
     \caption{Índice de segregação estrutural por evento. Esportes individuais apresentam segregação completa (índice 52-100): Atletismo Feminino 100m, Judô Masculino -90kg e Atletismo Masculino 100m exibem comunidades totalmente delimitadas. Esportes coletivos mostram baixa segregação (1.5-15.8), indicando fronteiras difusas entre agrupamentos temporais.}
     \label{fig:segregation}
 \end{figure}
@@ -356,14 +356,14 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/Futebol M.png}
+        \includegraphics[width=\textwidth]{img/futebol_M.png}
         \caption{Futebol Masculino (1900-2016): 1.275 atletas, densidade 1.33\%. Estrutura fragmentada reflete 121 anos de história olímpica com múltiplas gerações sem sobreposição competitiva.}
         \label{fig:futebol_m}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/Futebol F.png}
+        \includegraphics[width=\textwidth]{img/futebol_F.png}
         \caption{Futebol Feminino (1996-2016): 293 atletas, densidade 7.35\%. Rede mais coesa com densidade 5.52× maior que masculina, evidenciando campo competitivo concentrado em 25 anos de história.}
         \label{fig:futebol_f}
     \end{subfigure}
@@ -379,6 +379,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \textbf{Comparação M vs F:} Basquete feminino apresenta maior densidade e segregação ligeiramente superior, refletindo campo competitivo mais restrito. A dominância de USA é estruturalmente equivalente em ambas as versões, evidenciando que hegemonia competitiva ocorre em ambos os gêneros neste esporte específico.
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/basket_M.png}
+        \caption{Basquete Masculino (592 atletas, densidade 2.43\%). Estrutura em ``colar de pérolas'': comunidades densas na periferia, raramente conectadas entre si, evidenciando baixa sobreposição de atletas entre ciclos olímpicos.}
+        \label{fig:basket_m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/basket_F.png}
+        \caption{Basquete Feminino (323 atletas, densidade 4.40\%). Três grandes comunidades centrais conectadas por nós-ponte de alta \textit{betweenness}, mais um cluster isolado. Estrutura mais coesa que a masculina, com maior recorrência de atletas entre edições.}
+        \label{fig:basket_f}
+    \end{subfigure}
+    \caption{Redes competitivas de Basquete Olímpico. Cor por comunidade (\textit{Louvain}), tamanho por \textit{PageRank}, layout \textit{ForceAtlas2}.}
+    \label{fig:basquete_comparacao}
+\end{figure}
+
 \subsection{Atletismo 100m (Atletismo 100 Metros Rasos)}
 
 \textbf{Atletismo Masculino Masculino 100m:} Evento individual com segregação extrema (índice 90.11), caracterizando comunidades temporalmente delimitadas sem sobreposição. Velocistas raramente competem por mais de 2-3 ciclos olímpicos, resultando em gerações competitivas desconectadas.
@@ -391,14 +410,14 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/Atletismo M 100m.png}
+        \includegraphics[width=\textwidth]{img/atletismo_M_100m.png}
         \caption{Atletismo 100m Masculino (1896-2016): Segregação extrema (90.11) evidencia gerações de velocistas temporalmente desconectadas. Dominância estadounidense histórica visível na concentração de nós centrais.}
         \label{fig:atletismo_m_100m}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/Atletismo F 100m.png}
+        \includegraphics[width=\textwidth]{img/atletismo_F_100m.png}
         \caption{Atletismo 100m Feminino (1928-2016): Segregação máxima (100.00) indica fragmentação temporal absoluta. Densidade 1.30× superior à masculina reflete campo competitivo mais concentrado.}
         \label{fig:atletismo_f_100m}
     \end{subfigure}
@@ -414,6 +433,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \textbf{Comparação M vs F:} Natação 100m Nado Livre é o ÚNICO esporte onde densidade masculina supera feminina (razão 0.90×), contrariando padrão sistemático observado nos demais esportes. Esta exceção pode ser atribuída à longevidade histórica quase equivalente (diferença de apenas 16 anos de introdução), permitindo acumulação competitiva similar entre gêneros.
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/swimming_M_100m.png}
+        \caption{Natação 100m Livre Masculino (65 atletas, densidade 1.78\%). Estrutura difusa com comunidades parcialmente conectadas. O nó laranja de maior \textit{PageRank} e o nó teal no centro-direito representam nadadores com múltiplos ouros olímpicos, posicionados como hubs inter-comunidade.}
+        \label{fig:swimming_m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/swimming_F_100m.png}
+        \caption{Natação 100m Livre Feminino (66 atletas, densidade 1.60\%). Cluster central dourado conecta comunidades periféricas; nó vermelho/salmão de grande \textit{PageRank} na parte inferior destaca a nadadora mais central. Maior fragmentação que a rede masculina (18 vs.\ 15 componentes).}
+        \label{fig:swimming_f}
+    \end{subfigure}
+    \caption{Redes competitivas de Natação 100m Livre Olímpico. Cor por comunidade (\textit{Louvain}), tamanho por \textit{PageRank}, layout \textit{ForceAtlas2}.}
+    \label{fig:natacao_comparacao}
+\end{figure}
+
 \subsection{Judô (Judô)}
 
 \textbf{Judô Masculino -90kg:} 49 atletas, 65 arestas, densidade 2.76\%, segregação 100.00 (completamente segregado). Categoria introduzida em 1964, apresenta comunidades totalmente delimitadas por períodos temporais. Peter Seisenbacher (AUT, 2 ouros) lidera o ranking.
@@ -422,6 +460,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 
 \textbf{Comparação M vs F:} Judô apresenta o padrão mais contra-intuitivo observado: versão feminina exibe densidade 2.66× superior E segregação 32× inferior à masculina. Esta inversão sugere dinâmica competitiva fundamentalmente distinta: enquanto categoria masculina fragmenta-se temporalmente (comunidades de eras específicas), categoria feminina integra-se estruturalmente (mesmas atletas competindo recorrentemente ao longo de múltiplas edições desde introdução em 1992).
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/judo_M_HalfMiddleweight.png}
+        \caption{Judô -90kg Masculino (49 atletas, densidade 2.76\%). Comunidades completamente isoladas, com dois nós violeta de \textit{PageRank} notavelmente superior, evidenciando judocas que dominaram a categoria em múltiplas edições consecutivas.}
+        \label{fig:judo_m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/judo_F_HalfMiddleweight.png}
+        \caption{Judô -70kg Feminino (22 atletas, densidade 7.36\%). Quatro comunidades bem definidas (azul, laranja/marrom, amarela, verde e vinho), com nó azul dominante de maior \textit{PageRank}. Menor fragmentação (2 componentes vs.\ 10 M) reflete introdução recente da categoria (1992).}
+        \label{fig:judo_f}
+    \end{subfigure}
+    \caption{Redes competitivas de Judô Olímpico. Cor por comunidade (\textit{Louvain}), tamanho por \textit{PageRank}, layout \textit{ForceAtlas2}.}
+    \label{fig:judo_comparacao}
+\end{figure}
+
 \subsection{Boxe (Boxe)}
 
 \textbf{Boxe Masculino Welterweight:} Categoria histórica com múltiplas décadas de competição. Apresenta modularidade moderada e segregação intermediária.
@@ -429,6 +486,25 @@ As seções anteriores revelaram padrões estruturais gerais através de compara
 \textbf{Boxe Feminino Peso Médio:} 12 atletas, densidade extremamente elevada. Introdução recente (2012) com apenas 3 edições olímpicas resulta em campo competitivo mínimo onde mesmas atletas dominam consistentemente. PRICE Lauren (GBR) apresenta \textit{PageRank}{} de 0.5012 dentro da rede de Boxe feminino, valor absoluto que reflete tanto sua posição central quanto o efeito de concentração em rede pequena (n=12), não sendo comparável com valores de outras modalidades devido a diferenças estruturais.
 
 \textbf{Comparação M vs F:} Boxe feminino apresenta o razão de densidade F/M mais extremo de todos os esportes (25.65×), explicado pela combinação de (i) introdução recente (apenas 3 edições vs ~20 edições masculinas), (ii) campo competitivo inicial reduzido, e (iii) dominância estrutural de pouquíssimas atletas-chave que participaram das três edições consecutivas.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/boxing_M_Welterweight.png}
+        \caption{Boxe Peso Welter Masculino (85 atletas, densidade 2.32\%). Alta fragmentação com múltiplas pequenas comunidades isoladas. Dois nós centrais de \textit{PageRank} superior (vermelho escuro e laranja/marrom) representam os boxeadores mais recorrentes no pódio.}
+        \label{fig:boxing_m}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/boxing_F_Middleweight.png}
+        \caption{Boxe Peso Médio Feminino (7 atletas, densidade 23.81\%). Rede compacta com apenas dois ciclos olímpicos (2012--2016). Clarissa Maria Shields (nó central vermelho escuro) domina com \textit{PageRank} amplamente superior, sendo a única bicampeã olímpica da categoria. As duas comunidades correspondem às duas edições.}
+        \label{fig:boxing_f}
+    \end{subfigure}
+    \caption{Redes competitivas de Boxe Olímpico. Cor por comunidade (\textit{Louvain}), tamanho por \textit{PageRank}, layout \textit{ForceAtlas2}.}
+    \label{fig:boxe_comparacao}
+\end{figure}
 
 \section{Distribuição Geográfica e Padrões de Dominância}
 
@@ -532,12 +608,12 @@ Apenas 3 valores outlier foram identificados via IQR (\textit{threshold} conserv
     \item \textbf{Futebol Masculino — Número de atletas (1.275) e arestas (21.620):} Z-scores de 2.93-2.94 confirmam outliers moderados. Futebol Masculino é a maior rede individual do estudo, refletindo (i) longevidade histórica extrema (1900-2016, 116 anos), (ii) natureza de esporte coletivo (22 atletas por equipe × múltiplas equipes por edição), (iii) torneio de eliminação que gera múltiplos confrontos por edição. Valores são \textbf{legítimos} e consistentes com estrutura do evento.
 \end{enumerate}
 
-A Figura~\ref{fig:outliers_density_clustering} confirma que outliers ocupam posições extremas mas contínuas no espaço de métricas multivariadas, sem descontinuidades abruptas que sugeririam erros:
+A Figura~\ref{fig:outliers_density_clustering} confirma que outliers ocupam posições extremas mas contínuas no espaço densidade--modularidade, sem descontinuidades abruptas que sugeririam erros:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{figuras/outliers_density_vs_clustering.pdf}
-    \caption{Densidade versus \textit{clustering} com rótulos individuais das 12 redes. Boxing Feminino (densidade 0.417) posiciona-se como outlier extremo à direita, mas mantém relação estrutural contínua com outras redes de alta densidade (Judô, Basketball Feminino). Futebol Masculino posiciona-se no extremo inferior esquerdo (densidade mínima), mas sem descontinuidade topológica.}
+    \caption{Densidade versus modularidade com rótulos individuais das 12 redes. Boxe Médio F (densidade 0.417) posiciona-se como outlier extremo à direita, mas mantém relação estrutural contínua com outras redes de alta densidade (Judô, Basquete F). Futebol M posiciona-se no extremo inferior esquerdo (densidade mínima), mas sem descontinuidade topológica.}
     \label{fig:outliers_density_clustering}
 \end{figure}
 

@@ -3,16 +3,42 @@
     \begin{block}{120 anos de história olímpica (1896--2016)}
         \begin{itemize}
             \item \textbf{135.571 atletas} competindo em \textbf{66 modalidades}
-            \item Análises tradicionais focam em \textit{contagens de medalhas}
-            \item \textbf{Por trás dos resultados:} redes complexas de relações competitivas
+            \item Análises tradicionais focam em \textit{contagens de medalhas por país}
+            \item \textbf{O que vai além:} quem venceu quem? Por quanto tempo? Em que era?
         \end{itemize}
     \end{block}
 
-    \vspace{0.5cm}
+    \vspace{0.4cm}
 
-    \begin{block}{Hipótese}
-        Padrões de dominância, hierarquias e comunidades podem ser revelados através da \textbf{teoria de redes complexas}
-    \end{block}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Análise Tradicional}
+                \footnotesize
+                \begin{itemize}
+                    \item Tabela de medalhas por país
+                    \item Ranking de atletas por contagem
+                    \item \textit{Perde:} hierarquias, eras, relações
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Análise de Redes}
+                \footnotesize
+                \begin{itemize}
+                    \item Quem competiu com quem?
+                    \item Quem dominou cada era?
+                    \item \textit{Revela:} estruturas invisíveis
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.4cm}
+
+    \begin{alertblock}{Hipótese}
+        \centering
+        Padrões de dominância, hierarquias e comunidades são \textbf{quantificáveis} através de redes complexas
+    \end{alertblock}
 \end{frame}
 
 % Slide 3: Questão de Pesquisa
@@ -22,14 +48,21 @@
         \textbf{Como a estrutura de redes competitivas difere entre esportes olímpicos?}
     \end{center}
 
-    \vspace{0.8cm}
+    \vspace{0.6cm}
 
     \begin{itemize}
         \item Existem padrões de dominância consistentes ao longo de 120 anos?
         \item Esportes individuais vs coletivos formam estruturas diferentes?
         \item Comunidades de atletas refletem hegemonias históricas?
-        \item Diferenças entre competições masculinas e femininas?
+        \item Diferenças estruturais entre competições masculinas e femininas?
     \end{itemize}
+
+    \vspace{0.5cm}
+
+    \begin{center}
+        \footnotesize
+        \textit{Essas perguntas são impossíveis de responder com tabelas de medalhas — requerem modelagem estrutural}
+    \end{center}
 \end{frame}
 
 % Slide 4: Objetivos
@@ -42,11 +75,11 @@
 
     \begin{block}{Objetivos Específicos}
         \begin{itemize}
-            \item Construir \textbf{123 redes per-event} representando 6 esportes
-            \item Aplicar métricas de \textbf{centralidade} (PageRank, Betweenness, Degree)
-            \item Detectar \textbf{comunidades} e analisar modularidade
+            \item Construir \textbf{143 redes per-event} representando 6 esportes
+            \item Aplicar métricas de \textbf{centralidade} — identificar atletas mais influentes
+            \item Detectar \textbf{comunidades} — revelar eras e hegemonias históricas
             \item Analisar diferenças estruturais entre modalidades e gêneros
-            \item Validar descobertas com estatísticas históricas conhecidas
+            \item Disponibilizar resultados em \textbf{dashboard interativo} acessível
         \end{itemize}
     \end{block}
 \end{frame}
