@@ -19,20 +19,29 @@
     \midrule
     Dataset completo & Todos os atletas, 66 modalidades & 135.571 \\
     Dataset filtrado & 6 modalidades selecionadas & 48.949 \\
-    \textbf{Medalhistas} & \textbf{143 redes per-event} & \textbf{9.510} \\
+    \textbf{Medalhistas} & \textbf{143 redes por modalidade} & \textbf{9.510} \\
     12 casos de estudo & Seleção via \textit{Iconic Score} & 2.826 \\
     \bottomrule
     \end{tabular}
     \end{table}
 \end{frame}
 
-% Slide 6: Modelagem Per-Event
-\begin{frame}{Modelagem Per-Event}
-    \begin{block}{Chave Composta: (Year, Event\_Normalized)}
+% Slide 6: Modelagem por Modalidade
+\begin{frame}{Modelagem por Modalidade}
+    \begin{block}{O campo \texttt{Event\_Normalized} no dataset}
+        \footnotesize
+        Campo que padroniza o nome de cada prova olímpica:\\[0.15cm]
+        \texttt{"100m Atletismo M"} \quad \texttt{"Basquete F"} \quad \texttt{"Judô -90kg M"} \quad \ldots\\[0.2cm]
+        \textbf{Daqui em diante chamamos esse campo de \textit{modalidade}.}
+    \end{block}
+
+    \vspace{0.2cm}
+
+    \begin{block}{Chave de Construção: (Ano, Modalidade)}
         \begin{itemize}
             \item \textbf{143 redes independentes} preservando homogeneidade competitiva
             \item Exemplo: \texttt{Basquete M (1936, 1948, ..., 2016)} --- rede acumulada ao longo do tempo
-            \item Evita misturar eventos incomparáveis (100m Atletismo vs Maratona)
+            \item Evita misturar modalidades incomparáveis (100m Atletismo vs Maratona)
         \end{itemize}
     \end{block}
 
