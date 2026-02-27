@@ -1,29 +1,35 @@
 % Slide 12: Diferenças Estruturais entre Modalidades
 \begin{frame}{Diferenças Estruturais entre Modalidades}
-    \begin{block}{Modularidade Q: Natação vs Basquete}
-        \begin{itemize}
-            \item \textbf{Natação 100m Livre M:} Q = 0.892 --- 16 comunidades (eras) bem separadas
-            \begin{itemize}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/img/swimming_M_100m.png}\\
+                \vspace{0.1cm}
                 \footnotesize
-                \item Atletas de décadas distintas nunca competiram juntos
-                \item \textit{Cada era tem seus próprios dominantes}
-            \end{itemize}
-            \item \textbf{Basquete M:} Q = 0.003 --- praticamente sem estrutura de comunidades
-            \begin{itemize}
+                \textbf{Natação 100m Livre M}\\
+                Q = 0.892 --- \textit{16 eras distintas}\\
+                Densidade: 5.8\%
+            \end{center}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/img/basket_M.png}\\
+                \vspace{0.1cm}
                 \footnotesize
-                \item Mesmos times se reencontram em toda edição
-                \item \textit{Rede quase totalmente fundida --- sem eras distintas}
-            \end{itemize}
-        \end{itemize}
-    \end{block}
+                \textbf{Basquete M}\\
+                Q = 0.003 --- \textit{sem eras distintas}\\
+                Densidade: 48.6\%
+            \end{center}
+        \end{column}
+    \end{columns}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
     \begin{block}{Densidade: Coletivos vs Individuais}
+        \footnotesize
         \begin{itemize}
-            \item \textbf{Esportes Coletivos:} $\approx$ 35\% de densidade
-            \item \textbf{Esportes Individuais:} $\approx$ 5\% de densidade
-            \item Diferença de \textbf{7× na conectividade}
+            \item \textbf{Esportes Coletivos:} $\approx$ 35\% \quad \textbf{Individuais:} $\approx$ 5\% --- diferença de \textbf{7×}
+            \item Cor dos nós = comunidade (era histórica) \quad Tamanho = PageRank
         \end{itemize}
     \end{block}
 \end{frame}

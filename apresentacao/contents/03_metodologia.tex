@@ -1,6 +1,6 @@
 % Slide 5: Dados e Hierarquia
 \begin{frame}{Dados e Hierarquia}
-    \begin{block}{Dataset Griffin (2018)}
+    \begin{block}{Dataset Griffin (2018) \cite{Griffin2018OlympicDataset}}
         \begin{itemize}
             \item \textbf{Período:} Atenas 1896 até Rio 2016 (120 anos)
             \item \textbf{Fonte:} Kaggle -- ``120 years of Olympic history''
@@ -119,7 +119,7 @@
 % Slide 9: Métricas de Centralidade
 \begin{frame}{Métricas de Centralidade: Quem é mais influente?}
 
-    \begin{block}{PageRank --- \textit{``Vencer quem já vence muito vale mais''}}
+    \begin{block}{PageRank \cite{Brin1998PageRank} --- \textit{``Vencer quem já vence muito vale mais''}}
         \footnotesize
         Adaptado do Google Search: ao invés de sites, mede importância de atletas.
         Um atleta que derrotou Carl Lewis ou Usain Bolt recebe mais PageRank do que quem derrotou um estreante.\\
@@ -128,7 +128,7 @@
 
     \vspace{0.25cm}
 
-    \begin{block}{Betweenness Centrality --- \textit{``Atleta-ponte entre gerações''}}
+    \begin{block}{Betweenness Centrality \cite{Freeman1979Centrality} --- \textit{``Atleta-ponte entre gerações''}}
         \footnotesize
         Quantas vezes o atleta aparece no caminho mais curto entre outros dois atletas na rede.
         Atleta com carreira de 3 décadas conecta gerações que nunca se cruzaram diretamente.\\
@@ -137,7 +137,7 @@
 
     \vspace{0.25cm}
 
-    \begin{block}{Degree Centrality --- \textit{``Quantos adversários ao longo da carreira?''}}
+    \begin{block}{Degree Centrality \cite{Freeman1979Centrality} --- \textit{``Quantos adversários ao longo da carreira?''}}
         \footnotesize
         Número de competidores diferentes com quem o atleta dividiu um pódio olímpico.\\
         \textbf{Para que serve:} medir \textbf{longevidade e amplitude competitiva} de cada atleta.

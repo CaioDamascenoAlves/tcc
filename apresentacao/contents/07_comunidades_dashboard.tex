@@ -34,33 +34,37 @@
 
 % Slide 20: Evolução Temporal
 \begin{frame}{Evolução Temporal das Redes}
-    \begin{block}{Densidade Decrescente ao Longo do Tempo}
-        \footnotesize
-        \begin{itemize}
-            \item Primeiras Olimpíadas: alta densidade (poucos competidores, muitas conexões)
-            \item Olimpíadas modernas: densidade decrescente (mais atletas, especialização)
-            \item Tendência consistente em esportes individuais
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{block}{Modularidade Resiliente}
-        \footnotesize
-        \begin{itemize}
-            \item \textbf{Q $>$ 0.60} mantido ao longo de 120 anos
-            \item Comunidades persistem apesar de mudanças geopolíticas
-            \item Estrutura competitiva é estável
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{alertblock}{Implicação}
-        \footnotesize
-        \centering
-        Padrões estruturais são robustos -- refletem dinâmicas competitivas fundamentais
-    \end{alertblock}
+    \begin{columns}[T]
+        \begin{column}{0.50\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/figuras/temporal_evolution_density.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{Densidade decresce com o tempo}
+            \end{center}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Densidade Decrescente}
+                \footnotesize
+                \begin{itemize}
+                    \item Primeiras Olimpíadas: alta densidade\\(poucos competidores)
+                    \item Olimpíadas modernas: mais atletas, mais especialização
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Modularidade Resiliente}
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Q $>$ 0.60} mantido ao longo de 120 anos
+                    \item Estrutura competitiva estável apesar de mudanças geopolíticas
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{alertblock}{}
+                \footnotesize\centering
+                Padrões estruturais são \textbf{robustos}
+            \end{alertblock}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % Slide 21: Descoberta Contra-Intuitiva: Especialização em Ouro
@@ -158,34 +162,37 @@
         NetworkX com 9.510 nós excede memória gratuita disponível
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.15cm}
 
-    \begin{block}{Solução: Google Drive + Streamlit Cloud}
-        \footnotesize
-        \begin{enumerate}
-            \item \textbf{Pré-processamento:} Grafos calculados localmente
-            \item \textbf{Serialização:} JSON/CSV para Google Drive (público)
-            \item \textbf{Fetch on-demand:} Streamlit baixa dados via HTTP
-            \item \textbf{Renderização:} vis-network no navegador (cliente)
-        \end{enumerate}
-    \end{block}
+    \begin{columns}[T]
+        \begin{column}{0.52\textwidth}
+            \begin{block}{Solução: Google Drive + Streamlit}
+                \footnotesize
+                \begin{enumerate}
+                    \item \textbf{Pré-processamento:} Grafos calculados localmente
+                    \item \textbf{Serialização:} JSON/CSV para Google Drive (público)
+                    \item \textbf{Fetch on-demand:} Streamlit baixa via HTTP
+                    \item \textbf{Renderização:} vis-network no navegador
+                \end{enumerate}
+            \end{block}
+        \end{column}
+        \begin{column}{0.44\textwidth}
+            \begin{block}{Trade-off}
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Latência:} +2-3s (aceitável)
+                    \item \textbf{Custo:} Gratuito, sem servidor
+                    \item \textbf{Escala:} Google Drive CDN global
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{block}{Trade-off}
-        \footnotesize
-        \begin{itemize}
-            \item \textbf{Latência:} +2-3s para carregar rede (aceitável)
-            \item \textbf{Acessibilidade:} Gratuito, sem servidor próprio
-            \item \textbf{Escalabilidade:} Google Drive CDN global
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{alertblock}{URL}
+    \begin{alertblock}{\centering Acesse o Dashboard}
         \footnotesize
         \centering
-        \textbf{dashboard-tcc.streamlit.app}
+        \textbf{\large dashboard-tcc.streamlit.app}
     \end{alertblock}
 \end{frame}
