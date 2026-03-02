@@ -1,85 +1,94 @@
-% Slide 2: Motivação e Contexto
-\begin{frame}[shrink=10]{Motivação e Contexto}
-    \begin{block}{120 anos de história olímpica (1896--2016)}
-        \begin{itemize}
-            \item \textbf{135.571 atletas} competindo em \textbf{66 modalidades}
-            \item Análises tradicionais focam em \textit{contagens de medalhas por país}
-            \item \textbf{O que vai além:} quem venceu quem? Por quanto tempo? Em que era?
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.4cm}
-
+% Slide 1: Gancho Visual
+\begin{frame}[shrink=1]{O que são 120 anos de competição olímpica?}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
-            \begin{block}{Análise Tradicional}
+            \begin{center}
+                \textbf{Futebol Masculino} (1900--2016)\\
+                \vspace{0.05cm}
+                \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{../monografia/img/futebol_M.png}\\
+                \vspace{0.05cm}
+                \footnotesize Cor = era histórica \quad Tamanho = PageRank
+            \end{center}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+                \textbf{Futebol Feminino} (1996--2016)\\
+                \vspace{0.05cm}
+                \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{../monografia/img/futebol_F.png}\\
+                \vspace{0.05cm}
+                \footnotesize Mesma modalidade, mesmas regras
+            \end{center}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.1cm}
+
+    \begin{alertblock}{\centering Por que essas redes são tão diferentes?}
+        \footnotesize\centering
+        Análises tradicionais de medalhas não respondem essa pergunta
+    \end{alertblock}
+\end{frame}
+
+% Slide 2: Motivação + Questão (fundidos)
+\begin{frame}{Motivação e Questão de Pesquisa}
+    \begin{block}{O que as tabelas de medalhas não contam}
+        \footnotesize
+        120 anos · 135.571 atletas · 66 modalidades --- contagens por país perdem \textbf{hierarquias}, \textbf{eras} e \textbf{relações competitivas}
+    \end{block}
+
+    \vspace{0.2cm}
+
+    \begin{alertblock}{\centering Questão Central}
+        \centering
+        \textbf{Como a estrutura de redes competitivas difere entre esportes olímpicos?}
+    \end{alertblock}
+
+    \vspace{0.2cm}
+
+    \begin{block}{Perguntas Específicas}
+        \footnotesize
+        \begin{itemize}
+            \item Esportes individuais vs coletivos formam estruturas diferentes?
+            \item Padrões de dominância são consistentes ao longo de 120 anos?
+            \item Comunidades de atletas refletem hegemonias históricas?
+            \item Há diferenças estruturais entre competições masculinas e femininas?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 3: O que foi construído para responder
+\begin{frame}{O que foi construído para responder}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Modelagem}
                 \footnotesize
                 \begin{itemize}
-                    \item Tabela de medalhas por país
-                    \item Ranking de atletas por contagem
-                    \item \textit{Perde:} hierarquias, eras, relações
+                    \item \textbf{143 redes} independentes por modalidade
+                    \item \textbf{6 esportes}, 3 tipologias competitivas
+                    \item \textbf{12 casos de estudo} via \textit{Iconic Score}
+                \end{itemize}
+            \end{block}
+
+            \vspace{0.2cm}
+
+            \begin{block}{Métricas Aplicadas}
+                \footnotesize
+                \begin{itemize}
+                    \item PageRank · Betweenness · Degree
+                    \item Louvain (detecção de comunidades)
+                    \item Gini (desigualdade geográfica)
                 \end{itemize}
             \end{block}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{block}{Análise de Redes}
+            \begin{block}{Entregáveis}
                 \footnotesize
                 \begin{itemize}
-                    \item Quem competiu com quem?
-                    \item Quem dominou cada era?
-                    \item \textit{Revela:} estruturas invisíveis
+                    \item Dashboard interativo\\(9.510 atletas navegáveis)
+                    \item Validação estatística\\(Wilcoxon · bootstrap $R^2{=}0.91$)
+                    \item Análise cross-esporte inédita\\em 120 anos de Olimpíadas
                 \end{itemize}
             \end{block}
         \end{column}
     \end{columns}
-
-    \vspace{0.4cm}
-
-    \begin{alertblock}{Hipótese}
-        \centering
-        Padrões de dominância, hierarquias e comunidades são \textbf{quantificáveis} através de redes complexas
-    \end{alertblock}
-\end{frame}
-
-% Slide 3: Questão de Pesquisa
-\begin{frame}{Questão de Pesquisa}
-    \begin{center}
-        \Large
-        \textbf{Como a estrutura de redes competitivas difere entre esportes olímpicos?}
-    \end{center}
-
-    \vspace{0.6cm}
-
-    \begin{itemize}
-        \item Existem padrões de dominância consistentes ao longo de 120 anos?
-        \item Esportes individuais vs coletivos formam estruturas diferentes?
-        \item Comunidades de atletas refletem hegemonias históricas?
-        \item Diferenças estruturais entre competições masculinas e femininas?
-    \end{itemize}
-
-    \vspace{0.5cm}
-
-    \begin{center}
-        \footnotesize
-        \textit{Essas perguntas são impossíveis de responder com tabelas de medalhas — requerem modelagem estrutural}
-    \end{center}
-\end{frame}
-
-% Slide 4: Objetivos
-\begin{frame}{Objetivos}
-    \begin{block}{Objetivo Geral}
-        Caracterizar interações competitivas entre atletas olímpicos através de métricas de redes complexas
-    \end{block}
-
-    \vspace{0.5cm}
-
-    \begin{block}{Objetivos Específicos}
-        \begin{itemize}
-            \item Construir \textbf{143 redes por modalidade} representando 6 esportes
-            \item Aplicar métricas de \textbf{centralidade} — identificar atletas mais influentes
-            \item Detectar \textbf{comunidades} — revelar eras e hegemonias históricas
-            \item Analisar diferenças estruturais entre modalidades e gêneros
-            \item Disponibilizar resultados em \textbf{dashboard interativo} acessível
-        \end{itemize}
-    \end{block}
 \end{frame}
