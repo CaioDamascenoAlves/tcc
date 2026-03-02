@@ -1,5 +1,5 @@
 % Slide 10: Validação Louvain vs Infomap
-\begin{frame}{Validação: Louvain \cite{Blondel2008Louvain} vs Infomap}
+\begin{frame}[shrink=12]{Validação: Louvain \cite{Blondel2008Louvain} vs Infomap \cite{Rosvall2008Infomap}}
     \begin{columns}[T]
         \begin{column}{0.58\textwidth}
             \begin{center}
@@ -27,20 +27,34 @@
             \end{center}
         \end{column}
         \begin{column}{0.40\textwidth}
-            \begin{block}{Interpretação}
+            \begin{block}{NMI \cite{Vinh2010NMI} --- \textit{mesmas eras?}}
                 \footnotesize
-                \begin{itemize}
-                    \item \textbf{NMI}: sobreposição entre partições\\1.0 = comunidades idênticas
-                    \item \textbf{NMI = 0.969}\\concordância quase perfeita\\(excelente: $>$0.90)
-                    \item \textbf{Decisão:} Louvain\\eficiência com resultados equivalentes
-                \end{itemize}
+                \textit{O que resolve:} mede se dois algoritmos identificam as mesmas comunidades.\\
+                0 = nenhuma correspondência; 1 = idênticos.\\
+                \textbf{Média = 0.969} $\rightarrow$ concordância quase perfeita.
             \end{block}
+
+            \vspace{0.15cm}
+
+            \begin{block}{ARI \cite{Vinh2010NMI} --- \textit{concordância real?}}
+                \footnotesize
+                \textit{O que resolve:} verifica se a concordância é genuína e não coincidência estatística.\\
+                Mede \% de pares de atletas agrupados igual em ambos, \textbf{corrigido por acaso}.\\
+                \textbf{Média = 0.900} $\rightarrow$ robusto e não inflado.
+            \end{block}
+
+            \vspace{0.15cm}
+
+            \begin{alertblock}{}
+                \footnotesize\centering
+                \textbf{Decisão:} Louvain\\eficiência com resultado equivalente
+            \end{alertblock}
         \end{column}
     \end{columns}
 \end{frame}
 
 % Slide 11: Análise de Sensibilidade de Pesos
-\begin{frame}{Análise de Sensibilidade de Pesos}
+\begin{frame}[shrink=5]{Análise de Sensibilidade de Pesos}
     \begin{block}{Robustez do Sistema 5-3-2}
         Testados 6 sistemas de ponderação nos rankings de PageRank:
     \end{block}

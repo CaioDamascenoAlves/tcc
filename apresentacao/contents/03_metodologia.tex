@@ -1,5 +1,5 @@
-% Slide 5: Dados e Hierarquia
-\begin{frame}{Dados e Hierarquia}
+% Slide: Dados e Hierarquia
+\begin{frame}[shrink=8]{Dados e Hierarquia}
     \begin{block}{Dataset Griffin (2018) \cite{Griffin2018OlympicDataset}}
         \begin{itemize}
             \item \textbf{Período:} Atenas 1896 até Rio 2016 (120 anos)
@@ -8,7 +8,7 @@
         \end{itemize}
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.15cm}
 
     \begin{table}
     \centering
@@ -24,40 +24,20 @@
     \bottomrule
     \end{tabular}
     \end{table}
-\end{frame}
 
-% Slide 6: Modelagem por Modalidade
-\begin{frame}{Modelagem por Modalidade}
-    \begin{block}{O campo \texttt{Event\_Normalized} no dataset}
+    \vspace{0.1cm}
+
+    \begin{block}{\textit{Iconic Score} \cite{TCCRepositorio2025} --- por que 12 casos de estudo?}
         \footnotesize
-        Campo que padroniza o nome de cada prova olímpica:\\[0.15cm]
-        \texttt{"100m Atletismo M"} \quad \texttt{"Basquete F"} \quad \texttt{"Judô -90kg M"} \quad \ldots\\[0.2cm]
-        \textbf{Daqui em diante chamamos esse campo de \textit{modalidade}.}
-    \end{block}
-
-    \vspace{0.2cm}
-
-    \begin{block}{Chave de Construção: (Ano, Modalidade)}
-        \begin{itemize}
-            \item \textbf{143 redes independentes} preservando homogeneidade competitiva
-            \item Exemplo: \texttt{Basquete M (1936, 1948, ..., 2016)} --- rede acumulada ao longo do tempo
-            \item Evita misturar modalidades incomparáveis (100m Atletismo vs Maratona)
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{block}{Sistema de Ponderação de Arestas}
-        \begin{itemize}
-            \item \textbf{Ouro:} 5 pontos \quad \textbf{Prata:} 3 pontos \quad \textbf{Bronze:} 2 pontos
-            \item Aresta \textbf{direcionada}: medalha superior $\rightarrow$ medalha inferior
-            \item Pesos acumulados para atletas que competiram em múltiplas edições
-        \end{itemize}
+        $IS_e = 0.30 \cdot L_{\text{norm}} + 0.30 \cdot G_{\text{norm}} + 0.20 \cdot V_{\text{norm}} + 0.20 \cdot B(e)$\\[0.1cm]
+        \textbf{L:} longevidade (edições olímpicas) \quad \textbf{G:} diversidade geográfica (países)\\
+        \textbf{V:} volume de medalhistas \quad \textbf{B:} equilíbrio M/F\\[0.1cm]
+        Ex.: na Natação, \textit{100m Livre} supera 50m em L, G e V.
     \end{block}
 \end{frame}
 
-% Slide 7: Anatomia de uma Rede Competitiva
-\begin{frame}{O que é uma Rede Competitiva?}
+% Slide: O que é uma Rede Competitiva?
+\begin{frame}[shrink=3]{O que é uma Rede Competitiva?}
     \begin{columns}[T]
         \begin{column}{0.52\textwidth}
             \begin{block}{Elementos da Rede}
@@ -95,7 +75,42 @@
     \end{columns}
 \end{frame}
 
-% Slide 8: 6 Modalidades Analisadas
+% Slide: Modelagem por Modalidade
+\begin{frame}{Modelagem por Modalidade}
+    \begin{block}{O campo \texttt{Event\_Normalized} no dataset}
+        \footnotesize
+        Campo que padroniza o nome de cada prova olímpica:\\[0.15cm]
+        \texttt{"100m Atletismo M"} \quad \texttt{"Basquete F"} \quad \texttt{"Judô -90kg M"} \quad \ldots\\[0.2cm]
+        \textbf{Daqui em diante chamamos esse campo de \textit{modalidade}.}
+    \end{block}
+
+    \vspace{0.2cm}
+
+    \begin{columns}[T]
+        \begin{column}{0.54\textwidth}
+            \begin{block}{Chave de Construção: (Ano, Modalidade)}
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{143 redes independentes} preservando homogeneidade competitiva
+                    \item Ex.: \texttt{Basquete M} (1936--2016) --- rede acumulada
+                    \item Evita misturar provas incomparáveis (100m vs Maratona)
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.42\textwidth}
+            \begin{block}{Sistema de Ponderação de Arestas}
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Ouro:} 5 pts \quad \textbf{Prata:} 3 pts \quad \textbf{Bronze:} 2 pts
+                    \item Aresta \textbf{direcionada}: superior $\rightarrow$ inferior
+                    \item Pesos acumulados (múltiplas edições)
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: 6 Modalidades Analisadas
 \begin{frame}{6 Modalidades Analisadas}
     \begin{block}{Tipologias Esportivas}
         \begin{description}
@@ -121,95 +136,7 @@
 
     \vspace{0.2cm}
     \begin{center}
-        \textbf{Iconic Score} selecionou 12 redes para análise detalhada (2 por esporte, M/F)
+        \footnotesize
+        \textbf{Iconic Score} selecionou 12 redes para análise detalhada (2 por esporte: M e F mais representativos)
     \end{center}
-\end{frame}
-
-% Slide 9: Métricas de Centralidade
-\begin{frame}{Métricas de Centralidade: Quem é mais influente?}
-
-    \begin{block}{PageRank \cite{Brin1998PageRank} --- \textit{``Vencer quem já vence muito vale mais''}}
-        \footnotesize
-        Adaptado do Google Search: ao invés de sites, mede importância de atletas.
-        Um atleta que derrotou Carl Lewis ou Usain Bolt recebe mais PageRank do que quem derrotou um estreante.\\
-        \textbf{Para que serve:} identificar os atletas \textbf{historicamente dominantes} da modalidade.
-    \end{block}
-
-    \vspace{0.25cm}
-
-    \begin{block}{Betweenness Centrality \cite{Freeman1979Centrality} --- \textit{``Atleta-ponte entre gerações''}}
-        \footnotesize
-        Quantas vezes o atleta aparece no caminho mais curto entre outros dois atletas na rede.
-        Atleta com carreira de 3 décadas conecta gerações que nunca se cruzaram diretamente.\\
-        \textbf{Para que serve:} detectar atletas que \textbf{ligaram eras históricas} distintas.
-    \end{block}
-
-    \vspace{0.25cm}
-
-    \begin{block}{Degree Centrality \cite{Freeman1979Centrality} --- \textit{``Quantos adversários ao longo da carreira?''}}
-        \footnotesize
-        Número de competidores diferentes com quem o atleta dividiu um pódio olímpico.\\
-        \textbf{Para que serve:} medir \textbf{longevidade e amplitude competitiva} de cada atleta.
-    \end{block}
-
-\end{frame}
-
-% Slide 10: Métricas de Estrutura
-\begin{frame}{Métricas de Estrutura: Como a rede se organiza?}
-
-    \begin{block}{Densidade --- \textit{``Quão conectada é a rede?''}}
-        \footnotesize
-        \% dos pares possíveis de atletas que de fato competiram juntos.\\
-        \textbf{Baixa (1\%):} campo amplo, muitos atletas, poucos reencontros --- ex: \textit{Futebol M (1.3\%)}.\\
-        \textbf{Alta (40\%+):} campo restrito, mesmos atletas sempre se enfrentam --- ex: \textit{Boxe Médio F (41.7\%)}.
-    \end{block}
-
-    \vspace{0.25cm}
-
-    \begin{block}{Modularidade Q --- \textit{``Quão separadas são as eras?''}}
-        \footnotesize
-        Mede a força das comunidades internas (0 = sem estrutura, 1 = grupos perfeitamente separados).\\
-        \textbf{Natação 100m M (Q=0.89):} 16 eras distintas --- atletas de décadas diferentes nunca competiram.\\
-        \textbf{Basquete M (Q=0.003):} mesmos times sempre enfrentam os mesmos, rede quase totalmente fundida.
-    \end{block}
-
-    \vspace{0.25cm}
-
-    \begin{block}{Coeficiente de Gini --- \textit{``Quão desigual a distribuição entre países?''}}
-        \footnotesize
-        Emprestado da economia: 0 = distribuição igual, 1 = monopólio absoluto.\\
-        \textbf{Atletismo 100m M (Gini=0.63):} EUA com 46\% das medalhas históricas.\\
-        \textbf{Judô -70kg F (Gini=0.15):} 12 países distintos com distribuição equitativa.
-    \end{block}
-
-\end{frame}
-
-% Slide 11: Validações Metodológicas
-\begin{frame}{Validações Metodológicas}
-    \begin{block}{1. Louvain vs Infomap}
-        \begin{itemize}
-            \item Dois algoritmos de comunidades aplicados nas mesmas 12 redes
-            \item \textbf{NMI médio = 0.97} --- NMI mede sobreposição entre partições (1.0 = idênticos)
-            \item Decisão: Louvain (eficiência computacional + interpretabilidade)
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{block}{2. Análise de Sensibilidade de Pesos}
-        \begin{itemize}
-            \item Testados 6 sistemas de ponderação (3-2-1, 4-3-2, 5-3-2, etc.)
-            \item \textbf{Kendall $\tau \approx 1.0$} --- rankings de PageRank virtualmente idênticos em todos os sistemas
-            \item Resultado: conclusões não dependem da escolha específica de pesos
-        \end{itemize}
-    \end{block}
-
-    \vspace{0.3cm}
-
-    \begin{block}{3. Teste Estatístico de Gênero}
-        \begin{itemize}
-            \item Wilcoxon signed-rank test (não-paramétrico) para densidade F vs M
-            \item \textbf{p = 0.031} $\Rightarrow$ diferença estatisticamente significativa
-        \end{itemize}
-    \end{block}
 \end{frame}

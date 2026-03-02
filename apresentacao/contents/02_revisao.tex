@@ -1,0 +1,92 @@
+% Slide: Trabalhos Relacionados
+\begin{frame}[shrink=6]{Trabalhos Relacionados}
+
+    \begin{block}{F1 Racing \cite{brasnam2024F1} --- Redes em Esportes de Alta Performance}
+        \footnotesize
+        855 pilotos, 1.079 corridas (1950--2023). PageRank captura \textit{qualidade} de confrontos melhor que vitórias brutas.\\
+        \textbf{Limitação:} esporte único, sem comparações inter-modalidades.
+    \end{block}
+
+    \vspace{0.1cm}
+
+    \begin{block}{Natação Olímpica \cite{buldu2019complex} --- Redes Espectrais}
+        \footnotesize
+        40 nadadores, 5 olimpíadas. Raio espectral separa medalhistas ($>$3.39) de não-medalhistas ($<$2.51).\\
+        \textbf{Limitação:} escopo restrito, sem visão longitudinal de 120 anos.
+    \end{block}
+
+    \vspace{0.1cm}
+
+    \begin{block}{Redes em Esportes Coletivos \cite{warnick2016network}}
+        \footnotesize
+        Modularidade 0.4--0.6; comunidades algorítmicas $\neq$ divisões formais de equipe.\\
+        \textbf{Limitação:} foco em dinâmica de jogo, não em performance histórica cross-esporte.
+    \end{block}
+
+    \vspace{0.1cm}
+
+    \begin{alertblock}{Lacuna Identificada}
+        \footnotesize\centering
+        Nenhum trabalho compara \textbf{múltiplos esportes} em \textbf{120 anos} com caracterização multidimensional de comunidades
+    \end{alertblock}
+
+\end{frame}
+
+% Slide: Métricas de Centralidade
+\begin{frame}[shrink=2]{Métricas de Centralidade: Quem é mais influente?}
+
+    \begin{block}{PageRank \cite{Brin1998PageRank} --- \textit{``Vencer quem já vence muito vale mais''}}
+        \footnotesize
+        Adaptado do Google Search: ao invés de sites, mede importância de atletas.
+        Um atleta que derrotou Carl Lewis ou Usain Bolt recebe mais PageRank do que quem derrotou um estreante.\\
+        \textbf{Para que serve:} identificar os atletas \textbf{historicamente dominantes} da modalidade.
+    \end{block}
+
+    \vspace{0.25cm}
+
+    \begin{block}{Betweenness Centrality \cite{Freeman1979Centrality} --- \textit{``Atleta-ponte entre gerações''}}
+        \footnotesize
+        Quantas vezes o atleta aparece no caminho mais curto entre outros dois atletas na rede.
+        Atleta com carreira de 3 décadas conecta gerações que nunca se cruzaram diretamente.\\
+        \textbf{Para que serve:} detectar atletas que \textbf{ligaram eras históricas} distintas.
+    \end{block}
+
+    \vspace{0.25cm}
+
+    \begin{block}{Degree Centrality \cite{Freeman1979Centrality} --- \textit{``Quantos adversários ao longo da carreira?''}}
+        \footnotesize
+        Número de competidores diferentes com quem o atleta dividiu um pódio olímpico.\\
+        \textbf{Para que serve:} medir \textbf{longevidade e amplitude competitiva} de cada atleta.
+    \end{block}
+
+\end{frame}
+
+% Slide: Métricas de Estrutura
+\begin{frame}[shrink=5]{Métricas de Estrutura: Como a rede se organiza?}
+
+    \begin{block}{Densidade --- \textit{``Quão conectada é a rede?''}}
+        \footnotesize
+        \% dos pares possíveis de atletas que de fato competiram juntos.\\
+        \textbf{Baixa (1\%):} campo amplo, muitos atletas, poucos reencontros --- ex: \textit{Futebol M (1.3\%)}.\\
+        \textbf{Alta (40\%+):} campo restrito, mesmos atletas sempre se enfrentam --- ex: \textit{Boxe Médio F (41.7\%)}.
+    \end{block}
+
+    \vspace{0.25cm}
+
+    \begin{block}{Modularidade Q \cite{Newman2006Modularity} --- \textit{``Quão separadas são as eras?''}}
+        \footnotesize
+        Mede a força das comunidades internas (0 = sem estrutura, 1 = grupos perfeitamente separados).\\
+        \textbf{Natação 100m M (Q=0.89):} 16 eras distintas --- atletas de décadas diferentes nunca competiram.\\
+        \textbf{Basquete M (Q=0.003):} mesmos times sempre enfrentam os mesmos, rede quase totalmente fundida.
+    \end{block}
+
+    \vspace{0.25cm}
+
+    \begin{block}{Coeficiente de Gini \cite{Fabbri2022Inequality} --- \textit{``Quão desigual a distribuição entre países?''}}
+        \footnotesize
+        Emprestado da economia: 0 = distribuição igual, 1 = monopólio absoluto.\\
+        \textbf{Atletismo 100m M (Gini=0.63):} EUA com 46\% das medalhas históricas.\\
+        \textbf{Judô -70kg F (Gini=0.15):} 12 países distintos com distribuição equitativa.
+    \end{block}
+
+\end{frame}

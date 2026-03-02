@@ -1,16 +1,16 @@
-% Slide 19: Detecção de Comunidades
-\begin{frame}{Detecção de Comunidades}
+% Slide: Detecção de Comunidades
+\begin{frame}[shrink=7]{Detecção de Comunidades}
     \begin{block}{Comunidades Revelam Eras Históricas}
         \footnotesize
         \begin{itemize}
-            \item Algoritmo Louvain identifica agrupamentos naturais
+            \item Algoritmo Louvain no grafo simetrizado; PageRank/betweenness no grafo dirigido
             \item \textbf{Eras da Guerra Fria:} USA vs USSR (Basquete M)
             \item \textbf{Pós-colapso USSR:} redistribuição de atletas (1992+)
             \item \textbf{Hegemonias regionais:} Brasil (Futebol), Japão (Judô), Jamaica (Atletismo)
         \end{itemize}
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
     \begin{block}{Hierarquia de Perfis}
         \footnotesize
@@ -21,97 +21,109 @@
         \end{description}
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{block}{Métricas de Diversidade}
+    \begin{block}{Métricas de Diversidade por Comunidade}
         \footnotesize
         \begin{itemize}
-            \item \textbf{Entropia Temporal:} mede distribuição de atletas ao longo do tempo
-            \item \textbf{Entropia Geográfica:} mede diversidade de países em comunidade
+            \item \textbf{Entropia Temporal:} distribuição de atletas ao longo do tempo (identifica eras)
+            \item \textbf{Entropia Geográfica:} diversidade de países (identifica hegemonias vs equilíbrio)
         \end{itemize}
     \end{block}
 \end{frame}
 
-% Slide 20: Evolução Temporal
-\begin{frame}{Evolução Temporal das Redes}
+% Slide: Rivalidades Inter-Comunidade
+\begin{frame}{Rivalidades Históricas entre Comunidades}
     \begin{columns}[T]
         \begin{column}{0.50\textwidth}
             \begin{center}
-                \includegraphics[width=\textwidth]{../monografia/figuras/temporal_evolution_density.pdf}\\
+                \includegraphics[width=\textwidth]{../monografia/figuras/fig_top10_rivalries.png}\\
                 \vspace{0.1cm}
-                \footnotesize\textit{Densidade decresce com o tempo}
+                \footnotesize\textit{Top 10 rivalidades por volume de confrontos}
+            \end{center}
+        \end{column}
+        \begin{column}{0.46\textwidth}
+            \begin{block}{Mais conexões inter-comunidade}
+                \footnotesize
+                \begin{itemize}
+                    \item \textbf{Futebol F:} \textbf{1.150} arestas inter-era
+                    \item \textbf{Basquete M:} \textbf{726} arestas inter-era
+                    \item \textbf{Futebol M:} \textbf{591} arestas inter-era
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Por que coletivos dominam?}
+                \footnotesize
+                Times inteiros no pódio $\rightarrow$ atletas de uma era competem com atletas de eras adjacentes.\\
+                Individuais (Atletismo, Natação): $<5$ arestas inter-era por rede.
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: Evolução Temporal
+\begin{frame}[shrink=2]{Evolução Temporal das Redes}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{center}
+                \includegraphics[height=0.42\textheight, keepaspectratio]{../monografia/figuras/temporal_evolution_density.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{Densidade decresce com mais atletas}
             \end{center}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{block}{Densidade Decrescente}
-                \footnotesize
-                \begin{itemize}
-                    \item Primeiras Olimpíadas: alta densidade\\(poucos competidores)
-                    \item Olimpíadas modernas: mais atletas, mais especialização
-                \end{itemize}
-            \end{block}
-            \vspace{0.2cm}
-            \begin{block}{Modularidade Resiliente}
-                \footnotesize
-                \begin{itemize}
-                    \item \textbf{Q $>$ 0.60} mantido ao longo de 120 anos
-                    \item Estrutura competitiva estável apesar de mudanças geopolíticas
-                \end{itemize}
-            \end{block}
-            \vspace{0.2cm}
-            \begin{alertblock}{}
-                \footnotesize\centering
-                Padrões estruturais são \textbf{robustos}
-            \end{alertblock}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-% Slide 21: Descoberta Contra-Intuitiva: Especialização em Ouro
-\begin{frame}{Descoberta: Especialização em Ouro na Periferia}
-    \begin{block}{Padrão Contra-Intuitivo}
-        \Large
-        \centering
-        Atletas periféricos têm \textbf{maior \% de ouros}
-    \end{block}
-
-    \vspace{0.5cm}
-
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Núcleo}
-                \footnotesize
-                \begin{itemize}
-                    \item Múltiplas medalhas
-                    \item Balanceamento: ouros, pratas, bronzes
-                    \item Exemplos: Phelps, Bolt
-                    \item Carreira longa
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Periferia}
-                \footnotesize
-                \begin{itemize}
-                    \item 1-2 medalhas apenas
-                    \item \textbf{Alta \% de ouros}
-                    \item Especialização extrema
-                    \item "One-hit wonders"
-                \end{itemize}
-            \end{block}
+            \begin{center}
+                \includegraphics[height=0.42\textheight, keepaspectratio]{../monografia/figuras/temporal_evolution_modularity.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{Modularidade se mantém alta (Q $>$ 0.60)}
+            \end{center}
         \end{column}
     \end{columns}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{center}
+    \begin{block}{Interpretação}
         \footnotesize
-        \textit{Interpretação:} Atletas periféricos se especializam em evento único -- tudo ou nada
-    \end{center}
+        \begin{itemize}
+            \item Mais atletas nas Olimpíadas modernas $\rightarrow$ redes menos densas
+            \item Modularidade estável: \textbf{eras históricas continuam distintas} apesar de Guerra Fria, colapso URSS e expansão olímpica
+        \end{itemize}
+    \end{block}
 \end{frame}
 
-% Slide 22: Dashboard Web
-\begin{frame}{Dashboard Interativo}
+% Slide: Especialização em Ouro na Periferia
+\begin{frame}{Descoberta: Especialização em Ouro na Periferia}
+    \begin{columns}[T]
+        \begin{column}{0.50\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/figuras/08_gold_specialization_hierarchy.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{\% de ouros por perfil hierárquico}
+            \end{center}
+        \end{column}
+        \begin{column}{0.46\textwidth}
+            \begin{alertblock}{Padrão Contra-Intuitivo}
+                \centering
+                Periferia tem \textbf{maior \% de ouros}
+            \end{alertblock}
+            \vspace{0.2cm}
+            \begin{block}{Núcleo (Phelps, Bolt...)}
+                \footnotesize
+                Carreira longa, balanço entre ouros, pratas e bronzes
+            \end{block}
+            \vspace{0.15cm}
+            \begin{block}{Periferia (1--2 medalhas)}
+                \footnotesize
+                Alta \% de ouros: \textbf{especialização extrema}\\
+                ``One-hit wonders'' --- tudo ou nada\\
+                \textit{Especializam-se em um único evento}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: Dashboard Web
+\begin{frame}[shrink=1]{Dashboard Interativo}
     \begin{block}{Tecnologia: vis-network v9.1.6}
         \footnotesize
         \begin{itemize}
@@ -155,7 +167,7 @@
     \end{center}
 \end{frame}
 
-% Slide 23: Arquitetura de Publicação
+% Slide: Arquitetura de Publicação
 \begin{frame}{Arquitetura de Publicação}
     \begin{block}{Desafio: Limite de 1GB RAM no Streamlit Cloud}
         \footnotesize

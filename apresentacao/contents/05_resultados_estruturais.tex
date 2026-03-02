@@ -1,5 +1,40 @@
-% Slide 12: Diferenças Estruturais entre Modalidades
-\begin{frame}{Diferenças Estruturais entre Modalidades}
+% Slide: Visão Geral dos 12 Casos de Estudo
+\begin{frame}[shrink=3]{Os 12 Casos de Estudo: Visão Geral}
+    \begin{center}
+    \scriptsize
+    \begin{tabular}{llrrrrr}
+    \toprule
+    \textbf{Esporte} & \textbf{Evento} & \textbf{Atletas} & \textbf{Arestas} & \textbf{Densidade} & \textbf{Comp.} & \textbf{Segregação} \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Esportes Coletivos}} \\
+    Futebol   & Masculino      & 1.275 & 21.620 & 1.33\%  & 11 & 15.77  \\
+    Futebol   & Feminino       &   293 &  6.285 & 7.35\%  &  2 &  8.59  \\
+    Basquete  & Masculino      &   592 &  8.515 & 2.43\%  &  3 &  1.50  \\
+    Basquete  & Feminino       &   323 &  4.571 & 4.40\%  &  3 &  9.01  \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Esportes Individuais --- Performance}} \\
+    Atletismo & 100m M         &    85 &    116 & 1.62\%  & 17 & 90.11  \\
+    Atletismo & 100m F         &    63 &     94 & 2.41\%  & 16 & 100.00 \\
+    Natação   & 100m Livre M   &    68 &     81 & 1.78\%  & 15 & 52.37  \\
+    Natação   & 100m Livre F   &    69 &     75 & 1.60\%  & 18 & 89.87  \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Esportes de Combate}} \\
+    Judô      & --90kg M       &    49 &     65 & 2.76\%  & 10 & 100.00 \\
+    Judô      & --70kg F       &    22 &     34 & 7.36\%  &  2 &   3.12 \\
+    Boxe      & Welter M       &   106 &    258 & 2.32\%  &  8 &  48.23 \\
+    Boxe      & Médio F        &     7 &     10 & 23.81\% &  1 &   2.33 \\
+    \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.1cm}
+    \begin{center}
+        \footnotesize
+        \textbf{Range:} 7 a 1.275 atletas \quad Densidade: 1.33\% a 23.81\% \quad Segregação: 1.5 a 100.0
+    \end{center}
+\end{frame}
+
+% Slide: Diferenças Estruturais entre Modalidades
+\begin{frame}[shrink=10]{Diferenças Estruturais entre Modalidades}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \begin{center}
@@ -34,84 +69,92 @@
     \end{block}
 \end{frame}
 
-% Slide 13: Densidade Feminina > Masculina (DESTAQUE!)
-\begin{frame}{Descoberta Contra-Intuitiva: Densidade F $>$ M}
-    \begin{alertblock}{Resultado Surpreendente}
-        \Large
-        \centering
-        Redes femininas são \textbf{5.66× mais densas} que masculinas
-    \end{alertblock}
-
-    \vspace{0.5cm}
-
+% Slide: Densidade Feminina > Masculina (DESTAQUE!)
+\begin{frame}[shrink=5]{Descoberta Contra-Intuitiva: Densidade F $>$ M}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/figuras/01_density_comparison_mf.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{Densidade média por esporte e gênero}
+            \end{center}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{alertblock}{Resultado Surpreendente}
+                \centering
+                Redes F são \textbf{5.66× mais densas} que M
+            \end{alertblock}
+            \vspace{0.15cm}
             \begin{block}{Razão F/M por Esporte}
                 \footnotesize
                 \begin{itemize}
-                    \item Boxe: \textbf{25.65×}
-                    \item Judô: \textbf{10.23×}
-                    \item Atletismo: \textbf{5.15×}
-                    \item Futebol: \textbf{5.53×}
-                    \item Natação: \textbf{3.21×}
-                    \item Basquete: 0.56×
+                    \item Boxe: \textbf{25.65×} \quad Judô: \textbf{10.23×}
+                    \item Atletismo: \textbf{5.15×} \quad Futebol: \textbf{5.53×}
+                    \item Natação: \textbf{3.21×} \quad Basquete: 0.56×
                 \end{itemize}
             \end{block}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Validação Estatística}
+            \vspace{0.1cm}
+            \begin{block}{Validação (Wilcoxon \cite{VanderPlas2016Python})}
                 \footnotesize
-                \begin{itemize}
-                    \item Wilcoxon signed-rank test
-                    \item \textbf{p = 0.031} (significativo)
-                    \item Efeito genuíno
-                    \item 5 de 6 esportes com F $>$ M
-                \end{itemize}
+                \textbf{p = 0.031}: prob. do resultado ser acaso se não houvesse efeito real\\
+                $p < 0.05$ $\Rightarrow$ diferença real, 5/6 esportes com F $>$ M
             \end{block}
         \end{column}
     \end{columns}
-
-    \vspace{0.3cm}
-
     \begin{center}
-        \footnotesize
-        \textit{Possível explicação:} menor participação histórica feminina concentra competições
+        \vspace{0.1cm}
+        \footnotesize\textit{Explicação: menor participação histórica feminina concentra competições}
     \end{center}
 \end{frame}
 
-% Slide 14: Análise de Confounders
+% Slide: Análise de Confounders
 \begin{frame}{Análise de Confounders}
     \begin{block}{Hipóteses Alternativas Testadas}
-        Densidade F $>$ M poderia ser artefato de:
-        \begin{itemize}
-            \item Tamanho da rede (redes menores = maior densidade?)
-            \item Longevidade (menos edições = maior densidade?)
-            \item Tipologia esportiva (coletivo vs individual?)
-        \end{itemize}
+        \footnotesize
+        Densidade F $>$ M poderia ser artefato de tamanho da rede, longevidade ou tipologia esportiva.
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{block}{Regressão Múltipla: Controle de Confounders}
-        \begin{itemize}
-            \item \textbf{Modelo:} Densidade $\sim$ Gênero + Tamanho + Longevidade + Tipologia
-            \item \textbf{R² = 0.91} (modelo explica 91\% da variação)
-            \item \textbf{Efeito de gênero: p = 0.028} (significativo!)
-            \item Tamanho, longevidade e tipologia controlados
-        \end{itemize}
+    \begin{block}{Regressão Múltipla: densidade $\sim$ Gênero + Tamanho + Longevidade + Tipologia}
+        \begin{columns}[T]
+            \begin{column}{0.54\textwidth}
+                \centering
+                \scriptsize
+                \vspace{0.1cm}
+                \begin{tabular}{lrrr}
+                \toprule
+                \textbf{Variável} & \textbf{Coef.} & \textbf{p-valor} & \textbf{Sig.} \\
+                \midrule
+                \textbf{Gênero (F=1)} & \textbf{-0.029} & \textbf{0.028} & \textbf{**} \\
+                log(Atletas)          &  -0.009         &  0.582          & NS            \\
+                log(Anos)             &  -0.113         &  0.078          & $\sim$        \\
+                Tipo (Coletivo)       &  -0.012         &  0.974          & NS            \\
+                \bottomrule
+                \end{tabular}
+                \vspace{0.05cm}
+                \tiny $R^2 = 0.91$ \quad bootstrap $n=1000$ \quad \textbf{**} $p<0.05$, NS não significativo
+            \end{column}
+            \begin{column}{0.42\textwidth}
+                \footnotesize
+                \vspace{0.2cm}
+                Apenas \textbf{gênero} é significativo (p = 0.028).\\[0.2cm]
+                Tamanho (p = 0.582) e tipologia (p = 0.974) \textbf{não explicam} a diferença.\\[0.2cm]
+                \textbf{R² = 0.91}: o modelo explica 91\% da variação de densidade.
+            \end{column}
+        \end{columns}
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
     \begin{alertblock}{Conclusão}
-        \footnotesize
-        \centering
-        Densidade F $>$ M é \textbf{efeito genuíno}, não artefato metodológico
+        \footnotesize\centering
+        Densidade F $>$ M é \textbf{efeito genuíno e isolado}, não artefato metodológico
     \end{alertblock}
 \end{frame}
 
-% Slide 15: Visualização de Redes
-\begin{frame}{Visualização de Redes: Futebol M vs F}
+% Slide: Visualização de Redes
+\begin{frame}[shrink=2]{Visualização de Redes: Futebol M vs F}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \begin{center}

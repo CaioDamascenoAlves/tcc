@@ -1,5 +1,5 @@
-% Slide 16: Padrões de Dominância
-\begin{frame}{Padrões de Dominância Geográfica}
+% Slide: Padrões de Dominância
+\begin{frame}[shrink=12]{Padrões de Dominância Geográfica}
     \begin{block}{USA: Hegemonia em 7 de 12 redes}
         \footnotesize
         \begin{itemize}
@@ -53,7 +53,7 @@
     \end{center}
 \end{frame}
 
-% Slide 17: Desigualdade Estrutural (Gini)
+% Slide: Desigualdade Estrutural (Gini)
 \begin{frame}{Desigualdade Estrutural: Coeficiente de Gini}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
@@ -82,47 +82,72 @@
     \end{columns}
 \end{frame}
 
-% Slide 18: Validação com Estatísticas Históricas
-\begin{frame}{Validação com Estatísticas Históricas}
-    \begin{block}{Rankings Coincidem com Campeões Históricos}
+% Slide: Validação com Estatísticas Históricas
+\begin{frame}[shrink=7]{Validação com Estatísticas Históricas}
+    \begin{columns}[T]
+        \begin{column}{0.50\textwidth}
+            \begin{center}
+                \includegraphics[width=\textwidth]{../monografia/figuras/07_pagerank_vs_medals.pdf}\\
+                \vspace{0.1cm}
+                \footnotesize\textit{PageRank vs contagem de medalhas}
+            \end{center}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Rankings Coincidem com Campeões Históricos}
+                \footnotesize
+                \begin{itemize}
+                    \item Brasil Futebol: \#1 total de medalhas \checkmark \cite{OlympicsFootballWinners2024}
+                    \item USA Basketball M: 16/20 ouros (80\%!) \checkmark \cite{NBCBasketballHistory2024}
+                    \item USA Athletics 100m: 55\% dos ouros \checkmark \cite{Olympics100mWinners2024}
+                    \item Japão Judô: 8 ouros em Atenas 2004 \checkmark \cite{NBCJudoHistory2024}
+                \end{itemize}
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Top PageRank}
+                \footnotesize
+                \textbf{100m M:} Bolt $>$ Lewis $>$ Owens\\
+                \textbf{Natação 100m F:} Fraser $>$ Thompson\\[0.1cm]
+                \textit{PageRank $\neq$ contagem bruta:\\captura qualidade dos confrontos}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.1cm}
+    \begin{alertblock}{}
+        \footnotesize\centering
+        PageRank captura importância histórica --- não apenas contagem de medalhas
+    \end{alertblock}
+\end{frame}
+
+% Slide: Atletas-Ponte (Betweenness em Ação)
+\begin{frame}[shrink=12]{Betweenness em Ação: Atletas que Conectaram Eras}
+    \begin{block}{Quem conectou gerações?}
         \footnotesize
-        \begin{itemize}
-            \item \textbf{Brasil Futebol:} 6 medalhas até 2016 (\#1 em total de medalhas) \checkmark
-            \item \textbf{USA Basketball M:} 16 de 20 ouros (80\%!) \checkmark
-            \item \textbf{USA Athletics 100m:} 55\% dos ouros históricos \checkmark
-            \item \textbf{Japão Judô:} 8 ouros em Athens 2004 (recorde) \checkmark
-        \end{itemize}
+        Atletas com maior \textit{betweenness} aparecem no caminho mais curto entre atletas de eras distintas --- carreiras longas que ligaram décadas incompatíveis.
     \end{block}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{block}{Top PageRank: Atletas Icônicos}
-        \footnotesize
-        \begin{columns}[T]
-            \begin{column}{0.48\textwidth}
-                \textbf{Atletismo 100m M:}
-                \begin{itemize}
-                    \item Usain Bolt (JAM)
-                    \item Carl Lewis (USA)
-                    \item Jesse Owens (USA)
-                \end{itemize}
-            \end{column}
-            \begin{column}{0.48\textwidth}
-                \textbf{Natação 100m Livre F:}
-                \begin{itemize}
-                    \item Dawn Fraser (AUS)
-                    \item Jenny Thompson (USA)
-                    \item Kornelia Ender (GDR)
-                \end{itemize}
-            \end{column}
-        \end{columns}
-    \end{block}
+    \begin{center}
+    \footnotesize
+    \begin{tabular}{llllr}
+    \toprule
+    \textbf{Esporte} & \textbf{Atleta} & \textbf{País} & \textbf{G} & \textbf{Betweenness} \\
+    \midrule
+    Atletismo & Bob Garrett          & USA & M & 0.101 \\
+    Atletismo & Carl Lewis            & USA & M & 0.084 \\
+    Atletismo & T. Prorochenko       & URS & F & 0.084 \\
+    Natação   & Amanda Beard         & USA & F & 0.055 \\
+    Natação   & Ryan Lochte          & USA & M & 0.042 \\
+    Judô      & Ilias Iliadis         & GRE & M & 0.091 \\
+    Boxe      & P. Hämäläinen        & FIN & M & 0.030 \\
+    \bottomrule
+    \end{tabular}
+    \end{center}
 
-    \vspace{0.3cm}
+    \vspace{0.2cm}
 
-    \begin{alertblock}{Validação Externa}
-        \footnotesize
-        \centering
-        PageRank captura importância histórica -- não apenas contagem de medalhas
+    \begin{alertblock}{}
+        \footnotesize\centering
+        Carl Lewis (1984--1996): conecta a era pré-Carl-Lewis à era Bolt no Atletismo 100m M
     \end{alertblock}
 \end{frame}
