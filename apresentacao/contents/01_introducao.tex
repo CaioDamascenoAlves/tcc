@@ -1,11 +1,76 @@
-% Slide 1: Gancho Visual
-\begin{frame}[shrink=1]{O que são 120 anos de competição olímpica?}
+% Slide 1 (B): Contexto
+\begin{frame}{Jogos Olímpicos: 120 anos de história competitiva}
+    \begin{center}
+        \Large
+        \textbf{1896 \hspace{0.5cm} $\longrightarrow$ \hspace{0.5cm} 2016}
+    \end{center}
+
+    \vspace{0.4cm}
+
+    \begin{columns}[T]
+        \begin{column}{0.32\textwidth}
+            \begin{block}{\centering Atletas}
+                \centering\Large\textbf{135.571}\\
+                \footnotesize únicos medalhistas
+            \end{block}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{block}{\centering Modalidades}
+                \centering\Large\textbf{66}\\
+                \footnotesize esportes analisados
+            \end{block}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{block}{\centering Registros}
+                \centering\Large\textbf{269.718}\\
+                \footnotesize resultados olímpicos
+            \end{block}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.5cm}
+
+    \begin{center}
+        \footnotesize
+        \textit{Como analisar essa história de forma estrutural?}
+    \end{center}
+\end{frame}
+
+% Slide 2 (C): Provocação — o limite da análise tradicional
+\begin{frame}{O limite da análise tradicional}
+    \begin{block}{O que uma tabela responde\ldots}
+        \footnotesize\centering
+        USA venceu \textbf{55\% dos ouros} no atletismo 100m em 120 anos \cite{Olympics100mWinners2024}
+    \end{block}
+
+    \vspace{0.3cm}
+
+    \begin{alertblock}{O que ela não responde\ldots}
+        \footnotesize
+        \begin{itemize}
+            \item Usain Bolt teria vencido Carl Lewis se competissem na mesma era?
+            \item Quando exatamente essa dominância americana começou a ceder?
+            \item Quem foi o atleta que conectou a era Lewis à era Bolt?
+            \item Por que o Futebol F forma uma rede completamente diferente do Futebol M?
+        \end{itemize}
+    \end{alertblock}
+
+    \vspace{0.3cm}
+
+    \begin{center}
+        \footnotesize
+        Para responder isso, precisamos modelar \textbf{relações} --- não apenas resultados.
+    \end{center}
+\end{frame}
+
+% Slide 3: Visual — redes como resposta
+\begin{frame}[shrink=2]{A resposta: modelar relações competitivas como rede}
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \begin{center}
                 \textbf{Futebol Masculino} (1900--2016)\\
-                \vspace{0.05cm}
-                \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{../monografia/img/futebol_M.png}\\
+                \vspace{0.1cm}
+                \includegraphics[width=\textwidth, height=0.50\textheight, keepaspectratio]{../monografia/img/futebol_M.png}\\
                 \vspace{0.05cm}
                 \footnotesize Cor = era histórica \quad Tamanho = PageRank
             \end{center}
@@ -13,31 +78,24 @@
         \begin{column}{0.48\textwidth}
             \begin{center}
                 \textbf{Futebol Feminino} (1996--2016)\\
-                \vspace{0.05cm}
-                \includegraphics[width=\textwidth, height=0.52\textheight, keepaspectratio]{../monografia/img/futebol_F.png}\\
+                \vspace{0.1cm}
+                \includegraphics[width=\textwidth, height=0.50\textheight, keepaspectratio]{../monografia/img/futebol_F.png}\\
                 \vspace{0.05cm}
                 \footnotesize Mesma modalidade, mesmas regras
             \end{center}
         \end{column}
     \end{columns}
 
-    \vspace{0.1cm}
+    \vspace{0.15cm}
 
     \begin{alertblock}{\centering Por que essas redes são tão diferentes?}
         \footnotesize\centering
-        Análises tradicionais de medalhas não respondem essa pergunta
+        É exatamente essa pergunta que este trabalho responde
     \end{alertblock}
 \end{frame}
 
-% Slide 2: Motivação + Questão (fundidos)
-\begin{frame}{Motivação e Questão de Pesquisa}
-    \begin{block}{O que as tabelas de medalhas não contam}
-        \footnotesize
-        120 anos · 135.571 atletas · 66 modalidades --- contagens por país perdem \textbf{hierarquias}, \textbf{eras} e \textbf{relações competitivas}
-    \end{block}
-
-    \vspace{0.2cm}
-
+% Slide 4: Questão de Pesquisa
+\begin{frame}[shrink=5]{Questão de Pesquisa}
     \begin{alertblock}{\centering Questão Central}
         \centering
         \textbf{Como a estrutura de redes competitivas difere entre esportes olímpicos?}
@@ -54,41 +112,4 @@
             \item Há diferenças estruturais entre competições masculinas e femininas?
         \end{itemize}
     \end{block}
-\end{frame}
-
-% Slide 3: O que foi construído para responder
-\begin{frame}{O que foi construído para responder}
-    \begin{columns}[T]
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Modelagem}
-                \footnotesize
-                \begin{itemize}
-                    \item \textbf{143 redes} independentes por modalidade
-                    \item \textbf{6 esportes}, 3 tipologias competitivas
-                    \item \textbf{12 casos de estudo} via \textit{Iconic Score}
-                \end{itemize}
-            \end{block}
-
-            \vspace{0.2cm}
-
-            \begin{block}{Métricas Aplicadas}
-                \footnotesize
-                \begin{itemize}
-                    \item PageRank · Betweenness · Degree
-                    \item Louvain (detecção de comunidades)
-                    \item Gini (desigualdade geográfica)
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Entregáveis}
-                \footnotesize
-                \begin{itemize}
-                    \item Dashboard interativo\\(9.510 atletas navegáveis)
-                    \item Validação estatística\\(Wilcoxon · bootstrap $R^2{=}0.91$)
-                    \item Análise cross-esporte inédita\\em 120 anos de Olimpíadas
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
 \end{frame}
